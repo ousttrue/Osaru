@@ -18,6 +18,8 @@ namespace JsonSan
         Object,
         Array,
         Boolean,
+
+        Close,
     }
 
     public struct StringSegment : IEnumerable<Char>
@@ -203,7 +205,7 @@ namespace JsonSan
             }
         }
 
-        Node(StringSegment segment)
+        Node(StringSegment segment, bool recursive)
         {
             switch (segment[0])
             {
@@ -213,6 +215,10 @@ namespace JsonSan
                 case 't': ValueType = ValueType.Boolean; break;
                 case 'f': ValueType = ValueType.Boolean; break;
                 case 'n': ValueType = ValueType.Unknown; break;
+
+                case '}': // fall through
+                case ']': // fall through
+                    ValueType = ValueType.Close; break;
 
                 case '-': // fall through
                 case '0': // fall through
@@ -232,11 +238,20 @@ namespace JsonSan
                     throw new FormatException(segment.ToString() + " is not json");
             }
 
-            switch(ValueType)
+            switch (ValueType)
             {
                 case ValueType.Array: // fall through
                 case ValueType.Object: // fall through
                     m_segment = segment;
+                    if (recursive)
+                    {
+                        var close = GetNodes(true).Last();
+                        if (close.ValueType != ValueType.Close)
+                        {
+                            throw new FormatException("close expected");
+                        }
+                        m_segment=m_segment.Take(close.Start+1 - m_segment.Offset);
+                    }
                     break;
 
                 default:
@@ -247,10 +262,10 @@ namespace JsonSan
 
         public static Node Parse(string json)
         {
-            return Parse(new StringSegment(json));
+            return Parse(new StringSegment(json), false);
         }
 
-        public static Node Parse(StringSegment json)
+        public static Node Parse(StringSegment json, bool recursive)
         {
             // search non whitespace
             int pos;
@@ -258,7 +273,7 @@ namespace JsonSan
             {
                 throw new FormatException("[" + json.ToString() + "] is only whitespace");
             }
-            return new Node(json.Skip(pos));
+            return new Node(json.Skip(pos), recursive);
         }
 
         #region PrimitiveType
@@ -333,42 +348,71 @@ namespace JsonSan
 
         public IEnumerator<Node> GetEnumerator()
         {
+            return GetNodes(false).GetEnumerator();
+        }
+
+        public IEnumerable<Node> GetNodes(bool useCloseNode)
+        {
+            if(ValueType!=ValueType.Array
+                && ValueType!=ValueType.Object)
+            {
+                yield break;
+            }
+
+            var closeChar = ValueType == ValueType.Array ? ']' : '}';
             bool isFirst = true;
             var current = m_segment.Skip(1);
             while (true)
             {
+                {
+                    // skip white space
+                    int nextToken;
+                    if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
+                    {
+                        throw new FormatException("no white space expected");
+                    }
+                    current = current.Skip(nextToken);
+                }
+
+                {
+                    if (current[0]==closeChar)
+                    {
+                        // end
+                        if (useCloseNode) {
+                            yield return new Node(current, false);
+                        }
+                        break;
+                    }
+                }
+
                 if (isFirst)
                 {
                     isFirst = false;
                 }
                 else
                 {
-                    // search ','
+                    // search ',' or closeChar
                     int keyPos;
                     if (!current.TrySearch(x => x == ',', out keyPos))
                     {
-                        break;
+                        throw new FormatException("',' expected");
                     }
                     current = current.Skip(keyPos + 1);
                 }
 
-                // skip white space
-                int nextToken;
-                if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
                 {
-                    throw new KeyNotFoundException("no key node");
-                }
-                current = current.Skip(nextToken);
-
-                if (current[0] == '}')
-                {
-                    // closed
-                    yield break;
+                    // skip white space
+                    int nextToken;
+                    if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
+                    {
+                        throw new KeyNotFoundException("no key node");
+                    }
+                    current = current.Skip(nextToken);
                 }
 
                 // key
-                var key = Parse(current);
-                if (key.ValueType != ValueType.String)
+                var key = Parse(current, true);
+                if (ValueType==ValueType.Object && key.ValueType != ValueType.String)
                 {
                     throw new FormatException("no string key is not allowed: " + key.Segment);
                 }
@@ -385,8 +429,18 @@ namespace JsonSan
                     }
                     current = current.Skip(valuePos + 1);
 
+                    {
+                        // skip white space
+                        int nextToken;
+                        if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
+                        {
+                            throw new KeyNotFoundException("no key node");
+                        }
+                        current = current.Skip(nextToken);
+                    }
+
                     // value
-                    var value = Parse(current);
+                    var value = Parse(current, true);
                     current = current.Skip(value.Segment.Count);
                     yield return value;
                 }

@@ -159,24 +159,44 @@ public class JsonSanTest
     public void NestedObjectTest()
     {
         { 
-            var json = "{\"key\":{ \"nestedKey\": \"nestedValue\" } }";
+            var json = "{\"key\":{ \"nestedKey\": \"nestedValue\" }, \"key2\": { \"nestedKey2\": \"nestedValue2\" } }";
             var node = Node.Parse(json);
             Assert.AreEqual(ValueType.Object, node.ValueType);
 
-            var nested = node["key"];
+            {
+                var it = node.GetEnumerator();
 
-            var it = nested.GetEnumerator();
+                Assert.IsTrue(it.MoveNext());
+                Assert.AreEqual("key", it.Current.GetString());
 
-            Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual("nestedKey", it.Current.GetString());
+                Assert.IsTrue(it.MoveNext());
+                Assert.AreEqual(ValueType.Object, it.Current.ValueType);
 
-            Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual("nestedValue", it.Current.GetString());
+                Assert.IsTrue(it.MoveNext());
+                Assert.AreEqual("key2", it.Current.GetString());
 
-            Assert.IsFalse(it.MoveNext());
-            Assert.AreEqual(2, node.Count());
+                Assert.IsTrue(it.MoveNext());
+                Assert.AreEqual(ValueType.Object, it.Current.ValueType);
 
-            Assert.AreEqual("nestedValue", node["key"]["nestedKey"].GetString());
+                Assert.IsFalse(it.MoveNext());
+                Assert.AreEqual(4, node.Count());
+            }
+
+            var nested = node["key2"];
+
+            {
+                var it = nested.GetEnumerator();
+
+                Assert.IsTrue(it.MoveNext());
+                Assert.AreEqual("nestedKey2", it.Current.GetString());
+
+                Assert.IsTrue(it.MoveNext());
+                Assert.AreEqual("nestedValue2", it.Current.GetString());
+
+                Assert.IsFalse(it.MoveNext());
+            }
+
+            Assert.AreEqual("nestedValue2", node["key2"]["nestedKey2"].GetString());
         }
     }
 

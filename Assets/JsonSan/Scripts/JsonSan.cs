@@ -50,6 +50,35 @@ namespace JsonSan
             return Value.Substring(Offset, Count) == str;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is StringSegment)
+            {
+                return this.Equals((StringSegment)obj);
+            }
+            return false;
+        }
+
+        public bool Equals(StringSegment p)
+        {
+            return (Value == p.Value) && (Offset == p.Offset) && (Count==p.Count);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode() ^ Offset ^ Count;
+        }
+
+        public static bool operator ==(StringSegment lhs, StringSegment rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(StringSegment lhs, StringSegment rhs)
+        {
+            return !(lhs.Equals(rhs));
+        }
+
         public override string ToString()
         {
             return Value.Substring(Offset, Count);
@@ -302,51 +331,52 @@ namespace JsonSan
             }
         }
 
-        public IEnumerable<Node> ObjectItems
+        public IEnumerator<Node> GetEnumerator()
         {
-            get
+            bool isFirst = true;
+            var current = m_segment.Skip(1);
+            while (true)
             {
-                bool isFirst = true;
-                var current = m_segment.Skip(1);
-                while (true)
+                if (isFirst)
                 {
-                    if (isFirst)
+                    isFirst = false;
+                }
+                else
+                {
+                    // search ','
+                    int keyPos;
+                    if (!current.TrySearch(x => x == ',', out keyPos))
                     {
-                        isFirst = false;
+                        break;
                     }
-                    else
-                    {
-                        // search ','
-                        int keyPos;
-                        if (!current.TrySearch(x => x == ',', out keyPos))
-                        {
-                            break;
-                        }
-                        current = current.Skip(keyPos + 1);
-                    }
+                    current = current.Skip(keyPos + 1);
+                }
 
-                    // skip white space
-                    int nextToken;
-                    if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
-                    {
-                        throw new KeyNotFoundException("no key node");
-                    }
-                    current = current.Skip(nextToken);
+                // skip white space
+                int nextToken;
+                if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
+                {
+                    throw new KeyNotFoundException("no key node");
+                }
+                current = current.Skip(nextToken);
 
-                    if (current[0] == '}')
-                    {
-                        // closed
-                        yield break;
-                    }
+                if (current[0] == '}')
+                {
+                    // closed
+                    yield break;
+                }
 
-                    // key
-                    var key = Parse(current);
-                    if (key.ValueType != ValueType.String)
-                    {
-                        throw new FormatException("no string key is not allowed: " + key.Segment);
-                    }
-                    yield return key;
+                // key
+                var key = Parse(current);
+                if (key.ValueType != ValueType.String)
+                {
+                    throw new FormatException("no string key is not allowed: " + key.Segment);
+                }
+                current = current.Skip(key.Segment.Count);
+                yield return key;
 
+                if (ValueType == ValueType.Object)
+                {
                     // search ':'
                     int valuePos;
                     if (!current.TrySearch(x => x == ':', out valuePos))
@@ -354,73 +384,12 @@ namespace JsonSan
                         throw new FormatException(": is not found");
                     }
                     current = current.Skip(valuePos + 1);
+
+                    // value
                     var value = Parse(current);
+                    current = current.Skip(value.Segment.Count);
                     yield return value;
                 }
-            }
-        }
-
-        public IEnumerable<Node> ArrayValues
-        {
-            get
-            {
-                bool isFirst = true;
-                var current = m_segment.Skip(1);
-                while (true)
-                {
-                    if (isFirst)
-                    {
-                        isFirst = false;
-                    }
-                    else
-                    {
-                        // search ','
-                        int keyPos;
-                        if (!current.TrySearch(x => x == ',', out keyPos))
-                        {
-                            break;
-                        }
-                        current = current.Skip(keyPos + 1);
-                    }
-
-                    // skip white space
-                    int nextToken;
-                    if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
-                    {
-                        throw new KeyNotFoundException("no key node");
-                    }
-                    current = current.Skip(nextToken);
-
-                    if (current[0] == ']')
-                    {
-                        // closed
-                        yield break;
-                    }
-
-                    // search ':'
-                    var value = Parse(current);
-                    yield return value;
-                }
-            }
-        }
-
-        public IEnumerator<Node> GetEnumerator()
-        {
-            switch (ValueType)
-            {
-                case ValueType.Object:
-                    foreach (var n in ObjectItems)
-                    {
-                        yield return n;
-                    }
-                    break;
-
-                case ValueType.Array:
-                    foreach(var n in ArrayValues)
-                    {
-                        yield return n;
-                    }
-                    break;
             }
         }
 

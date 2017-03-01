@@ -19,7 +19,7 @@ namespace JsonSan
         Array,
         Boolean,
 
-        Close,
+        Close, // internal use
     }
 
     public struct StringSegment : IEnumerable<Char>
@@ -93,7 +93,7 @@ namespace JsonSan
         }
     }
 
-    public struct Node: IEnumerable<Node>
+    public struct Node
     {
         StringSegment m_segment;
         public StringSegment Segment
@@ -258,6 +258,7 @@ namespace JsonSan
 
         public bool GetBoolean()
         {
+            if (ValueType != ValueType.Boolean) throw new FormatException("is not boolean: "+m_segment);
             var s = m_segment.ToString();
             switch (s)
             {
@@ -269,6 +270,7 @@ namespace JsonSan
 
         public double GetNumber()
         {
+            if (ValueType != ValueType.Number) throw new FormatException("is not number: " + m_segment);
             return double.Parse(m_segment.ToString());
         }
         #endregion
@@ -276,6 +278,7 @@ namespace JsonSan
         #region StringType
         public string GetString()
         {
+            if (ValueType != ValueType.String) throw new FormatException("is not string: "+m_segment);
             return Unquote(m_segment.ToString());
         }
 
@@ -288,7 +291,6 @@ namespace JsonSan
         {
             return src.Substring(1, src.Length - 2);
         }
-
         #endregion
 
         #region CollectionType
@@ -297,7 +299,7 @@ namespace JsonSan
         {
             get
             {
-                var it = GetEnumerator();
+                var it = GetNodes(false).GetEnumerator();
                 while (it.MoveNext())
                 {
                     var key = it.Current;
@@ -317,12 +319,32 @@ namespace JsonSan
             }
         }
 
-        public IEnumerator<Node> GetEnumerator()
+        public IEnumerable<KeyValuePair<String, Node>> ObjectItems
         {
-            return GetNodes(false).GetEnumerator();
+            get
+            {
+                if (ValueType != ValueType.Object) throw new FormatException("is not object");
+                var it = GetNodes(false).GetEnumerator();
+                while (it.MoveNext())
+                {
+                    var key = it.Current.GetString();
+
+                    it.MoveNext();
+                    yield return new KeyValuePair<string, Node>(key, it.Current);
+                }
+            }
         }
 
-        public IEnumerable<Node> GetNodes(bool useCloseNode)
+        public IEnumerable<Node> ArrayItems
+        {
+            get
+            {
+                if (ValueType != ValueType.Array) throw new FormatException("is not array");
+                return GetNodes(false);
+            }
+        }
+
+        IEnumerable<Node> GetNodes(bool useCloseNode)
         {
             if(ValueType!=ValueType.Array
                 && ValueType!=ValueType.Object)
@@ -416,11 +438,6 @@ namespace JsonSan
                     yield return value;
                 }
             }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
         #endregion
     }

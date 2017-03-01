@@ -113,7 +113,7 @@ public class JsonSanTest
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(2, node.End);
             Assert.AreEqual(ValueType.Object, node.ValueType);
-            Assert.AreEqual(0, node.Count());
+            Assert.AreEqual(0, node.ObjectItems.Count());
         }
 
         {
@@ -123,16 +123,13 @@ public class JsonSanTest
             Assert.AreEqual(json.Length, node.End);
             Assert.AreEqual(ValueType.Object, node.ValueType);
 
-            var it = node.GetEnumerator();
+            var it = node.ObjectItems.GetEnumerator();
 
             Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual("key", it.Current.GetString());
-
-            Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual("value", it.Current.GetString());
+            Assert.AreEqual("key", it.Current.Key);
+            Assert.AreEqual("value", it.Current.Value.GetString());
 
             Assert.IsFalse(it.MoveNext());
-            Assert.AreEqual(2, node.Count());
         }
 
         {
@@ -142,16 +139,13 @@ public class JsonSanTest
             Assert.AreEqual(json.Length, node.End);
             Assert.AreEqual(ValueType.Object, node.ValueType);
 
-            var it = node.GetEnumerator();
+            var it = node.ObjectItems.GetEnumerator();
 
             Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual("key", it.Current.GetString());
-
-            Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual("value", it.Current.GetString());
+            Assert.AreEqual("key", it.Current.Key);
+            Assert.AreEqual("value", it.Current.Value.GetString());
 
             Assert.IsFalse(it.MoveNext());
-            Assert.AreEqual(2, node.Count());
         }
     }
 
@@ -164,34 +158,27 @@ public class JsonSanTest
             Assert.AreEqual(ValueType.Object, node.ValueType);
 
             {
-                var it = node.GetEnumerator();
+                var it = node.ObjectItems.GetEnumerator();
 
                 Assert.IsTrue(it.MoveNext());
-                Assert.AreEqual("key", it.Current.GetString());
+                Assert.AreEqual("key", it.Current.Key);
+                Assert.AreEqual(ValueType.Object, it.Current.Value.ValueType);
 
                 Assert.IsTrue(it.MoveNext());
-                Assert.AreEqual(ValueType.Object, it.Current.ValueType);
-
-                Assert.IsTrue(it.MoveNext());
-                Assert.AreEqual("key2", it.Current.GetString());
-
-                Assert.IsTrue(it.MoveNext());
-                Assert.AreEqual(ValueType.Object, it.Current.ValueType);
+                Assert.AreEqual("key2", it.Current.Key);
+                Assert.AreEqual(ValueType.Object, it.Current.Value.ValueType);
 
                 Assert.IsFalse(it.MoveNext());
-                Assert.AreEqual(4, node.Count());
             }
 
             var nested = node["key2"];
 
             {
-                var it = nested.GetEnumerator();
+                var it = nested.ObjectItems.GetEnumerator();
 
                 Assert.IsTrue(it.MoveNext());
-                Assert.AreEqual("nestedKey2", it.Current.GetString());
-
-                Assert.IsTrue(it.MoveNext());
-                Assert.AreEqual("nestedValue2", it.Current.GetString());
+                Assert.AreEqual("nestedKey2", it.Current.Key);
+                Assert.AreEqual("nestedValue2", it.Current.Value.GetString());
 
                 Assert.IsFalse(it.MoveNext());
             }
@@ -209,7 +196,6 @@ public class JsonSanTest
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(2, node.End);
             Assert.AreEqual(ValueType.Array, node.ValueType);
-            Assert.AreEqual(0, node.Count());
         }
 
         {
@@ -219,7 +205,7 @@ public class JsonSanTest
             Assert.AreEqual(json.Length, node.End);
             Assert.AreEqual(ValueType.Array, node.ValueType);
 
-            var it = node.GetEnumerator();
+            var it = node.ArrayItems.GetEnumerator();
 
             Assert.IsTrue(it.MoveNext());
             Assert.AreEqual("key", it.Current.GetString());
@@ -228,7 +214,6 @@ public class JsonSanTest
             Assert.AreEqual(1, it.Current.GetNumber());
 
             Assert.IsFalse(it.MoveNext());
-            Assert.AreEqual(2, node.Count());
         }
     }
 }

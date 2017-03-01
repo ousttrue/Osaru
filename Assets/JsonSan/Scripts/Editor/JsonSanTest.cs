@@ -231,4 +231,11 @@ public class JsonSanTest
             Assert.AreEqual(1, node[1].GetNumber());
         }
     }
+
+    [Test]
+    public void ParseTest()
+    {
+        var json = "{";
+        Assert.Catch(typeof(JsonParseException), ()=>Node.Parse(json, true));
+    }
 }

@@ -52,35 +52,6 @@ namespace JsonSan
             return Value.Substring(Offset, Count) == str;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj is StringSegment)
-            {
-                return this.Equals((StringSegment)obj);
-            }
-            return false;
-        }
-
-        public bool Equals(StringSegment p)
-        {
-            return (Value == p.Value) && (Offset == p.Offset) && (Count==p.Count);
-        }
-
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode() ^ Offset ^ Count;
-        }
-
-        public static bool operator ==(StringSegment lhs, StringSegment rhs)
-        {
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(StringSegment lhs, StringSegment rhs)
-        {
-            return !(lhs.Equals(rhs));
-        }
-
         public override string ToString()
         {
             return Value.Substring(Offset, Count);

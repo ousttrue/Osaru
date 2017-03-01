@@ -93,6 +93,15 @@ namespace JsonSan
         }
     }
 
+    public class JsonParseException : FormatException
+    {
+        public JsonParseException(string msg) : base(msg) { }
+    }
+    public class JsonValueException: ArgumentException
+    {
+        public JsonValueException(string msg) : base(msg) { }
+    }
+
     public struct Node
     {
         StringSegment m_segment;
@@ -111,7 +120,7 @@ namespace JsonSan
         {
             if (ValueType != JsonValueType.Object && ValueType != JsonValueType.Array)
             {
-                throw new FormatException("require object or arrray");
+                throw new JsonParseException("require object or arrray");
             }
             if (IsParsedToEnd)
             {
@@ -121,7 +130,7 @@ namespace JsonSan
             var close = GetNodes(true).Last();
             if (close.ValueType != JsonValueType.Close)
             {
-                throw new FormatException("close expected");
+                throw new JsonParseException("close expected");
             }
             m_segment = m_segment.Take(close.Start + 1 - m_segment.Offset);
             IsParsedToEnd = true;
@@ -182,11 +191,11 @@ namespace JsonSan
 
                             default:
                                 // unkonw escape
-                                throw new FormatException("unknown escape: "+segment.Skip(i));
+                                throw new JsonParseException("unknown escape: "+segment.Skip(i));
                         }                         
                     }
                 }
-                throw new FormatException("no close string: " + segment.Skip(i));
+                throw new JsonParseException("no close string: " + segment.Skip(i));
             }
             else
             {
@@ -235,7 +244,7 @@ namespace JsonSan
 
                 default:
                     ValueType = JsonValueType.Unknown;
-                    throw new FormatException(segment.ToString() + " is not json");
+                    throw new JsonParseException(segment.ToString() + " is not json");
             }
 
             switch (ValueType)
@@ -269,7 +278,7 @@ namespace JsonSan
             int pos;
             if(!json.TrySearch(x => !Char.IsWhiteSpace(x), out pos))
             {
-                throw new FormatException("[" + json.ToString() + "] is only whitespace");
+                throw new JsonParseException("[" + json.ToString() + "] is only whitespace");
             }
             return new Node(json.Skip(pos), recursive);
         }
@@ -285,19 +294,19 @@ namespace JsonSan
 
         public bool GetBoolean()
         {
-            if (ValueType != JsonValueType.Boolean) throw new FormatException("is not boolean: "+m_segment);
+            if (ValueType != JsonValueType.Boolean) throw new JsonValueException("is not boolean: "+m_segment);
             var s = m_segment.ToString();
             switch (s)
             {
                 case "true": return true;
                 case "false": return false;
-                default: throw new FormatException(s + " is not boolean");
+                default: throw new JsonParseException(s + " is not boolean");
             }
         }
 
         public double GetNumber()
         {
-            if (ValueType != JsonValueType.Number) throw new FormatException("is not number: " + m_segment);
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return double.Parse(m_segment.ToString());
         }
         #endregion
@@ -305,7 +314,7 @@ namespace JsonSan
         #region StringType
         public string GetString()
         {
-            if (ValueType != JsonValueType.String) throw new FormatException("is not string: "+m_segment);
+            if (ValueType != JsonValueType.String) throw new JsonValueException("is not string: "+m_segment);
             return Unquote(m_segment.ToString());
         }
 
@@ -340,7 +349,15 @@ namespace JsonSan
         {
             get
             {
-                return ArrayItems.Skip(index).First();
+                var it = ArrayItems.GetEnumerator();
+                for(int i=0; it.MoveNext(); ++i)
+                {
+                    if (i == index)
+                    {
+                        return it.Current;
+                    }
+                }
+                throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -348,7 +365,7 @@ namespace JsonSan
         {
             get
             {
-                if (ValueType != JsonValueType.Object) throw new FormatException("is not object");
+                if (ValueType != JsonValueType.Object) throw new JsonValueException("is not object");
                 var it = GetNodes(false).GetEnumerator();
                 while (it.MoveNext())
                 {
@@ -364,7 +381,7 @@ namespace JsonSan
         {
             get
             {
-                if (ValueType != JsonValueType.Array) throw new FormatException("is not array");
+                if (ValueType != JsonValueType.Array) throw new JsonValueException("is not array");
                 return GetNodes(false);
             }
         }
@@ -387,7 +404,7 @@ namespace JsonSan
                     int nextToken;
                     if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
                     {
-                        throw new FormatException("no white space expected");
+                        throw new JsonParseException("no white space expected");
                     }
                     current = current.Skip(nextToken);
                 }
@@ -413,7 +430,7 @@ namespace JsonSan
                     int keyPos;
                     if (!current.TrySearch(x => x == ',', out keyPos))
                     {
-                        throw new FormatException("',' expected");
+                        throw new JsonParseException("',' expected");
                     }
                     current = current.Skip(keyPos + 1);
                 }
@@ -423,7 +440,7 @@ namespace JsonSan
                     int nextToken;
                     if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
                     {
-                        throw new KeyNotFoundException("no key node");
+                        throw new JsonParseException("not whitespace expected");
                     }
                     current = current.Skip(nextToken);
                 }
@@ -432,7 +449,7 @@ namespace JsonSan
                 var key = Parse(current, true);
                 if (ValueType==JsonValueType.Object && key.ValueType != JsonValueType.String)
                 {
-                    throw new FormatException("no string key is not allowed: " + key.Segment);
+                    throw new JsonParseException("no string key is not allowed: " + key.Segment);
                 }
                 current = current.Skip(key.Segment.Count);
                 yield return key;
@@ -443,7 +460,7 @@ namespace JsonSan
                     int valuePos;
                     if (!current.TrySearch(x => x == ':', out valuePos))
                     {
-                        throw new FormatException(": is not found");
+                        throw new JsonParseException(": is not found");
                     }
                     current = current.Skip(valuePos + 1);
 
@@ -452,7 +469,7 @@ namespace JsonSan
                         int nextToken;
                         if (!current.TrySearch(x => !Char.IsWhiteSpace(x), out nextToken))
                         {
-                            throw new KeyNotFoundException("no key node");
+                            throw new JsonParseException("not whitespace expected");
                         }
                         current = current.Skip(nextToken);
                     }

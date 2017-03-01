@@ -26,7 +26,7 @@ public class JsonSanTest
             Assert.AreEqual(4, node.End);
             Assert.AreEqual(JsonValueType.Boolean, node.ValueType);
             Assert.AreEqual(true, node.GetBoolean());
-            Assert.Catch(typeof(System.FormatException), () => node.GetNumber());
+            Assert.Catch(typeof(JsonValueException), () => node.GetNumber());
         }
         {
             var node = Node.Parse(" false ");
@@ -46,7 +46,7 @@ public class JsonSanTest
             Assert.AreEqual(1, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
             Assert.AreEqual(1, (int)node.GetNumber());
-            Assert.Catch(typeof(System.FormatException), () => node.GetBoolean());
+            Assert.Catch(typeof(JsonValueException), () => node.GetBoolean());
         }
         {
             var node = Node.Parse(" 22 ");

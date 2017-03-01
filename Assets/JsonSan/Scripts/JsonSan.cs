@@ -9,7 +9,7 @@ using System.Collections.Generic;
 /// </summary>
 namespace JsonSan
 {
-    public enum ValueType
+    public enum JsonValueType
     {
         Unknown,
 
@@ -101,6 +101,32 @@ namespace JsonSan
             get { return m_segment; }
         }
 
+        public bool IsParsedToEnd
+        {
+            get;
+            private set;
+        }
+
+        public void ParseToEnd()
+        {
+            if (ValueType != JsonValueType.Object && ValueType != JsonValueType.Array)
+            {
+                throw new FormatException("require object or arrray");
+            }
+            if (IsParsedToEnd)
+            {
+                throw new InvalidOperationException("already parsed");
+            }
+
+            var close = GetNodes(true).Last();
+            if (close.ValueType != JsonValueType.Close)
+            {
+                throw new FormatException("close expected");
+            }
+            m_segment = m_segment.Take(close.Start + 1 - m_segment.Offset);
+            IsParsedToEnd = true;
+        }
+
         public int Start
         {
             get { return m_segment.Offset; }
@@ -108,10 +134,13 @@ namespace JsonSan
 
         public int End
         {
-            get { return m_segment.Offset + m_segment.Count; }
+            get {
+                if (!IsParsedToEnd) throw new InvalidOperationException("is not parsed to end");
+                return m_segment.Offset + m_segment.Count;
+            }
         }
 
-        public ValueType ValueType
+        public JsonValueType ValueType
         {
             get;
             private set;
@@ -180,16 +209,16 @@ namespace JsonSan
         {
             switch (segment[0])
             {
-                case '{': ValueType = ValueType.Object; break;
-                case '[': ValueType = ValueType.Array; break;
-                case '"': ValueType = ValueType.String; break;
-                case 't': ValueType = ValueType.Boolean; break;
-                case 'f': ValueType = ValueType.Boolean; break;
-                case 'n': ValueType = ValueType.Unknown; break;
+                case '{': ValueType = JsonValueType.Object; break;
+                case '[': ValueType = JsonValueType.Array; break;
+                case '"': ValueType = JsonValueType.String; break;
+                case 't': ValueType = JsonValueType.Boolean; break;
+                case 'f': ValueType = JsonValueType.Boolean; break;
+                case 'n': ValueType = JsonValueType.Unknown; break;
 
                 case '}': // fall through
                 case ']': // fall through
-                    ValueType = ValueType.Close; break;
+                    ValueType = JsonValueType.Close; break;
 
                 case '-': // fall through
                 case '0': // fall through
@@ -202,38 +231,36 @@ namespace JsonSan
                 case '7': // fall through
                 case '8': // fall through
                 case '9': // fall through
-                    ValueType = ValueType.Number; break;
+                    ValueType = JsonValueType.Number; break;
 
                 default:
-                    ValueType = ValueType.Unknown;
+                    ValueType = JsonValueType.Unknown;
                     throw new FormatException(segment.ToString() + " is not json");
             }
 
             switch (ValueType)
             {
-                case ValueType.Array: // fall through
-                case ValueType.Object: // fall through
+                case JsonValueType.Array: // fall through
+                case JsonValueType.Object: // fall through
                     m_segment = segment;
+                    IsParsedToEnd = false;
+                    // parse child objects ?
                     if (recursive)
                     {
-                        var close = GetNodes(true).Last();
-                        if (close.ValueType != ValueType.Close)
-                        {
-                            throw new FormatException("close expected");
-                        }
-                        m_segment=m_segment.Take(close.Start+1 - m_segment.Offset);
+                        ParseToEnd();
                     }
                     break;
 
                 default:
                     m_segment = SearchTokenEnd(segment);
+                    IsParsedToEnd = true;
                     break;
             }
         }
 
-        public static Node Parse(string json)
+        public static Node Parse(string json, bool recursive=false)
         {
-            return Parse(new StringSegment(json), false);
+            return Parse(new StringSegment(json), recursive);
         }
 
         public static Node Parse(StringSegment json, bool recursive)
@@ -258,7 +285,7 @@ namespace JsonSan
 
         public bool GetBoolean()
         {
-            if (ValueType != ValueType.Boolean) throw new FormatException("is not boolean: "+m_segment);
+            if (ValueType != JsonValueType.Boolean) throw new FormatException("is not boolean: "+m_segment);
             var s = m_segment.ToString();
             switch (s)
             {
@@ -270,7 +297,7 @@ namespace JsonSan
 
         public double GetNumber()
         {
-            if (ValueType != ValueType.Number) throw new FormatException("is not number: " + m_segment);
+            if (ValueType != JsonValueType.Number) throw new FormatException("is not number: " + m_segment);
             return double.Parse(m_segment.ToString());
         }
         #endregion
@@ -278,7 +305,7 @@ namespace JsonSan
         #region StringType
         public string GetString()
         {
-            if (ValueType != ValueType.String) throw new FormatException("is not string: "+m_segment);
+            if (ValueType != JsonValueType.String) throw new FormatException("is not string: "+m_segment);
             return Unquote(m_segment.ToString());
         }
 
@@ -323,7 +350,7 @@ namespace JsonSan
         {
             get
             {
-                if (ValueType != ValueType.Object) throw new FormatException("is not object");
+                if (ValueType != JsonValueType.Object) throw new FormatException("is not object");
                 var it = GetNodes(false).GetEnumerator();
                 while (it.MoveNext())
                 {
@@ -339,20 +366,20 @@ namespace JsonSan
         {
             get
             {
-                if (ValueType != ValueType.Array) throw new FormatException("is not array");
+                if (ValueType != JsonValueType.Array) throw new FormatException("is not array");
                 return GetNodes(false);
             }
         }
 
         IEnumerable<Node> GetNodes(bool useCloseNode)
         {
-            if(ValueType!=ValueType.Array
-                && ValueType!=ValueType.Object)
+            if(ValueType!=JsonValueType.Array
+                && ValueType!=JsonValueType.Object)
             {
                 yield break;
             }
 
-            var closeChar = ValueType == ValueType.Array ? ']' : '}';
+            var closeChar = ValueType == JsonValueType.Array ? ']' : '}';
             bool isFirst = true;
             var current = m_segment.Skip(1);
             while (true)
@@ -405,14 +432,14 @@ namespace JsonSan
 
                 // key
                 var key = Parse(current, true);
-                if (ValueType==ValueType.Object && key.ValueType != ValueType.String)
+                if (ValueType==JsonValueType.Object && key.ValueType != JsonValueType.String)
                 {
                     throw new FormatException("no string key is not allowed: " + key.Segment);
                 }
                 current = current.Skip(key.Segment.Count);
                 yield return key;
 
-                if (ValueType == ValueType.Object)
+                if (ValueType == JsonValueType.Object)
                 {
                     // search ':'
                     int valuePos;

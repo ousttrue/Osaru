@@ -226,6 +226,9 @@ public class JsonSanTest
             Assert.AreEqual(1, it.Current.GetNumber());
 
             Assert.IsFalse(it.MoveNext());
+
+            Assert.AreEqual("key", node[0].GetString());
+            Assert.AreEqual(1, node[1].GetNumber());
         }
     }
 }

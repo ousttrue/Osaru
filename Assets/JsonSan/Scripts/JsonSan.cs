@@ -321,28 +321,26 @@ namespace JsonSan
         #endregion
 
         #region CollectionType
-        // for string key object
-        public Node this[string target]
+        public Node this[string key]
         {
             get
             {
-                var it = GetNodes(false).GetEnumerator();
-                while (it.MoveNext())
+                foreach(var kv in ObjectItems)
                 {
-                    var key = it.Current;
-
-                    if (!it.MoveNext())
+                    if (kv.Key == key)
                     {
-                        throw new FormatException("no value");
-                    }
-                    var value = it.Current;
-
-                    if(key.GetString()==target)
-                    {
-                        return value;
+                        return kv.Value;
                     }
                 }
                 throw new KeyNotFoundException();
+            }
+        }
+
+        public Node this[int index]
+        {
+            get
+            {
+                return ArrayItems.Skip(index).First();
             }
         }
 

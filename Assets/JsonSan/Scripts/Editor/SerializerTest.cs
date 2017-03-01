@@ -51,7 +51,15 @@ public class SerializerTest
     public void ListTest()
     {
         var typeRegistory = new TypeRegistory();
-        var array = new List<int> { 1, 2, 3 };
-        typeRegistory.TypeTest(array, "[1,2,3]");
+        var list = new List<int> { 1, 2, 3 };
+        typeRegistory.TypeTest(list, "[1,2,3]");
+    }
+
+    [Test]
+    public void Vector3Test()
+    {
+        var typeRegistory = new TypeRegistory();
+        var v = new UnityEngine.Vector3(1, 2, 3);
+        typeRegistory.TypeTest(v, "{\"x\":1,\"y\":2,\"z\":3}");
     }
 }

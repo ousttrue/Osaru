@@ -16,7 +16,18 @@ namespace JsonSan
         #region Serialize
         Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()
         {
-            {typeof(int), new LambdaSerializer<int>(x=> x.ToString()) },
+            {typeof(Boolean), new LambdaSerializer<Boolean>(x=> x ? "true" : "false") },
+            {typeof(SByte), new LambdaSerializer<SByte>(x=> x.ToString()) },
+            {typeof(Int16), new LambdaSerializer<Int16>(x=> x.ToString()) },
+            {typeof(Int32), new LambdaSerializer<Int32>(x=> x.ToString()) },
+            {typeof(Int64), new LambdaSerializer<Int64>(x=> x.ToString()) },
+            {typeof(Byte), new LambdaSerializer<Byte>(x=> x.ToString()) },
+            {typeof(UInt16), new LambdaSerializer<UInt16>(x=> x.ToString()) },
+            {typeof(UInt32), new LambdaSerializer<UInt32>(x=> x.ToString()) },
+            {typeof(UInt64), new LambdaSerializer<UInt64>(x=> x.ToString()) },
+            {typeof(Single), new LambdaSerializer<Single>(x=> x.ToString()) },
+            {typeof(Double), new LambdaSerializer<Double>(x=> x.ToString()) },
+            {typeof(string), new LambdaSerializer<string>(x => Node.Quote(x)) },
         };
 
         public ISerializer GetSerializer(Type t)
@@ -62,7 +73,9 @@ namespace JsonSan
             }
             else
             {
-                throw new NotImplementedException();
+                // object
+                Type constructedType = typeof(ReflectionSerializer<>).MakeGenericType(t);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion
@@ -70,7 +83,16 @@ namespace JsonSan
         #region Deserialize
         Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
         {
-            {typeof(int), new LambdaDeserializer<int>((Node json, ref int outValue, TypeRegistory r) => outValue=(int)json.GetNumber() )},
+            {typeof(SByte), new LambdaDeserializer<SByte>((Node json, ref SByte outValue, TypeRegistory r) => outValue=(SByte)json.GetNumber() )},
+            {typeof(Int16), new LambdaDeserializer<Int16>((Node json, ref Int16 outValue, TypeRegistory r) => outValue=(Int16)json.GetNumber() )},
+            {typeof(Int32), new LambdaDeserializer<Int32>((Node json, ref Int32 outValue, TypeRegistory r) => outValue=(Int32)json.GetNumber() )},
+            {typeof(Int64), new LambdaDeserializer<Int64>((Node json, ref Int64 outValue, TypeRegistory r) => outValue=(Int64)json.GetNumber() )},
+            {typeof(Byte), new LambdaDeserializer<Byte>((Node json, ref Byte outValue, TypeRegistory r) => outValue=(Byte)json.GetNumber() )},
+            {typeof(UInt16), new LambdaDeserializer<UInt16>((Node json, ref UInt16 outValue, TypeRegistory r) => outValue=(UInt16)json.GetNumber() )},
+            {typeof(UInt32), new LambdaDeserializer<UInt32>((Node json, ref UInt32 outValue, TypeRegistory r) => outValue=(UInt32)json.GetNumber() )},
+            {typeof(UInt64), new LambdaDeserializer<UInt64>((Node json, ref UInt64 outValue, TypeRegistory r) => outValue=(UInt64)json.GetNumber() )},
+            {typeof(Single), new LambdaDeserializer<Single>((Node json, ref Single outValue, TypeRegistory r) => outValue=(Single)json.GetNumber() )},
+            {typeof(Double), new LambdaDeserializer<Double>((Node json, ref Double outValue, TypeRegistory r) => outValue=(Double)json.GetNumber() )},
         };
 
         public DeserializerBase<T> GetDeserializer<T>()
@@ -109,7 +131,9 @@ namespace JsonSan
             }
             else
             {
-                throw new NotImplementedException();
+                // object
+                Type constructedType = typeof(ReflectionStructDeserializer<>).MakeGenericType(t);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion

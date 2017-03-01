@@ -6,7 +6,7 @@ namespace JsonSan.Serializers
 {
     public class TypedArraySerializer<T> : SerializerBase<T[]>
     {
-        SerializerBase<T> m_serializer = null;
+        ISerializer m_serializer = null;
 
         public override void Setup(TypeRegistory r)
         {

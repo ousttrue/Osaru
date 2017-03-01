@@ -1,6 +1,7 @@
 ﻿using JsonSan.Deserializers;
 using JsonSan.Serializers;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -36,23 +37,27 @@ namespace JsonSan
             return serializer;
         }
 
-        public SerializerBase<T> GetSerializer<T>()
+        public ISerializer GetSerializer<T>()
         {
-            return (SerializerBase<T>)GetSerializer(typeof(T));
+            var t = typeof(T);
+            var serializer= GetSerializer(t);
+            return serializer;
         }
 
         ISerializer CreateSerializer(Type t)
-        { 
-            if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IList<>))
-            {
-                // IList<T>
-                Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
-            }
-            else if (t.IsArray && t.GetElementType() != null)
+        {
+            if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
                 Type constructedType = typeof(TypedArraySerializer<>).MakeGenericType(t.GetElementType());
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
+            }
+            else if (t.GetInterfaces().Any(x =>
+            x.IsGenericType &&
+            x.GetGenericTypeDefinition() == typeof(IList<>)))
+            {
+                // IList<T>
+                Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
             else if (typeof(ICollection).IsAssignableFrom(t))
@@ -61,7 +66,8 @@ namespace JsonSan
                 Type constructedType = typeof(CollectionSerializer<>).MakeGenericType(t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
-            else {
+            else
+            {
                 return null;
             }
         }
@@ -76,7 +82,7 @@ namespace JsonSan
         public DeserializerBase<T> GetDeserializer<T>()
         {
             IDeserializer deserializer;
-            var t=typeof(T);
+            var t = typeof(T);
             if (m_deserializerMap.TryGetValue(t, out deserializer))
             {
                 return (DeserializerBase<T>)deserializer;
@@ -97,6 +103,14 @@ namespace JsonSan
             {
                 // T[]
                 Type constructedType = typeof(TypedArrayDeserializer<>).MakeGenericType(t.GetElementType());
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+            }
+            else if (t.GetInterfaces().Any(x =>
+            x.IsGenericType &&
+            x.GetGenericTypeDefinition() == typeof(IList<>)))
+            {
+                // IList<T>
+                Type constructedType = typeof(GenericListDeserializer<>).MakeGenericType(t.GetGenericArguments());
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else

@@ -1,7 +1,7 @@
-﻿using Boo.Lang;
-using JsonSan;
+﻿using JsonSan;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 
 public static class TypeRegistoryExtensions
@@ -32,7 +32,6 @@ public static class TypeRegistoryExtensions
 
 public class SerializerTest
 {
-
     [Test]
     public void NumberTest()
     {

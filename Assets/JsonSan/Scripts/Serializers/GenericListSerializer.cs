@@ -6,7 +6,7 @@ namespace JsonSan.Serializers
 {
     public class GenericListSerializer<T> : SerializerBase<IList<T>>
     {
-        SerializerBase<T> m_serializer;
+        ISerializer m_serializer;
 
         public override void Setup(TypeRegistory r)
         {

@@ -215,8 +215,8 @@ public class JsonSanTest
 
             Assert.AreEqual(JsonValueType.Array, node.ValueType);
             Assert.AreEqual(1, node[0].GetNumber());
-            Assert.AreEqual(2, node[0].GetNumber());
-            Assert.AreEqual(3, node[0].GetNumber());
+            Assert.AreEqual(2, node[1].GetNumber());
+            Assert.AreEqual(3, node[2].GetNumber());
         }
 
         {

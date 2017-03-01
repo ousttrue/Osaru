@@ -205,6 +205,8 @@ namespace JsonSan
                     if (Char.IsWhiteSpace(segment[i])
                         || segment[i] == '}' 
                         || segment[i] == ']'
+                        || segment[i] == ','
+                        || segment[i] == ':'
                         )
                     {
                         break;

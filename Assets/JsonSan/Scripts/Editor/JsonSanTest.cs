@@ -207,6 +207,19 @@ public class JsonSanTest
         }
 
         {
+            var json = "[1,2,3]";
+            var node = Node.Parse(json);
+            Assert.AreEqual(0, node.Start);
+
+            Assert.Catch(() => { var result = node.End; }, "raise exception");
+
+            Assert.AreEqual(JsonValueType.Array, node.ValueType);
+            Assert.AreEqual(1, node[0].GetNumber());
+            Assert.AreEqual(2, node[0].GetNumber());
+            Assert.AreEqual(3, node[0].GetNumber());
+        }
+
+        {
             var json = "[\"key\",1]";
             var node = Node.Parse(json);
             Assert.AreEqual(0, node.Start);

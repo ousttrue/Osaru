@@ -60,15 +60,9 @@ namespace JsonSan
                 Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
-            else if (typeof(ICollection).IsAssignableFrom(t))
-            {
-                // Array
-                Type constructedType = typeof(CollectionSerializer<>).MakeGenericType(t);
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
-            }
             else
             {
-                return null;
+                throw new NotImplementedException();
             }
         }
         #endregion

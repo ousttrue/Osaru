@@ -22,4 +22,6 @@ Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
 * [ ] reorganize messagepack library
 * [ ] json from messagepack
 * [ ] messagepack from json
+* [ ] RPC
+* [ ] code generator for RPC client
 

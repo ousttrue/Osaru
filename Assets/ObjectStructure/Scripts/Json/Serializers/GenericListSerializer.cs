@@ -7,12 +7,12 @@ namespace ObjectStructure.Json.Serializers
     {
         ISerializer m_elementSerializer;
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(JsonSerializeTypeRegistory r)
         {
             m_elementSerializer= r.GetSerializer<T>();
         }
 
-        public override void Serialize(IList<T> t, IWriteStream w, TypeRegistory r)
+        public override void Serialize(IList<T> t, IWriteStream w, JsonSerializeTypeRegistory r)
         {
             w.Write('[');
             bool isFirst = true;

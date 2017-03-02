@@ -7,9 +7,9 @@ namespace ObjectStructure.Json.Serializers
 {
     public class ReflectionSerializer<T> : SerializerBase<T>
     {
-        delegate void SerializeFunc(T value, IWriteStream w, TypeRegistory r);
+        delegate void SerializeFunc(T value, IWriteStream w, JsonSerializeTypeRegistory r);
         SerializeFunc[] m_serializers;
-        public override void Setup(TypeRegistory r)
+        public override void Setup(JsonSerializeTypeRegistory r)
         {
             var keySerializer = r.GetSerializer(typeof(String));
             var sb = new StringBuilder();
@@ -36,7 +36,7 @@ namespace ObjectStructure.Json.Serializers
                 ;
         }
 
-        public override void Serialize(T t, IWriteStream w, TypeRegistory r)
+        public override void Serialize(T t, IWriteStream w, JsonSerializeTypeRegistory r)
         {
             w.Write('{');
             bool isFirst = true;

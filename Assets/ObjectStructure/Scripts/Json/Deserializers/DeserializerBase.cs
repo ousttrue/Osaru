@@ -2,15 +2,15 @@
 {
     public interface IDeserializer
     {
-        void Setup(TypeRegistory r);
+        void Setup(JsonSerializeTypeRegistory r);
     }
     public abstract class DeserializerBase<T> : IDeserializer
     {
-        public virtual void Setup(TypeRegistory r)
+        public virtual void Setup(JsonSerializeTypeRegistory r)
         {
             // default, do nothing
         }
 
-        public abstract void Deserialize(Node json, ref T outValue, TypeRegistory r);
+        public abstract void Deserialize(JsonParser json, ref T outValue, JsonSerializeTypeRegistory r);
     }
 }

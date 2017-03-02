@@ -5,12 +5,12 @@ namespace ObjectStructure.Json.Serializers
 {
     public class LambdaSerializer<T> : SerializerBase<T>
     {
-        Action<T, IWriteStream, TypeRegistory> m_serializer;
-        public LambdaSerializer(Action<T, IWriteStream, TypeRegistory> serializer)
+        Action<T, IWriteStream, JsonSerializeTypeRegistory> m_serializer;
+        public LambdaSerializer(Action<T, IWriteStream, JsonSerializeTypeRegistory> serializer)
         {
             m_serializer = serializer;
         }
-        public override void Serialize(T t, IWriteStream w, TypeRegistory r)
+        public override void Serialize(T t, IWriteStream w, JsonSerializeTypeRegistory r)
         {
             m_serializer(t, w, r);
         }

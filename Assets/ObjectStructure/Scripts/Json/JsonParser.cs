@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 
 
 /// <summary>
-/// reference: http://www.json.org/json-ja.html
+/// reference: http://www.json.org/index.html
 /// </summary>
 namespace ObjectStructure.Json
 {
@@ -22,77 +21,6 @@ namespace ObjectStructure.Json
         Close, // internal use
     }
 
-    public struct StringSegment : IEnumerable<Char>
-    {
-        public string Value;
-        public int Offset;
-        public int Count;
-
-        public char this[int index]
-        {
-            get
-            {
-                if (index >= Count) throw new ArgumentOutOfRangeException();
-                return Value[Offset + index];
-            }
-        }
-
-        public StringSegment(string value) : this(value, 0, value.Length) { }
-        public StringSegment(string value, int offset) : this(value, offset, value.Length - offset) { }
-        public StringSegment(string value, int offset, int count)
-        {
-            Value = value;
-            Offset = offset;
-            Count = count;
-        }
-
-        public bool IsMatch(string str)
-        {
-            if (Count != str.Length) return false;
-            return Value.Substring(Offset, Count) == str;
-        }
-
-        public override string ToString()
-        {
-            return Value.Substring(Offset, Count);
-        }
-
-        public IEnumerator<char> GetEnumerator()
-        {
-            return Value.Skip(Count).Take(Count).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public StringSegment Take(int n)
-        {
-            if (n > Count) throw new ArgumentOutOfRangeException();
-            return new StringSegment(Value, Offset, n);
-        }
-
-        public StringSegment Skip(int n)
-        {
-            if (n > Count) throw new ArgumentOutOfRangeException();
-            return new StringSegment(Value, Offset + n, Count - n);
-        }
-
-        public bool TrySearch(Func<Char, bool> pred, out int pos)
-        {
-            pos = 0;
-            for (; pos < Count; ++pos)
-            {
-                if (pred(this[pos]))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
     public class JsonParseException : FormatException
     {
         public JsonParseException(string msg) : base(msg) { }
@@ -102,7 +30,7 @@ namespace ObjectStructure.Json
         public JsonValueException(string msg) : base(msg) { }
     }
 
-    public struct Node
+    public struct JsonParser
     {
         StringSegment m_segment;
         public StringSegment Segment
@@ -216,7 +144,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        Node(StringSegment segment, bool recursive)
+        JsonParser(StringSegment segment, bool recursive)
         {
             switch (segment[0])
             {
@@ -269,12 +197,12 @@ namespace ObjectStructure.Json
             }
         }
 
-        public static Node Parse(string json, bool recursive=false)
+        public static JsonParser Parse(string json, bool recursive=false)
         {
             return Parse(new StringSegment(json), recursive);
         }
 
-        public static Node Parse(StringSegment json, bool recursive)
+        public static JsonParser Parse(StringSegment json, bool recursive)
         {
             // search non whitespace
             int pos;
@@ -282,7 +210,7 @@ namespace ObjectStructure.Json
             {
                 throw new JsonParseException("[" + json.ToString() + "] is only whitespace");
             }
-            return new Node(json.Skip(pos), recursive);
+            return new JsonParser(json.Skip(pos), recursive);
         }
 
         #region PrimitiveType
@@ -332,7 +260,7 @@ namespace ObjectStructure.Json
         #endregion
 
         #region CollectionType
-        public Node this[string key]
+        public JsonParser this[string key]
         {
             get
             {
@@ -347,7 +275,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public Node this[int index]
+        public JsonParser this[int index]
         {
             get
             {
@@ -363,7 +291,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public IEnumerable<KeyValuePair<String, Node>> ObjectItems
+        public IEnumerable<KeyValuePair<String, JsonParser>> ObjectItems
         {
             get
             {
@@ -374,12 +302,12 @@ namespace ObjectStructure.Json
                     var key = it.Current.GetString();
 
                     it.MoveNext();
-                    yield return new KeyValuePair<string, Node>(key, it.Current);
+                    yield return new KeyValuePair<string, JsonParser>(key, it.Current);
                 }
             }
         }
 
-        public IEnumerable<Node> ArrayItems
+        public IEnumerable<JsonParser> ArrayItems
         {
             get
             {
@@ -388,7 +316,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        IEnumerable<Node> GetNodes(bool useCloseNode)
+        IEnumerable<JsonParser> GetNodes(bool useCloseNode)
         {
             if(ValueType!=JsonValueType.Array
                 && ValueType!=JsonValueType.Object)
@@ -416,7 +344,7 @@ namespace ObjectStructure.Json
                     {
                         // end
                         if (useCloseNode) {
-                            yield return new Node(current, false);
+                            yield return new JsonParser(current, false);
                         }
                         break;
                     }

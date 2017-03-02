@@ -9,7 +9,7 @@ public class JsonSanTest
     public void NullTest()
     {
         {
-            var node = Node.Parse("null");
+            var node = JsonParser.Parse("null");
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(4, node.End);
             Assert.AreEqual(JsonValueType.Unknown, node.ValueType);
@@ -21,7 +21,7 @@ public class JsonSanTest
     public void BooleanTest()
     {
         {
-            var node = Node.Parse("true");
+            var node = JsonParser.Parse("true");
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(4, node.End);
             Assert.AreEqual(JsonValueType.Boolean, node.ValueType);
@@ -29,7 +29,7 @@ public class JsonSanTest
             Assert.Catch(typeof(JsonValueException), () => node.GetNumber());
         }
         {
-            var node = Node.Parse(" false ");
+            var node = JsonParser.Parse(" false ");
             Assert.AreEqual(1, node.Start);
             Assert.AreEqual(6, node.End);
             Assert.AreEqual(JsonValueType.Boolean, node.ValueType);
@@ -41,7 +41,7 @@ public class JsonSanTest
     public void NumberTest()
     {
         {
-            var node = Node.Parse("1");
+            var node = JsonParser.Parse("1");
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(1, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
@@ -49,14 +49,14 @@ public class JsonSanTest
             Assert.Catch(typeof(JsonValueException), () => node.GetBoolean());
         }
         {
-            var node = Node.Parse(" 22 ");
+            var node = JsonParser.Parse(" 22 ");
             Assert.AreEqual(1, node.Start);
             Assert.AreEqual(3, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
             Assert.AreEqual(22, (int)node.GetNumber());
         }
         {
-            var node = Node.Parse(" 3.3 ");
+            var node = JsonParser.Parse(" 3.3 ");
             Assert.AreEqual(1, node.Start);
             Assert.AreEqual(4, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
@@ -64,13 +64,13 @@ public class JsonSanTest
             Assert.AreEqual(3.3f, (float)node.GetNumber());
         }
         {
-            var node = Node.Parse(" -4.44444444444444444444 ");
+            var node = JsonParser.Parse(" -4.44444444444444444444 ");
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
             Assert.AreEqual(-4, (int)node.GetNumber());
             Assert.AreEqual(-4.44444444444444444444, node.GetNumber());
         }
         {
-            var node = Node.Parse(" -5e-4 ");
+            var node = JsonParser.Parse(" -5e-4 ");
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
             Assert.AreEqual(0, (int)node.GetNumber());
             Assert.AreEqual(-5e-4, node.GetNumber());
@@ -83,8 +83,8 @@ public class JsonSanTest
         {
             var value = "hoge";
             var quoted = "\"hoge\"";
-            Assert.AreEqual(quoted, Node.Quote(value));
-            var node = Node.Parse(quoted);
+            Assert.AreEqual(quoted, JsonParser.Quote(value));
+            var node = JsonParser.Parse(quoted);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(quoted.Length, node.End);
             Assert.AreEqual(JsonValueType.String, node.ValueType);
@@ -95,8 +95,8 @@ public class JsonSanTest
             var value = @"fuga
   hoge";
             var quoted = "\"fuga\r\n  hoge\"";
-            Assert.AreEqual(quoted, Node.Quote(value));
-            var node = Node.Parse(quoted);
+            Assert.AreEqual(quoted, JsonParser.Quote(value));
+            var node = JsonParser.Parse(quoted);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(quoted.Length, node.End);
             Assert.AreEqual(JsonValueType.String, node.ValueType);
@@ -109,7 +109,7 @@ public class JsonSanTest
     {
         {
             var json = "{}";
-            var node = Node.Parse(json);
+            var node = JsonParser.Parse(json);
             Assert.AreEqual(0, node.Start);
 
             Assert.Catch(() => { var result = node.End; }, "raise exception");
@@ -122,7 +122,7 @@ public class JsonSanTest
 
         {
             var json = "{\"key\":\"value\"}";
-            var node = Node.Parse(json, true);
+            var node = JsonParser.Parse(json, true);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(json.Length, node.End);
             Assert.AreEqual(JsonValueType.Object, node.ValueType);
@@ -138,7 +138,7 @@ public class JsonSanTest
 
         {
             var json = "{\"key\":\"value\"}";
-            var node = Node.Parse(json, true);
+            var node = JsonParser.Parse(json, true);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(json.Length, node.End);
             Assert.AreEqual(JsonValueType.Object, node.ValueType);
@@ -158,7 +158,7 @@ public class JsonSanTest
     {
         { 
             var json = "{\"key\":{ \"nestedKey\": \"nestedValue\" }, \"key2\": { \"nestedKey2\": \"nestedValue2\" } }";
-            var node = Node.Parse(json);
+            var node = JsonParser.Parse(json);
             Assert.AreEqual(JsonValueType.Object, node.ValueType);
 
             {
@@ -196,7 +196,7 @@ public class JsonSanTest
     {
         {
             var json = "[]";
-            var node = Node.Parse(json);
+            var node = JsonParser.Parse(json);
             Assert.AreEqual(0, node.Start);
 
             Assert.Catch(()=> { var result=node.End; }, "raise exception");
@@ -208,7 +208,7 @@ public class JsonSanTest
 
         {
             var json = "[1,2,3]";
-            var node = Node.Parse(json);
+            var node = JsonParser.Parse(json);
             Assert.AreEqual(0, node.Start);
 
             Assert.Catch(() => { var result = node.End; }, "raise exception");
@@ -221,7 +221,7 @@ public class JsonSanTest
 
         {
             var json = "[\"key\",1]";
-            var node = Node.Parse(json);
+            var node = JsonParser.Parse(json);
             Assert.AreEqual(0, node.Start);
 
             Assert.Catch(() => { var result = node.End; }, "raise exception");
@@ -249,6 +249,6 @@ public class JsonSanTest
     public void ParseTest()
     {
         var json = "{";
-        Assert.Catch(typeof(JsonParseException), ()=>Node.Parse(json, true));
+        Assert.Catch(typeof(JsonParseException), ()=>JsonParser.Parse(json, true));
     }
 }

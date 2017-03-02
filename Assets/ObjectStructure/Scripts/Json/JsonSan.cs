@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// <summary>
 /// reference: http://www.json.org/json-ja.html
 /// </summary>
-namespace JsonSan
+namespace ObjectStructure.Json
 {
     public enum JsonValueType
     {

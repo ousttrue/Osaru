@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Text;
 
-namespace JsonSan.Serializers
+
+namespace ObjectStructure.Json.Serializers
 {
     public interface ISerializer
     {
         void Setup(TypeRegistory r);
-        void Serialize(object o, TypeRegistory r, IWriteStream<char> w);
+        void Serialize(object o, IWriteStream w, TypeRegistory r);
         string Serialize(object o, TypeRegistory r);
     }
     public abstract class SerializerBase<T> : ISerializer
     {
+        #region ISerializer
         public virtual void Setup(TypeRegistory r)
         {
         }
-        public void Serialize(object o, TypeRegistory r, IWriteStream<char> w)
+        public void Serialize(object o, IWriteStream w, TypeRegistory r)
         {
-            Serialize((T)o, r, w);
+            Serialize((T)o, w, r);
         }
-        public abstract void Serialize(T t, TypeRegistory r, IWriteStream<char> w);
         public string Serialize(object o, TypeRegistory r)
         {
             var sb = new StringBuilder();
             var w = new StringBuilderStream(sb);
-            Serialize(o, r, w);
+            Serialize(o, w, r);
             return sb.ToString();
         }
+        #endregion
+        public abstract void Serialize(T t, IWriteStream w, TypeRegistory r);
     }
 }

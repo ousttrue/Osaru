@@ -3,11 +3,11 @@ using System.Linq;
 using System.Text;
 
 
-namespace JsonSan.Serializers
+namespace ObjectStructure.Json.Serializers
 {
     public class ReflectionSerializer<T> : SerializerBase<T>
     {
-        delegate void SerializeFunc(T value, TypeRegistory r, IWriteStream<char> w);
+        delegate void SerializeFunc(T value, IWriteStream w, TypeRegistory r);
         SerializeFunc[] m_serializers;
         public override void Setup(TypeRegistory r)
         {
@@ -21,22 +21,22 @@ namespace JsonSan.Serializers
                 .Select(x =>
                 {
                     keyWriter.Clear();
-                    keySerializer.Serialize(x.Name, r, keyWriter);
+                    keySerializer.Serialize(x.Name, keyWriter, r);
                     keyWriter.Write(":");
                     var key = sb.ToString();
 
                     var serializer = r.GetSerializer(x.FieldType);
-                    return new SerializeFunc((value, rr, w) =>
+                    return new SerializeFunc((value, w, rr) =>
                     {
                         w.Write(key);
-                        serializer.Serialize(x.GetValue(value), rr, w);
+                        serializer.Serialize(x.GetValue(value), w, rr);
                     });
                 })
                 .ToArray()
                 ;
         }
 
-        public override void Serialize(T t, TypeRegistory r, IWriteStream<char> w)
+        public override void Serialize(T t, IWriteStream w, TypeRegistory r)
         {
             w.Write('{');
             bool isFirst = true;
@@ -50,7 +50,7 @@ namespace JsonSan.Serializers
                 {
                     w.Write(',');
                 }
-                serializer(t, r, w);
+                serializer(t, w, r);
             }
             w.Write('}');
         }

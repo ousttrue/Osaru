@@ -1,15 +1,15 @@
 ﻿using System.Linq;
 
 
-namespace JsonSan.Deserializers
+namespace ObjectStructure.Json.Deserializers
 {
     public class TypedArrayDeserializer<T> : DeserializerBase<T[]>
     {
-        DeserializerBase<T> m_deserializer;
+        DeserializerBase<T> m_elementDeserializer;
 
         public override void Setup(TypeRegistory r)
         {
-            m_deserializer = r.GetDeserializer<T>();
+            m_elementDeserializer = r.GetDeserializer<T>();
         }
 
         public override void Deserialize(Node json, ref T[] outValue, TypeRegistory r)
@@ -23,7 +23,7 @@ namespace JsonSan.Deserializers
             int i = 0;
             foreach (var item in json.ArrayItems)
             {
-                m_deserializer.Deserialize(item, ref outValue[i++], r);
+                m_elementDeserializer.Deserialize(item, ref outValue[i++], r);
             }
         }
     }

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace JsonSan.Serializers
+namespace ObjectStructure
 {
-    public interface IWriteStream<T>
+    public interface IWriteStream
     {
         void Clear();
-        void Write(T src);
-        void Write(IEnumerable<T> t);
         void Write(string src);
+        void Write(char c);
     }
 
     static class ArraySegementExtensions
@@ -26,7 +25,7 @@ namespace JsonSan.Serializers
         }
     }
 
-    public class CharArrayStream : IWriteStream<Char>
+    public class CharArrayStream : IWriteStream
     {
         ArraySegment<Char> m_buffer;
         int m_pos;
@@ -66,7 +65,7 @@ namespace JsonSan.Serializers
         }
     }
 
-    public class StringBuilderStream: IWriteStream<Char>
+    public class StringBuilderStream: IWriteStream
     {
         StringBuilder m_sb;
 

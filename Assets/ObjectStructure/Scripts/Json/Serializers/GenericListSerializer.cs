@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 
 
-namespace JsonSan.Serializers
+namespace ObjectStructure.Json.Serializers
 {
     public class GenericListSerializer<T> : SerializerBase<IList<T>>
     {
-        ISerializer m_serializer;
+        ISerializer m_elementSerializer;
 
         public override void Setup(TypeRegistory r)
         {
-            m_serializer= r.GetSerializer<T>();
+            m_elementSerializer= r.GetSerializer<T>();
         }
 
-        public override void Serialize(IList<T> t, TypeRegistory r, IWriteStream<char> w)
+        public override void Serialize(IList<T> t, IWriteStream w, TypeRegistory r)
         {
-            w.Write("[");
+            w.Write('[');
             bool isFirst = true;
             foreach(var item in t)
             {
@@ -25,11 +24,11 @@ namespace JsonSan.Serializers
                 }
                 else
                 {
-                    w.Write(",");
+                    w.Write(',');
                 }
-                m_serializer.Serialize(item, r, w);
+                m_elementSerializer.Serialize(item, w, r);
             }
-            w.Write("]");
+            w.Write(']');
         }
     }
 }

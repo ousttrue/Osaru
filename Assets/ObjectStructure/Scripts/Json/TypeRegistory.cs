@@ -1,12 +1,12 @@
-﻿using JsonSan.Deserializers;
-using JsonSan.Serializers;
+﻿using ObjectStructure.Json.Deserializers;
+using ObjectStructure.Json.Serializers;
 using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
 
-namespace JsonSan
+namespace ObjectStructure.Json
 {
     /// <summary>
     /// not thread safe
@@ -16,18 +16,18 @@ namespace JsonSan
         #region Serialize
         Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()
         {
-            {typeof(Boolean), new LambdaSerializer<Boolean>((x, w)=> w.Write(x ? "true" : "false")) },
-            {typeof(SByte), new LambdaSerializer<SByte>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Int16), new LambdaSerializer<Int16>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Int32), new LambdaSerializer<Int32>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Int64), new LambdaSerializer<Int64>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Byte), new LambdaSerializer<Byte>((x, w)=> w.Write(x.ToString())) },
-            {typeof(UInt16), new LambdaSerializer<UInt16>((x, w)=> w.Write(x.ToString())) },
-            {typeof(UInt32), new LambdaSerializer<UInt32>((x, w)=> w.Write(x.ToString())) },
-            {typeof(UInt64), new LambdaSerializer<UInt64>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Single), new LambdaSerializer<Single>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Double), new LambdaSerializer<Double>((x, w)=> w.Write(x.ToString())) },
-            {typeof(string), new LambdaSerializer<string>((x, w) => w.Write(Node.Quote(x))) },
+            {typeof(Boolean), new LambdaSerializer<Boolean>((x, w, r)=> w.Write(x ? "true" : "false")) },
+            {typeof(SByte), new LambdaSerializer<SByte>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Int16), new LambdaSerializer<Int16>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Int32), new LambdaSerializer<Int32>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Int64), new LambdaSerializer<Int64>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Byte), new LambdaSerializer<Byte>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(UInt16), new LambdaSerializer<UInt16>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(UInt32), new LambdaSerializer<UInt32>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(UInt64), new LambdaSerializer<UInt64>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Single), new LambdaSerializer<Single>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Double), new LambdaSerializer<Double>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(string), new LambdaSerializer<string>((x, w, r) => w.Write(Node.Quote(x))) },
         };
 
         public ISerializer GetSerializer(Type t)

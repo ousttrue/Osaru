@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace JsonSan.Deserializers
+namespace ObjectStructure.Json.Deserializers
 {
     public class LambdaDeserializer<T> : DeserializerBase<T>
     {

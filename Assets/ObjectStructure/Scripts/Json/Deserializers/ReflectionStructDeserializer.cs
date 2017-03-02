@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace JsonSan.Deserializers
+
+namespace ObjectStructure.Json.Deserializers
 {
     public class ReflectionStructDeserializer<T> : DeserializerBase<T>
         where T: struct

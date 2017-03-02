@@ -1,8 +1,4 @@
-﻿
-
-using System;
-
-namespace JsonSan.Deserializers
+﻿namespace ObjectStructure.Json.Deserializers
 {
     public interface IDeserializer
     {
@@ -12,6 +8,7 @@ namespace JsonSan.Deserializers
     {
         public virtual void Setup(TypeRegistory r)
         {
+            // default, do nothing
         }
 
         public abstract void Deserialize(Node json, ref T outValue, TypeRegistory r);

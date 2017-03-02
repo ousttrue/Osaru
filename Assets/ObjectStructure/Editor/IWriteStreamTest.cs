@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
-using JsonSan.Serializers;
 using System.Text;
+using ObjectStructure;
 
 
 public class IWriteStreamTest

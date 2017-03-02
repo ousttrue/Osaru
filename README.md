@@ -1,19 +1,25 @@
 # ObjectStructure
-JSON parser for .Net3.5(Unity).
+.Net3.5(Unity) Serialize library.
 
 ## Features
-* inplace serialize
-* inplace deserialize
+* JSON
+* MessagePack
+* parser without deserialize
+* inplace serialize(json)
+* inplace deserialize(json)
 
 ## Usage
 
 ```cs
-var json = "{\"key\":{ \"nestedKey\": \"nestedValue\" } }";
-var node = Node.Parse(json);
+var src = "{\"key\":{ \"nestedKey\": \"nestedValue\" } }";
+var json = JsonParser.Parse(src);
 
-Assert.AreEqual("nestedValue", node["key"]["nestedKey"].GetString());
+Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
 ```
 
 # ToDO
-* [ ] integrate [MsgPack library](https://github.com/ousttrue/NMessagePack)
+* [x] integrate [MsgPack library](https://github.com/ousttrue/NMessagePack)
+* [ ] reorganize messagepack library
+* [ ] json from messagepack
+* [ ] messagepack from json
 

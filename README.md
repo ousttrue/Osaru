@@ -1,6 +1,10 @@
 # ObjectStructure
 JSON parser for .Net3.5(Unity).
 
+## Features
+* inplace serialize
+* inplace deserialize
+
 ## Usage
 
 ```cs

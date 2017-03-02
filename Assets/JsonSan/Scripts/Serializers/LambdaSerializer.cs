@@ -5,14 +5,14 @@ namespace JsonSan.Serializers
 {
     public class LambdaSerializer<T> : SerializerBase<T>
     {
-        Func<T, string> m_serializer;
-        public LambdaSerializer(Func<T, string> serializer)
+        Action<T, IWriteStream<char>> m_serializer;
+        public LambdaSerializer(Action<T, IWriteStream<char>> serializer)
         {
             m_serializer = serializer;
         }
-        public override string Serialize(T t, TypeRegistory _)
+        public override void Serialize(T t, TypeRegistory _, IWriteStream<char> w)
         {
-            return m_serializer(t);
+            m_serializer(t, w);
         }
     }
 }

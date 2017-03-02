@@ -7,7 +7,9 @@ namespace JsonSan.Serializers
 {
     public interface IWriteStream<T>
     {
-        void Write(IEnumerable<T> src);
+        void Clear();
+        void Write(T src);
+        void Write(IEnumerable<T> t);
         void Write(string src);
     }
 
@@ -43,11 +45,19 @@ namespace JsonSan.Serializers
             m_buffer = buffer;
         }
 
+        public void Clear()
+        {
+            m_pos = 0;
+        }
+        public void Write(char c)
+        {
+            m_buffer.Set(m_pos++, c);
+        }
         public void Write(IEnumerable<char> src)
         {
             foreach (var c in src)
             {
-                m_buffer.Set(m_pos++, c);
+                Write(c);
             }
         }
         public void Write(string src)
@@ -65,12 +75,20 @@ namespace JsonSan.Serializers
             m_sb = sb;
         }
 
+        public void Clear()
+        {
+            m_sb.Length = 0;
+        }
         public void Write(IEnumerable<char> src)
         {
             foreach(var c in src)
             {
                 m_sb.Append(c);
             }
+        }
+        public void Write(Char c)
+        {
+            m_sb.Append(c);
         }
         public void Write(string src)
         {

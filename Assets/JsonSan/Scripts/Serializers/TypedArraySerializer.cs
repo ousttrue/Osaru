@@ -13,10 +13,9 @@ namespace JsonSan.Serializers
             m_serializer = r.GetSerializer<T>();
         }
 
-        public override string Serialize(T[] t, TypeRegistory r)
+        public override void Serialize(T[] t, TypeRegistory r, IWriteStream<char> w)
         {
-            var sb = new StringBuilder();
-            sb.Append("[");
+            w.Write("[");
             bool isFirst = true;
             foreach(var item in t)
             {
@@ -26,12 +25,11 @@ namespace JsonSan.Serializers
                 }
                 else
                 {
-                    sb.Append(",");
+                    w.Write(",");
                 }
-                sb.Append(m_serializer.Serialize(item, r));
+                m_serializer.Serialize(item, r, w);
             }
-            sb.Append("]");
-            return sb.ToString();
+            w.Write("]");
         }
     }
 }

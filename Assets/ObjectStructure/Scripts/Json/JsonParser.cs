@@ -234,7 +234,52 @@ namespace ObjectStructure.Json
             }
         }
 
-        public double GetNumber()
+        public SByte GetSByte()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return SByte.Parse(m_segment.ToString());
+        }
+        public Int16 GetInt16()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return Int16.Parse(m_segment.ToString());
+        }
+        public Int32 GetInt32()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return Int32.Parse(m_segment.ToString());
+        }
+        public Int64 GetInt64()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return Int64.Parse(m_segment.ToString());
+        }
+        public Byte GetByte()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return Byte.Parse(m_segment.ToString());
+        }
+        public UInt16 GetUInt16()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return UInt16.Parse(m_segment.ToString());
+        }
+        public UInt32 GetUInt32()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return UInt32.Parse(m_segment.ToString());
+        }
+        public UInt64 GetUInt64()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return UInt64.Parse(m_segment.ToString());
+        }
+        public float GetSingle()
+        {
+            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            return float.Parse(m_segment.ToString());
+        }
+        public double GetDouble()
         {
             if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return double.Parse(m_segment.ToString());

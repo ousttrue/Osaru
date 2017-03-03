@@ -26,7 +26,7 @@ public class JsonSanTest
             Assert.AreEqual(4, node.End);
             Assert.AreEqual(JsonValueType.Boolean, node.ValueType);
             Assert.AreEqual(true, node.GetBoolean());
-            Assert.Catch(typeof(JsonValueException), () => node.GetNumber());
+            Assert.Catch(typeof(JsonValueException), () => node.GetDouble());
         }
         {
             var node = JsonParser.Parse(" false ");
@@ -45,7 +45,7 @@ public class JsonSanTest
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(1, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
-            Assert.AreEqual(1, (int)node.GetNumber());
+            Assert.AreEqual(1, (int)node.GetDouble());
             Assert.Catch(typeof(JsonValueException), () => node.GetBoolean());
         }
         {
@@ -53,27 +53,27 @@ public class JsonSanTest
             Assert.AreEqual(1, node.Start);
             Assert.AreEqual(3, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
-            Assert.AreEqual(22, (int)node.GetNumber());
+            Assert.AreEqual(22, (int)node.GetDouble());
         }
         {
             var node = JsonParser.Parse(" 3.3 ");
             Assert.AreEqual(1, node.Start);
             Assert.AreEqual(4, node.End);
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
-            Assert.AreEqual(3, (int)node.GetNumber());
-            Assert.AreEqual(3.3f, (float)node.GetNumber());
+            Assert.AreEqual(3, (int)node.GetDouble());
+            Assert.AreEqual(3.3f, (float)node.GetDouble());
         }
         {
             var node = JsonParser.Parse(" -4.44444444444444444444 ");
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
-            Assert.AreEqual(-4, (int)node.GetNumber());
-            Assert.AreEqual(-4.44444444444444444444, node.GetNumber());
+            Assert.AreEqual(-4, (int)node.GetDouble());
+            Assert.AreEqual(-4.44444444444444444444, node.GetDouble());
         }
         {
             var node = JsonParser.Parse(" -5e-4 ");
             Assert.AreEqual(JsonValueType.Number, node.ValueType);
-            Assert.AreEqual(0, (int)node.GetNumber());
-            Assert.AreEqual(-5e-4, node.GetNumber());
+            Assert.AreEqual(0, (int)node.GetDouble());
+            Assert.AreEqual(-5e-4, node.GetDouble());
         }
     }
 
@@ -214,9 +214,9 @@ public class JsonSanTest
             Assert.Catch(() => { var result = node.End; }, "raise exception");
 
             Assert.AreEqual(JsonValueType.Array, node.ValueType);
-            Assert.AreEqual(1, node[0].GetNumber());
-            Assert.AreEqual(2, node[1].GetNumber());
-            Assert.AreEqual(3, node[2].GetNumber());
+            Assert.AreEqual(1, node[0].GetDouble());
+            Assert.AreEqual(2, node[1].GetDouble());
+            Assert.AreEqual(3, node[2].GetDouble());
         }
 
         {
@@ -236,12 +236,12 @@ public class JsonSanTest
             Assert.AreEqual("key", it.Current.GetString());
 
             Assert.IsTrue(it.MoveNext());
-            Assert.AreEqual(1, it.Current.GetNumber());
+            Assert.AreEqual(1, it.Current.GetDouble());
 
             Assert.IsFalse(it.MoveNext());
 
             Assert.AreEqual("key", node[0].GetString());
-            Assert.AreEqual(1, node[1].GetNumber());
+            Assert.AreEqual(1, node[1].GetDouble());
         }
     }
 

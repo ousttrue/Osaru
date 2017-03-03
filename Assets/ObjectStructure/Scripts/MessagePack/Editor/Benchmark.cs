@@ -111,6 +111,8 @@ public class Benchmark
             }
         }
 
+        Assert.AreEqual(original, copy);
+
         using (new Measure("ReSerialize"))
         {
             for (int i = 0; i < Iteration; i++)
@@ -294,7 +296,7 @@ public class Benchmark
     static T SerializeJson<T>(T original)
     {
         T copy = default(T);
-        string bytes = null;
+        string json = null;
 
         // Note:We should check MessagePackSerializer.Get<T>() on every iteration
         // But currenly MsgPack-Cli has bug of get serializer
@@ -310,7 +312,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                bytes = serializer.Serialize(original, r);
+                json = serializer.Serialize(original, r);
             }
         }
 
@@ -319,15 +321,17 @@ public class Benchmark
             for (int i = 0; i < Iteration; i++)
             {
                 //copy = NMessagePack.Deserializer.Deserialize<T>(bytes);
-                copy=deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(bytes), r);
+                copy=deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(json), r);
             }
         }
+
+        Assert.AreEqual(original, copy);
 
         using (new Measure("ReSerialize"))
         {
             for (int i = 0; i < Iteration; i++)
             {
-                bytes = serializer.Serialize(copy, r);
+                json = serializer.Serialize(copy, r);
             }
         }
 

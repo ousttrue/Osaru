@@ -6,23 +6,22 @@ using System.Reflection;
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class ReflectionStructDeserializer<T> : DeserializerBase<T>
-        where T: struct
+    public class ReflectionClassDeserializer<T> : DeserializerBase<T>
+        where T: class
     {
-        delegate void BoxingDeserializeFunc(JsonParser json, object outValue, TypeRegistory r);
-        Dictionary<string, BoxingDeserializeFunc> m_deserializers=new Dictionary<string, BoxingDeserializeFunc>();
+        delegate void DeserializeFunc(JsonParser json, ref T outValue, TypeRegistory r);
+        Dictionary<string, DeserializeFunc> m_deserializers=new Dictionary<string, DeserializeFunc>();
 
-        static BoxingDeserializeFunc CreateFunc<U>(TypeRegistory r, FieldInfo x)
+        static DeserializeFunc CreateFunc<U>(TypeRegistory r, FieldInfo x)
         {
             var deserializer = r.GetDeserializer<U>();
 
-            return new BoxingDeserializeFunc(
-            (JsonParser json, object boxedValue, TypeRegistory rr) =>
+            return new DeserializeFunc(
+            (JsonParser json, ref T outValue, TypeRegistory rr) =>
             {
                 var value = default(U);
                 deserializer.Deserialize(json, ref value, rr);
-                //x.SetValueDirect(__makeref(outValue), value); Unity not implemented
-                x.SetValue(boxedValue, value); 
+                x.SetValue(outValue, value); 
             });
         }
 
@@ -35,23 +34,25 @@ namespace ObjectStructure.Json.Deserializers
                 .Where(x => Attribute.IsDefined(x.FieldType, typeof(SerializableAttribute))))
             {
                 var method = genericMethod.MakeGenericMethod(x.FieldType);
-                m_deserializers.Add(x.Name, (BoxingDeserializeFunc)method.Invoke(null, new object[] { r, x }));
+                m_deserializers.Add(x.Name, (DeserializeFunc)method.Invoke(null, new object[] { r, x }));
             }
         }
 
         public override void Deserialize(JsonParser json, ref T outValue, TypeRegistory r)
         {
-            var boxed = (object)outValue;
+            if (outValue == null)
+            {
+                outValue=Activator.CreateInstance<T>();
+            }
+
             foreach(var kv in json.ObjectItems)
             {
-                BoxingDeserializeFunc d;
+                DeserializeFunc d;
                 if(m_deserializers.TryGetValue(kv.Key, out d))
                 {
-                    d(kv.Value, boxed, r);
+                    d(kv.Value, ref outValue, r);
                 }
             }
-            // unboxing
-            outValue = (T)boxed;
         }
     }
 }

@@ -135,9 +135,15 @@ namespace ObjectStructure.Json
                 Type constructedType = typeof(GenericListDeserializer<>).MakeGenericType(t.GetGenericArguments());
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
+            else if(t.IsClass)
+            {
+                // class
+                Type constructedType = typeof(ReflectionClassDeserializer<>).MakeGenericType(t);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+            }
             else
             {
-                // object
+                // struct
                 Type constructedType = typeof(ReflectionStructDeserializer<>).MakeGenericType(t);
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }

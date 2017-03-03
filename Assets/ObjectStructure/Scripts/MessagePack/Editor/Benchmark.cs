@@ -143,6 +143,51 @@ public class Benchmark
             this.y = y;
             this.z = z;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Vector3)
+            {
+                return this.Equals((Vector3)obj);
+            }
+            return false;
+        }
+
+        public bool NearlyEqual(float a, float b, float epsilon)
+        {
+            float absA = Math.Abs(a);
+            float absB = Math.Abs(b);
+            float diff = Math.Abs(a - b);
+
+            if (a == b)
+            { // shortcut, handles infinities
+                return true;
+            }
+            else if (a == 0 || b == 0 || diff < float.Epsilon)
+            {
+                // a or b is zero or both are extremely close to it
+                // relative error is less meaningful here
+                return diff < epsilon;
+            }
+            else
+            { // use relative error
+                return diff / (absA + absB) < epsilon;
+            }
+        }
+
+        public bool Equals(Vector3 p)
+        {
+            const float EPSILON = 1e-5f;
+            if (!NearlyEqual(x, p.x, EPSILON))return false;
+            if (!NearlyEqual(y, p.y, EPSILON)) return false;
+            if (!NearlyEqual(z, p.z, EPSILON)) return false;
+            return true;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("[{0}, {1}, {2}]", x, y, z);
+        }
     }
 
     [SetUp]
@@ -325,7 +370,7 @@ public class Benchmark
             }
         }
 
-        //Assert.AreEqual(original, copy);
+        Assert.AreEqual(original, copy);
 
         using (new Measure("ReSerialize"))
         {

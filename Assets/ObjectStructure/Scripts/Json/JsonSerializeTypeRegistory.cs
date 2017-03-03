@@ -57,7 +57,13 @@ namespace ObjectStructure.Json
 
         ISerializer CreateSerializer(Type t)
         {
-            if (t.IsArray && t.GetElementType() != null)
+            if (t.IsEnum)
+            {
+                // enum
+                Type constructedType = typeof(EnumStringSerializer<>).MakeGenericType(t);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
+            }
+            else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
                 Type constructedType = typeof(TypedArraySerializer<>).MakeGenericType(t.GetElementType());

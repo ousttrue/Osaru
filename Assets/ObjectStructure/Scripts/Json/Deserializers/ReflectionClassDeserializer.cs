@@ -12,7 +12,7 @@ namespace ObjectStructure.Json.Deserializers
         delegate void DeserializeFunc(JsonParser json, ref T outValue, TypeRegistory r);
         Dictionary<string, DeserializeFunc> m_deserializers=new Dictionary<string, DeserializeFunc>();
 
-        static DeserializeFunc CreateFunc<U>(TypeRegistory r, FieldInfo x)
+        static DeserializeFunc CreateFunc<U>(TypeRegistory r, Setter<U> setter)
         {
             var deserializer = r.GetDeserializer<U>();
 
@@ -21,21 +21,56 @@ namespace ObjectStructure.Json.Deserializers
             {
                 var value = default(U);
                 deserializer.Deserialize(json, ref value, rr);
-                x.SetValue(outValue, value); 
+                setter(outValue, value); 
             });
+        }
+
+        delegate void Setter<U>(object outValue, U value);
+        static Setter<U> CreateFieldSetter<U>(FieldInfo fi)
+        {
+            return (o, v) => fi.SetValue(o, v);
+        }
+        static Setter<U> CreatePropertySetter<U>(PropertyInfo pi)
+        {
+            return (o, v) => pi.SetValue(o, v, null);
         }
 
         public override void Setup(TypeRegistory r)
         {
             var genericMethod = GetType().GetMethod("CreateFunc", BindingFlags.Static|BindingFlags.NonPublic);
-
-            foreach(var x in typeof(T).GetFields(System.Reflection.BindingFlags.Public
+            var genericFieldSetter = GetType().GetMethod("CreateFieldSetter", BindingFlags.Static | BindingFlags.NonPublic);
+            var fieldDeserializers = typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
-                .Where(x => Attribute.IsDefined(x.FieldType, typeof(SerializableAttribute))))
-            {
-                var method = genericMethod.MakeGenericMethod(x.FieldType);
-                m_deserializers.Add(x.Name, (DeserializeFunc)method.Invoke(null, new object[] { r, x }));
-            }
+                .Where(x => Attribute.IsDefined(x.FieldType, typeof(SerializableAttribute)))
+                .Select(x =>
+                {
+                    var method = genericMethod.MakeGenericMethod(x.FieldType);
+                    var setter = genericFieldSetter.MakeGenericMethod(x.FieldType).Invoke(null, new object[] { x });
+                    return new
+                    {
+                        Name = x.Name,
+                        Deserializer = (DeserializeFunc)method.Invoke(null, new object[] { r, setter })
+                    };
+                });
+            var genericPropertySetter = GetType().GetMethod("CreatePropertySetter", BindingFlags.Static | BindingFlags.NonPublic);
+            var propertyDeserializers = typeof(T).GetProperties(System.Reflection.BindingFlags.Public
+                | System.Reflection.BindingFlags.Instance)
+                .Where(x => Attribute.IsDefined(x.PropertyType, typeof(SerializableAttribute)))
+                .Where(x => x.CanRead && x.CanWrite && x.GetIndexParameters().Length == 0)
+                .Select(x =>
+                {
+                    var method = genericMethod.MakeGenericMethod(x.PropertyType);
+                    var setter = genericPropertySetter.MakeGenericMethod(x.PropertyType).Invoke(null, new object[] { x });
+                    return new
+                    {
+                        Name = x.Name,
+                        Deserializer = (DeserializeFunc)method.Invoke(null, new object[] { r, setter })
+                    };
+                });
+
+            m_deserializers = fieldDeserializers.Concat(propertyDeserializers)
+                .ToDictionary(x => x.Name, x => x.Deserializer)
+                ;
         }
 
         public override void Deserialize(JsonParser json, ref T outValue, TypeRegistory r)

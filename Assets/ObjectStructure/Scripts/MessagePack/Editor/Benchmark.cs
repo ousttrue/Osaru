@@ -290,7 +290,7 @@ public class Benchmark
         sw.Stop();
 
         //結果を表示する
-        UnityEngine.Debug.LogFormat("[Benchmark]{0}", sw.Elapsed);
+        UnityEngine.Debug.LogFormat("[Json]{0}", sw.Elapsed);
     }
 
     static T SerializeJson<T>(T original)

@@ -99,6 +99,7 @@ namespace ObjectStructure.Json
             {typeof(UInt64), new LambdaDeserializer<UInt64>((JsonParser json, ref UInt64 outValue, TypeRegistory r) => outValue=(UInt64)json.GetNumber() )},
             {typeof(Single), new LambdaDeserializer<Single>((JsonParser json, ref Single outValue, TypeRegistory r) => outValue=(Single)json.GetNumber() )},
             {typeof(Double), new LambdaDeserializer<Double>((JsonParser json, ref Double outValue, TypeRegistory r) => outValue=(Double)json.GetNumber() )},
+            {typeof(string), new LambdaDeserializer<string>((JsonParser json, ref string outValue, TypeRegistory r) => outValue=json.GetString() )}
         };
 
         public DeserializerBase<T> GetDeserializer<T>()
@@ -121,7 +122,13 @@ namespace ObjectStructure.Json
 
         IDeserializer CreateDeserializer(Type t)
         {
-            if (t.IsArray && t.GetElementType() != null)
+            if (t.IsEnum)
+            {
+                // enum
+                Type constructedType = typeof(EnumStringDeserializer<>).MakeGenericType(t);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+            }
+            else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
                 Type constructedType = typeof(TypedArrayDeserializer<>).MakeGenericType(t.GetElementType());

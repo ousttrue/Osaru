@@ -4,12 +4,12 @@
     {
         ISerializer m_elementSerializer = null;
 
-        public override void Setup(JsonSerializeTypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
             m_elementSerializer = r.GetSerializer<T>();
         }
 
-        public override void Serialize(T[] t, IWriteStream w, JsonSerializeTypeRegistory r)
+        public override void Serialize(T[] t, IWriteStream w, TypeRegistory r)
         {
             w.Write('[');
             bool isFirst = true;

@@ -9,7 +9,7 @@ namespace ObjectStructure.Json.Serializers
 {
     public class ReflectionSerializer<T> : SerializerBase<T>
     {
-        delegate void SerializeFunc(T value, IWriteStream w, JsonSerializeTypeRegistory r);
+        delegate void SerializeFunc(T value, IWriteStream w, TypeRegistory r);
         SerializeFunc[] m_serializers;
 
         struct KeySerializer
@@ -34,7 +34,7 @@ namespace ObjectStructure.Json.Serializers
             }
         }
 
-        public override void Setup(JsonSerializeTypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
             var keyWriter = new KeySerializer(r.GetSerializer(typeof(String)));
 
@@ -46,7 +46,7 @@ namespace ObjectStructure.Json.Serializers
         }
 
         static IEnumerable<SerializeFunc> FieldsSerializers(
-            JsonSerializeTypeRegistory r, KeySerializer keySerializer)
+            TypeRegistory r, KeySerializer keySerializer)
         {
             return typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
@@ -59,7 +59,7 @@ namespace ObjectStructure.Json.Serializers
         }
 
         static SerializeFunc CreateFieldSerializer(
-            JsonSerializeTypeRegistory r
+            TypeRegistory r
             , KeySerializer keySerializer
             , FieldInfo x)
         {
@@ -73,7 +73,7 @@ namespace ObjectStructure.Json.Serializers
         }
 
         static IEnumerable<SerializeFunc> PropertiesSerializers(
-            JsonSerializeTypeRegistory r, KeySerializer keySerializer)
+            TypeRegistory r, KeySerializer keySerializer)
         {
             return typeof(T).GetProperties(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
@@ -87,7 +87,7 @@ namespace ObjectStructure.Json.Serializers
         }
 
         static SerializeFunc CreatePropertySerializer(
-            JsonSerializeTypeRegistory r
+            TypeRegistory r
             , KeySerializer keySerializer
             , PropertyInfo x)
         {
@@ -100,7 +100,7 @@ namespace ObjectStructure.Json.Serializers
             });
         }
 
-        public override void Serialize(T t, IWriteStream w, JsonSerializeTypeRegistory r)
+        public override void Serialize(T t, IWriteStream w, TypeRegistory r)
         {
             w.Write('{');
             bool isFirst = true;

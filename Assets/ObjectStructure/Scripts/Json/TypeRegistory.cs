@@ -11,7 +11,7 @@ namespace ObjectStructure.Json
     /// <summary>
     /// not thread safe
     /// </summary>
-    public class JsonSerializeTypeRegistory
+    public class TypeRegistory
     {
         #region Serialize
         Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()
@@ -89,16 +89,16 @@ namespace ObjectStructure.Json
         #region Deserialize
         Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
         {
-            {typeof(SByte), new LambdaDeserializer<SByte>((JsonParser json, ref SByte outValue, JsonSerializeTypeRegistory r) => outValue=(SByte)json.GetNumber() )},
-            {typeof(Int16), new LambdaDeserializer<Int16>((JsonParser json, ref Int16 outValue, JsonSerializeTypeRegistory r) => outValue=(Int16)json.GetNumber() )},
-            {typeof(Int32), new LambdaDeserializer<Int32>((JsonParser json, ref Int32 outValue, JsonSerializeTypeRegistory r) => outValue=(Int32)json.GetNumber() )},
-            {typeof(Int64), new LambdaDeserializer<Int64>((JsonParser json, ref Int64 outValue, JsonSerializeTypeRegistory r) => outValue=(Int64)json.GetNumber() )},
-            {typeof(Byte), new LambdaDeserializer<Byte>((JsonParser json, ref Byte outValue, JsonSerializeTypeRegistory r) => outValue=(Byte)json.GetNumber() )},
-            {typeof(UInt16), new LambdaDeserializer<UInt16>((JsonParser json, ref UInt16 outValue, JsonSerializeTypeRegistory r) => outValue=(UInt16)json.GetNumber() )},
-            {typeof(UInt32), new LambdaDeserializer<UInt32>((JsonParser json, ref UInt32 outValue, JsonSerializeTypeRegistory r) => outValue=(UInt32)json.GetNumber() )},
-            {typeof(UInt64), new LambdaDeserializer<UInt64>((JsonParser json, ref UInt64 outValue, JsonSerializeTypeRegistory r) => outValue=(UInt64)json.GetNumber() )},
-            {typeof(Single), new LambdaDeserializer<Single>((JsonParser json, ref Single outValue, JsonSerializeTypeRegistory r) => outValue=(Single)json.GetNumber() )},
-            {typeof(Double), new LambdaDeserializer<Double>((JsonParser json, ref Double outValue, JsonSerializeTypeRegistory r) => outValue=(Double)json.GetNumber() )},
+            {typeof(SByte), new LambdaDeserializer<SByte>((JsonParser json, ref SByte outValue, TypeRegistory r) => outValue=(SByte)json.GetNumber() )},
+            {typeof(Int16), new LambdaDeserializer<Int16>((JsonParser json, ref Int16 outValue, TypeRegistory r) => outValue=(Int16)json.GetNumber() )},
+            {typeof(Int32), new LambdaDeserializer<Int32>((JsonParser json, ref Int32 outValue, TypeRegistory r) => outValue=(Int32)json.GetNumber() )},
+            {typeof(Int64), new LambdaDeserializer<Int64>((JsonParser json, ref Int64 outValue, TypeRegistory r) => outValue=(Int64)json.GetNumber() )},
+            {typeof(Byte), new LambdaDeserializer<Byte>((JsonParser json, ref Byte outValue, TypeRegistory r) => outValue=(Byte)json.GetNumber() )},
+            {typeof(UInt16), new LambdaDeserializer<UInt16>((JsonParser json, ref UInt16 outValue, TypeRegistory r) => outValue=(UInt16)json.GetNumber() )},
+            {typeof(UInt32), new LambdaDeserializer<UInt32>((JsonParser json, ref UInt32 outValue, TypeRegistory r) => outValue=(UInt32)json.GetNumber() )},
+            {typeof(UInt64), new LambdaDeserializer<UInt64>((JsonParser json, ref UInt64 outValue, TypeRegistory r) => outValue=(UInt64)json.GetNumber() )},
+            {typeof(Single), new LambdaDeserializer<Single>((JsonParser json, ref Single outValue, TypeRegistory r) => outValue=(Single)json.GetNumber() )},
+            {typeof(Double), new LambdaDeserializer<Double>((JsonParser json, ref Double outValue, TypeRegistory r) => outValue=(Double)json.GetNumber() )},
         };
 
         public DeserializerBase<T> GetDeserializer<T>()

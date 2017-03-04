@@ -27,7 +27,7 @@ namespace ObjectStructure.Json
             {typeof(UInt64), new LambdaSerializer<UInt64>((x, w, r)=> w.Write(x.ToString())) },
             {typeof(Single), new LambdaSerializer<Single>((x, w, r)=> w.Write(x.ToString())) },
             {typeof(Double), new LambdaSerializer<Double>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(string), new LambdaSerializer<string>((x, w, r) => w.Write(JsonParser.Quote(x))) },
+            {typeof(string), new StringSerializer() },
         };
 
         public ISerializer GetSerializer(Type t)
@@ -105,7 +105,7 @@ namespace ObjectStructure.Json
             {typeof(UInt64), new LambdaDeserializer<UInt64>((JsonParser json, ref UInt64 outValue, TypeRegistory r) => outValue=json.GetUInt64() )},
             {typeof(Single), new LambdaDeserializer<Single>((JsonParser json, ref Single outValue, TypeRegistory r) => outValue=json.GetSingle() )},
             {typeof(Double), new LambdaDeserializer<Double>((JsonParser json, ref Double outValue, TypeRegistory r) => outValue=json.GetDouble() )},
-            {typeof(string), new LambdaDeserializer<string>((JsonParser json, ref string outValue, TypeRegistory r) => outValue=json.GetString() )}
+            {typeof(string), new StringDeserializer() }
         };
 
         public DeserializerBase<T> GetDeserializer<T>()

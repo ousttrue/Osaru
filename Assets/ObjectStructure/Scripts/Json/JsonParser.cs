@@ -290,17 +290,7 @@ namespace ObjectStructure.Json
         public string GetString()
         {
             if (ValueType != JsonValueType.String) throw new JsonValueException("is not string: "+m_segment);
-            return Unquote(m_segment.ToString());
-        }
-
-        public static string Quote(string src)
-        {
-            return '"' + src + '"';
-        }
-
-        public static string Unquote(string src)
-        {
-            return src.Substring(1, src.Length - 2);
+            return Deserializers.StringDeserializer.Unquote(m_segment.ToString());
         }
         #endregion
 

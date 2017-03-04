@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ObjectStructure.Json;
+using ObjectStructure.Json.Serializers;
 using System.Linq;
 
 
@@ -83,7 +84,7 @@ public class JsonSanTest
         {
             var value = "hoge";
             var quoted = "\"hoge\"";
-            Assert.AreEqual(quoted, JsonParser.Quote(value));
+            Assert.AreEqual(quoted, StringSerializer.Quote(value));
             var node = JsonParser.Parse(quoted);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(quoted.Length, node.End);
@@ -95,7 +96,7 @@ public class JsonSanTest
             var value = @"fuga
   hoge";
             var quoted = "\"fuga\r\n  hoge\"";
-            Assert.AreEqual(quoted, JsonParser.Quote(value));
+            Assert.AreEqual(quoted, StringSerializer.Quote(value));
             var node = JsonParser.Parse(quoted);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(quoted.Length, node.End);

@@ -4,8 +4,9 @@ namespace ObjectStructure.Json.Deserializers
 {
     public interface IDeserializer
     {
-        object Deserialize(JsonParser json, TypeRegistory r);
         void Setup(TypeRegistory r);
+        object Deserialize<PARSER>(PARSER json, TypeRegistory r)
+            where PARSER : IParser;
     }
     public abstract class DeserializerBase<T> : IDeserializer
     {
@@ -14,17 +15,19 @@ namespace ObjectStructure.Json.Deserializers
             // default, do nothing
         }
 
-        public object Deserialize(JsonParser json, TypeRegistory r)
+        public object Deserialize<PARSER>(PARSER json, TypeRegistory r)
+            where PARSER : IParser
         {
             var value = default(T);
             Deserialize(json, ref value, r);
             return value;
         }
 
-        public abstract void Deserialize(JsonParser json, ref T outValue, TypeRegistory r);
+        public abstract void Deserialize<PARSER>(PARSER json, ref T outValue, TypeRegistory r)
+            where PARSER : IParser;
 
         /*
-        public T Deserialize(JsonParser json, TypeRegistory r)
+        public T Deserialize(PARSER json, TypeRegistory r)
         {
             var value = default(T);
             Deserialize(json, ref value, r);

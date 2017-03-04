@@ -6,7 +6,7 @@ namespace ObjectStructure.Json.Deserializers
 {
     public class StringDeserializer : DeserializerBase<String>
     {
-        public override void Deserialize(JsonParser json, ref String outValue, TypeRegistory r)
+        public override void Deserialize<PARSER>(PARSER json, ref String outValue, TypeRegistory r)
         {
             outValue = json.GetString();
         }

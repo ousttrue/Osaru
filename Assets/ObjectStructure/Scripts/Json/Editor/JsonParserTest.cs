@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using ObjectStructure;
 using ObjectStructure.Json;
 using ObjectStructure.Json.Deserializers;
 using ObjectStructure.Json.Serializers;

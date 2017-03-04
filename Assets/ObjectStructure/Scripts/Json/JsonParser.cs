@@ -8,19 +8,6 @@ using System.Collections.Generic;
 /// </summary>
 namespace ObjectStructure.Json
 {
-    public enum JsonValueType
-    {
-        Unknown,
-
-        String,
-        Number,
-        Object,
-        Array,
-        Boolean,
-
-        Close, // internal use
-    }
-
     public class JsonParseException : FormatException
     {
         public JsonParseException(string msg) : base(msg) { }
@@ -30,7 +17,7 @@ namespace ObjectStructure.Json
         public JsonValueException(string msg) : base(msg) { }
     }
 
-    public struct JsonParser
+    public struct JsonParser: IParser
     {
         StringSegment m_segment;
         public StringSegment Segment
@@ -295,7 +282,7 @@ namespace ObjectStructure.Json
         #endregion
 
         #region CollectionType
-        public JsonParser this[string key]
+        public IParser this[string key]
         {
             get
             {
@@ -310,7 +297,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public JsonParser this[int index]
+        public IParser this[int index]
         {
             get
             {
@@ -326,7 +313,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public IEnumerable<KeyValuePair<String, JsonParser>> ObjectItems
+        public IEnumerable<KeyValuePair<String, IParser>> ObjectItems
         {
             get
             {
@@ -337,17 +324,17 @@ namespace ObjectStructure.Json
                     var key = it.Current.GetString();
 
                     it.MoveNext();
-                    yield return new KeyValuePair<string, JsonParser>(key, it.Current);
+                    yield return new KeyValuePair<string, IParser>(key, it.Current);
                 }
             }
         }
 
-        public IEnumerable<JsonParser> ArrayItems
+        public IEnumerable<IParser> ArrayItems
         {
             get
             {
                 if (ValueType != JsonValueType.Array) throw new JsonValueException("is not array");
-                return GetNodes(false);
+                return GetNodes(false).Cast<IParser>();
             }
         }
 

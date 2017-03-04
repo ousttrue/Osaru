@@ -9,7 +9,7 @@ namespace ObjectStructure.Json.Deserializers
     public class ReflectionStructDeserializer<T> : DeserializerBase<T>
         where T: struct
     {
-        delegate void BoxingDeserializeFunc(JsonParser json, object outValue, TypeRegistory r);
+        delegate void BoxingDeserializeFunc(IParser json, object outValue, TypeRegistory r);
         Dictionary<string, BoxingDeserializeFunc> m_deserializers=new Dictionary<string, BoxingDeserializeFunc>();
 
         static BoxingDeserializeFunc CreateFunc<U>(TypeRegistory r, Setter<U> setter)
@@ -17,7 +17,7 @@ namespace ObjectStructure.Json.Deserializers
             var deserializer = r.GetDeserializer<U>();
 
             return new BoxingDeserializeFunc(
-            (JsonParser json, object boxedValue, TypeRegistory rr) =>
+            (IParser json, object boxedValue, TypeRegistory rr) =>
             {
                 var value = default(U);
                 deserializer.Deserialize(json, ref value, rr);
@@ -76,7 +76,7 @@ namespace ObjectStructure.Json.Deserializers
                 .ToDictionary(x => String.Intern(x.Name), x => x.Deserializer);
         }
 
-        public override void Deserialize(JsonParser json, ref T outValue, TypeRegistory r)
+        public override void Deserialize<PARSER>(PARSER json, ref T outValue, TypeRegistory r)
         {
             var boxed = (object)outValue;
             foreach(var kv in json.ObjectItems)

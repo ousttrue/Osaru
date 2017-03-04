@@ -9,7 +9,7 @@ namespace ObjectStructure.Json.Deserializers
     public class ReflectionClassDeserializer<T> : DeserializerBase<T>
         where T: class
     {
-        delegate void DeserializeFunc(JsonParser json, ref T outValue, TypeRegistory r);
+        delegate void DeserializeFunc(IParser json, ref T outValue, TypeRegistory r);
         Dictionary<string, DeserializeFunc> m_deserializers=new Dictionary<string, DeserializeFunc>();
 
         static DeserializeFunc CreateFunc<U>(TypeRegistory r, Setter<U> setter)
@@ -17,7 +17,7 @@ namespace ObjectStructure.Json.Deserializers
             var deserializer = r.GetDeserializer<U>();
 
             return new DeserializeFunc(
-            (JsonParser json, ref T outValue, TypeRegistory rr) =>
+            (IParser json, ref T outValue, TypeRegistory rr) =>
             {
                 var value = default(U);
                 deserializer.Deserialize(json, ref value, rr);
@@ -73,7 +73,7 @@ namespace ObjectStructure.Json.Deserializers
                 ;
         }
 
-        public override void Deserialize(JsonParser json, ref T outValue, TypeRegistory r)
+        public override void Deserialize<PARSER>(PARSER json, ref T outValue, TypeRegistory r)
         {
             if (outValue == null)
             {

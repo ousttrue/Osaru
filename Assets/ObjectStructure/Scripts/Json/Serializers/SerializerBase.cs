@@ -6,21 +6,21 @@ namespace ObjectStructure.Json.Serializers
 {
     public interface ISerializer
     {
-        void Setup(TypeRegistory r);
-        void Serialize(object o, IWriteStream w, TypeRegistory r);
-        string Serialize(object o, TypeRegistory r);
+        void Setup(ITypeRegistory r);
+        void Serialize(object o, IWriteStream w, ITypeRegistory r);
+        string Serialize(object o, ITypeRegistory r);
     }
     public abstract class SerializerBase<T> : ISerializer
     {
         #region ISerializer
-        public virtual void Setup(TypeRegistory r)
+        public virtual void Setup(ITypeRegistory r)
         {
         }
-        public void Serialize(object o, IWriteStream w, TypeRegistory r)
+        public void Serialize(object o, IWriteStream w, ITypeRegistory r)
         {
             Serialize((T)o, w, r);
         }
-        public string Serialize(object o, TypeRegistory r)
+        public string Serialize(object o, ITypeRegistory r)
         {
             var sb = new StringBuilder();
             var w = new StringBuilderStream(sb);
@@ -28,6 +28,6 @@ namespace ObjectStructure.Json.Serializers
             return sb.ToString();
         }
         #endregion
-        public abstract void Serialize(T t, IWriteStream w, TypeRegistory r);
+        public abstract void Serialize(T t, IWriteStream w, ITypeRegistory r);
     }
 }

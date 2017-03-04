@@ -6,7 +6,7 @@ namespace ObjectStructure.Json.Serializers
 {
     public class StringSerializer : SerializerBase<String>
     {
-        public override void Serialize(String s, IWriteStream w, TypeRegistory r)
+        public override void Serialize(String s, IWriteStream w, ITypeRegistory r)
         {
             Quote(s, w);
         }

@@ -11,7 +11,7 @@ namespace ObjectStructure.Json
     /// <summary>
     /// not thread safe
     /// </summary>
-    public class TypeRegistory
+    public class TypeRegistory: ITypeRegistory
     {
         #region Serialize
         Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()

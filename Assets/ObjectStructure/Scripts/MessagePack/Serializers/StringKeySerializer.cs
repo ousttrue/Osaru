@@ -1,5 +1,5 @@
 
-namespace NMessagePack.Serializers
+namespace ObjectStructure.MessagePack.Serializers
 {
     public abstract class StringKeySerializer<T> : SerializerBase<T>
     {

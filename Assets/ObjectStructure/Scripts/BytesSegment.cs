@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace NMessagePack
+
+namespace ObjectStructure
 {
     public struct BytesSegment : IEnumerable<Byte>
     {

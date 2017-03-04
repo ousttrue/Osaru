@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using NMessagePack.Serializers;
+using ObjectStructure.MessagePack.Serializers;
 
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     public static class FieldInfoExtensions
     {

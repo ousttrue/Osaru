@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using NMessagePack;
+using ObjectStructure.MessagePack;
 
 
 namespace UniMsgPack

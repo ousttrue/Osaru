@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using NMessagePack.Serializers;
+using ObjectStructure.MessagePack.Serializers;
 
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     public static class Serializer
     {

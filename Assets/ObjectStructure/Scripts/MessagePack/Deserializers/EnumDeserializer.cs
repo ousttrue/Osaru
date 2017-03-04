@@ -1,7 +1,7 @@
 using System;
 
 
-namespace NMessagePack.Deserializers
+namespace ObjectStructure.MessagePack.Deserializers
 {
     public class EnumDeserializer<T, U> : DeserializerBase<T>
     {

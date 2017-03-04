@@ -1,9 +1,9 @@
-﻿using NMessagePack.Deserializers;
-using NMessagePack.Serializers;
+﻿using ObjectStructure.MessagePack.Deserializers;
+using ObjectStructure.MessagePack.Serializers;
 using System;
 
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     public static class Experiment
     {

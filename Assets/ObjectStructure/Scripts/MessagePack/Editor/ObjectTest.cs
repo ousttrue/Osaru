@@ -1,5 +1,5 @@
 ﻿
-using NMessagePack;
+using ObjectStructure.MessagePack;
 using NUnit.Framework;
 using System;
 using System.IO;

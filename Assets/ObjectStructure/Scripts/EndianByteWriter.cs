@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace NMessagePack
+namespace ObjectStructure
 {
     public class EndianByteWriter
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 
 
-namespace NMessagePack.Serializers
+namespace ObjectStructure.MessagePack.Serializers
 {
     public class MapSerializer<T> : SerializerBase<T>
         where T : IDictionary

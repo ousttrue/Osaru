@@ -1,7 +1,7 @@
 using System;
 
 
-namespace NMessagePack.Serializers
+namespace ObjectStructure.MessagePack.Serializers
 {
     public class LambdaSerializer<T> : SerializerBase<T>
     {

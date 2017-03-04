@@ -6,12 +6,13 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 
+
 /// <summary>
 /// from https://github.com/neuecc/ZeroFormatter/blob/master/sandbox/PerformanceComparison/Program.cs
 /// </summary>
 public class Benchmark
 {
-    string HtmlPath= UnityEngine.Application.dataPath + "/ObjectStructure/Scripts/MessagePack/Editor/CSharpHtml.txt";
+    string HtmlPath = UnityEngine.Application.dataPath + "/ObjectStructure/Scripts/MessagePack/Editor/CSharpHtml.txt";
 
     const int Iteration = 10;
     static bool dryRun = true;
@@ -105,7 +106,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                bytes = NMessagePack.Serializer.Serialize(original);
+                bytes = ObjectStructure.MessagePack.Serializer.Serialize(original);
             }
         }
 
@@ -113,7 +114,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                copy=NMessagePack.Deserializer.Deserialize<T>(bytes);
+                copy = ObjectStructure.MessagePack.Deserializer.Deserialize<T>(bytes);
             }
         }
 
@@ -123,7 +124,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                bytes = NMessagePack.Serializer.Serialize(copy);
+                bytes = ObjectStructure.MessagePack.Serializer.Serialize(copy);
             }
         }
 
@@ -184,7 +185,7 @@ public class Benchmark
         public bool Equals(Vector3 p)
         {
             const float EPSILON = 1e-5f;
-            if (!NearlyEqual(x, p.x, EPSILON))return false;
+            if (!NearlyEqual(x, p.x, EPSILON)) return false;
             if (!NearlyEqual(y, p.y, EPSILON)) return false;
             if (!NearlyEqual(z, p.z, EPSILON)) return false;
             return true;
@@ -199,9 +200,9 @@ public class Benchmark
     [SetUp]
     public void Setup()
     {
-        NMessagePack.Serializer.Clear();
-        NMessagePack.Deserializer.Clear();
-        NMessagePack.Experiment.Register();
+        ObjectStructure.MessagePack.Serializer.Clear();
+        ObjectStructure.MessagePack.Deserializer.Clear();
+        ObjectStructure.MessagePack.Experiment.Register();
     }
 
     [Test]
@@ -239,7 +240,7 @@ public class Benchmark
 
         var C = SerializeMsgPack(l); Console.WriteLine();
 
-        Validate("NMessagePack", p, l, c, C);
+        Validate("ObjectStructure.MessagePack", p, l, c, C);
 
         Console.WriteLine();
         Console.WriteLine("Additional Benchmarks"); Console.WriteLine();
@@ -309,7 +310,7 @@ public class Benchmark
 
         var C = SerializeJson(l); Console.WriteLine();
 
-        Validate("NMessagePack", p, l, c, C);
+        Validate("ObjectStructure.MessagePack", p, l, c, C);
 
         Console.WriteLine();
         Console.WriteLine("Additional Benchmarks"); Console.WriteLine();
@@ -371,8 +372,8 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                //copy = NMessagePack.Deserializer.Deserialize<T>(bytes);
-                copy=(T)deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(json), r);
+                //copy = ObjectStructure.MessagePack.Deserializer.Deserialize<T>(bytes);
+                copy = (T)deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(json), r);
             }
         }
 
@@ -393,5 +394,4 @@ public class Benchmark
 
         return copy;
     }
-
 }

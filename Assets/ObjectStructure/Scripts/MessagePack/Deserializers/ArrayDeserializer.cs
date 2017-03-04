@@ -1,4 +1,4 @@
-namespace NMessagePack.Deserializers
+namespace ObjectStructure.MessagePack.Deserializers
 {
     public class ArrayDeserializer<T> : DeserializerBase<T[]>
     {

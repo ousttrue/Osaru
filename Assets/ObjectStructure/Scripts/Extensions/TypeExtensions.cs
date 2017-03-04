@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 
 
-namespace NMessagePack
+namespace ObjectStructure
 {
     public static class TypeExtensions
     {

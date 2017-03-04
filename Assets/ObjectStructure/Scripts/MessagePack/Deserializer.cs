@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
-using NMessagePack.Deserializers;
+using ObjectStructure.MessagePack.Deserializers;
 
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     public static class Deserializer
     {

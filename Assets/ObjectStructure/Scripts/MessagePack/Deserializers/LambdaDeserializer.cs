@@ -1,7 +1,7 @@
 using System;
 
 
-namespace NMessagePack.Deserializers
+namespace ObjectStructure.MessagePack.Deserializers
 {
     public class LambdaDeserilaizer<T> : DeserializerBase<T>
     {

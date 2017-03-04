@@ -1,7 +1,8 @@
 using System;
 
 
-namespace NMessagePack.Serializers {
+namespace ObjectStructure.MessagePack.Serializers
+{
     public class BoxingSerializer : SerializerBase<Object>
     {
         protected override void NonNullSerialize(MsgPackWriter w, object o)

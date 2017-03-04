@@ -1,6 +1,6 @@
 using System;
 
-namespace NMessagePack.Serializers
+namespace ObjectStructure.MessagePack.Serializers
 {
     public abstract class SerializerBase<T> : ISerializer
     {

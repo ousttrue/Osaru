@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 using System.IO;
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     [TestFixture]
     public class MapTest

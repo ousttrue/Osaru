@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NMessagePack
+﻿namespace ObjectStructure.MessagePack
 {
     public enum MsgPackType : byte
     {
@@ -290,7 +288,7 @@ namespace NMessagePack
         #endregion
     }
 
-    public enum ExtType: byte
+    public enum ExtType : byte
     {
         UNKNOWN = 0x00,
 

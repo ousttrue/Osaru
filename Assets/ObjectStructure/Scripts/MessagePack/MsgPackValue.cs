@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     public struct MsgPackValue
     {

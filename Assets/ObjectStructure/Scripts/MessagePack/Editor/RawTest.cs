@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     [TestFixture]
     public class RawTest

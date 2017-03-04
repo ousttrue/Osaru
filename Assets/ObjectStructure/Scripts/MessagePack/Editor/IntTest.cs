@@ -2,7 +2,7 @@
 using System;
 
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     [TestFixture]
     public class IntTest 

@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Linq;
 using System;
 
-namespace NMessagePack.Serializers
+namespace ObjectStructure.MessagePack.Serializers
 {
     public class ClassReflectionSerializer<T> : StringKeySerializer<T>
         where T : class

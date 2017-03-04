@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 
-namespace NMessagePack.Deserializers
+namespace ObjectStructure.MessagePack.Deserializers
 {
     public class GenericListDeserializer<T, V> : DeserializerBase<T>
         where T : IList<V>

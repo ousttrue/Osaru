@@ -1,4 +1,4 @@
-﻿namespace NMessagePack.Deserializers
+﻿namespace ObjectStructure.MessagePack.Deserializers
 {
     public abstract class DeserializerBase<T> : IDeserializer
     {

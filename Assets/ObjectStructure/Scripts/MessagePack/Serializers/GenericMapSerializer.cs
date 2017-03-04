@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 
-namespace NMessagePack.Serializers
+namespace ObjectStructure.MessagePack.Serializers
 {
     public class GenericMapSerializer<K, V> : SerializerBase<IDictionary<K, V>>
     {

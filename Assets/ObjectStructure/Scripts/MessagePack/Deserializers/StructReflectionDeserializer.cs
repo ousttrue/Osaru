@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 
 
-namespace NMessagePack.Deserializers
+namespace ObjectStructure.MessagePack.Deserializers
 {
     public class StructReflectionDeserializer<T> : DeserializerBase<T>
             where T : struct

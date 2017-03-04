@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 
 
-namespace NMessagePack.Serializers{
+namespace ObjectStructure.MessagePack.Serializers{
     public class StructReflectionSerializer<T> : StringKeySerializer<T>
         where T : struct
     {

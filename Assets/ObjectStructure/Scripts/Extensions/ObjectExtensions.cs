@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace NMessagePack
+namespace ObjectStructure.MessagePack
 {
     public static class ObjectExtensions
     {

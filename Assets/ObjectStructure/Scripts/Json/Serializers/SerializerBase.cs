@@ -1,33 +1,26 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 
 namespace ObjectStructure.Json.Serializers
 {
-    public interface ISerializer
+    public interface ISerializer<T> : Serialization.ITypeInitializer
     {
-        void Setup(ITypeRegistory r);
-        void Serialize(object o, IWriteStream w, ITypeRegistory r);
-        string Serialize(object o, ITypeRegistory r);
+        void Serialize(T t, IWriteStream w);
     }
-    public abstract class SerializerBase<T> : ISerializer
+
+    public static class SerializerBaseExtensions
     {
-        #region ISerializer
-        public virtual void Setup(ITypeRegistory r)
+        public static void Serialize<T>(this ISerializer<T> s, object o, IWriteStream w)
         {
+            s.Serialize((T)o, w);
         }
-        public void Serialize(object o, IWriteStream w, ITypeRegistory r)
-        {
-            Serialize((T)o, w, r);
-        }
-        public string Serialize(object o, ITypeRegistory r)
+
+        public static string Serialize<T>(this ISerializer<T> s, object o)
         {
             var sb = new StringBuilder();
             var w = new StringBuilderStream(sb);
-            Serialize(o, w, r);
+            s.Serialize(o, w);
             return sb.ToString();
         }
-        #endregion
-        public abstract void Serialize(T t, IWriteStream w, ITypeRegistory r);
     }
 }

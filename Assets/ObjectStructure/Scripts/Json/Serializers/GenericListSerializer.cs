@@ -3,20 +3,20 @@
 
 namespace ObjectStructure.Json.Serializers
 {
-    public class GenericListSerializer<T> : SerializerBase<IList<T>>
+    public class GenericListSerializer<T> : ISerializer<IList<T>>
     {
-        ISerializer m_elementSerializer;
+        ISerializer<T> m_elementSerializer;
 
-        public override void Setup(ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
-            m_elementSerializer= r.GetSerializer<T>();
+            m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public override void Serialize(IList<T> t, IWriteStream w, ITypeRegistory r)
+        public void Serialize(IList<T> t, IWriteStream w)
         {
             w.Write('[');
             bool isFirst = true;
-            foreach(var item in t)
+            foreach (var item in t)
             {
                 if (isFirst)
                 {
@@ -26,7 +26,7 @@ namespace ObjectStructure.Json.Serializers
                 {
                     w.Write(',');
                 }
-                m_elementSerializer.Serialize(item, w, r);
+                m_elementSerializer.Serialize(item, w);
             }
             w.Write(']');
         }

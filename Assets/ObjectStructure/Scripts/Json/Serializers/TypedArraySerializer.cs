@@ -1,15 +1,15 @@
 ﻿namespace ObjectStructure.Json.Serializers
 {
-    public class TypedArraySerializer<T> : SerializerBase<T[]>
+    public class TypedArraySerializer<T> : ISerializer<T[]>
     {
-        ISerializer m_elementSerializer = null;
+        ISerializer<T> m_elementSerializer = null;
 
-        public override void Setup(ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
-            m_elementSerializer = r.GetSerializer<T>();
+            m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public override void Serialize(T[] t, IWriteStream w, ITypeRegistory r)
+        public void Serialize(T[] t, IWriteStream w)
         {
             w.Write('[');
             bool isFirst = true;
@@ -23,7 +23,7 @@
                 {
                     w.Write(',');
                 }
-                m_elementSerializer.Serialize(item, w, r);
+                m_elementSerializer.Serialize(item, w);
             }
             w.Write(']');
         }

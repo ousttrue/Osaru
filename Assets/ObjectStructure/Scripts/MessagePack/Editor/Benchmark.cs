@@ -5,7 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
-
+using ObjectStructure.Json.Serializers;
 
 /// <summary>
 /// from https://github.com/neuecc/ZeroFormatter/blob/master/sandbox/PerformanceComparison/Program.cs
@@ -357,14 +357,14 @@ public class Benchmark
         // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
 
         var r = new ObjectStructure.Json.TypeRegistory();
-        var serializer = r.GetSerializer<T>();
+        var serializer = (ISerializer<T>)r.GetSerializer<T>();
         var deserializer = r.GetDeserializer(typeof(T));
 
         using (new Measure("Serialize"))
         {
             for (int i = 0; i < Iteration; i++)
             {
-                json = serializer.Serialize(original, r);
+                json = serializer.Serialize(original);
             }
         }
 
@@ -383,7 +383,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                json = serializer.Serialize(copy, r);
+                json = serializer.Serialize(copy);
             }
         }
 

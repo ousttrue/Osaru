@@ -3,18 +3,18 @@
 
 namespace ObjectStructure.Json.Serializers
 {
-    public class EnumStringSerializer<T> : SerializerBase<T>
+    public class EnumStringSerializer<T> : ISerializer<T>
     {
-        SerializerBase<string> m_stringSerializer;
+        ISerializer<string> m_stringSerializer;
 
-        public override void Setup(ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
-            m_stringSerializer = (SerializerBase<string>)r.GetSerializer<String>();
+            m_stringSerializer = (ISerializer<string>)r.GetSerializer<String>();
         }
 
-        public override void Serialize(T t, IWriteStream w, ITypeRegistory r)
+        public void Serialize(T t, IWriteStream w)
         {
-            m_stringSerializer.Serialize(t.ToString(), w, r);
+            m_stringSerializer.Serialize(t.ToString(), w);
         }
     }
 }

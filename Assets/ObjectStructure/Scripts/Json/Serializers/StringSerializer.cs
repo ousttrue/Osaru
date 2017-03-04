@@ -4,9 +4,14 @@ using System.Text;
 
 namespace ObjectStructure.Json.Serializers
 {
-    public class StringSerializer : SerializerBase<String>
+    public class StringSerializer : ISerializer<String>
     {
-        public override void Serialize(String s, IWriteStream w, ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void Serialize(String s, IWriteStream w)
         {
             Quote(s, w);
         }

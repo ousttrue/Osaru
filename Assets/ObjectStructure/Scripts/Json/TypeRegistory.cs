@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-
+using ObjectStructure.Serialization;
 
 namespace ObjectStructure.Json
 {
@@ -14,25 +14,25 @@ namespace ObjectStructure.Json
     public class TypeRegistory: ITypeRegistory
     {
         #region Serialize
-        Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()
+        Dictionary<Type, ITypeInitializer> m_serializerMap = new Dictionary<Type, ITypeInitializer>()
         {
-            {typeof(Boolean), new LambdaSerializer<Boolean>((x, w, r)=> w.Write(x ? "true" : "false")) },
-            {typeof(SByte), new LambdaSerializer<SByte>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(Int16), new LambdaSerializer<Int16>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(Int32), new LambdaSerializer<Int32>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(Int64), new LambdaSerializer<Int64>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(Byte), new LambdaSerializer<Byte>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(UInt16), new LambdaSerializer<UInt16>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(UInt32), new LambdaSerializer<UInt32>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(UInt64), new LambdaSerializer<UInt64>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(Single), new LambdaSerializer<Single>((x, w, r)=> w.Write(x.ToString())) },
-            {typeof(Double), new LambdaSerializer<Double>((x, w, r)=> w.Write(x.ToString())) },
+            {typeof(Boolean), new LambdaSerializer<Boolean>((x, w)=> w.Write(x ? "true" : "false")) },
+            {typeof(SByte), new LambdaSerializer<SByte>((x, w)=> w.Write(x.ToString())) },
+            {typeof(Int16), new LambdaSerializer<Int16>((x, w)=> w.Write(x.ToString())) },
+            {typeof(Int32), new LambdaSerializer<Int32>((x, w)=> w.Write(x.ToString())) },
+            {typeof(Int64), new LambdaSerializer<Int64>((x, w)=> w.Write(x.ToString())) },
+            {typeof(Byte), new LambdaSerializer<Byte>((x, w)=> w.Write(x.ToString())) },
+            {typeof(UInt16), new LambdaSerializer<UInt16>((x, w)=> w.Write(x.ToString())) },
+            {typeof(UInt32), new LambdaSerializer<UInt32>((x, w)=> w.Write(x.ToString())) },
+            {typeof(UInt64), new LambdaSerializer<UInt64>((x, w)=> w.Write(x.ToString())) },
+            {typeof(Single), new LambdaSerializer<Single>((x, w)=> w.Write(x.ToString())) },
+            {typeof(Double), new LambdaSerializer<Double>((x, w)=> w.Write(x.ToString())) },
             {typeof(string), new StringSerializer() },
         };
 
-        public ISerializer GetSerializer(Type t)
+        public ITypeInitializer GetSerializer(Type t)
         {
-            ISerializer serializer;
+            ITypeInitializer serializer;
             if (m_serializerMap.TryGetValue(t, out serializer))
             {
                 return serializer;
@@ -48,26 +48,26 @@ namespace ObjectStructure.Json
             return serializer;
         }
 
-        public ISerializer GetSerializer<T>()
+        public ITypeInitializer GetSerializer<T>()
         {
             var t = typeof(T);
             var serializer= GetSerializer(t);
             return serializer;
         }
 
-        ISerializer CreateSerializer(Type t)
+        ITypeInitializer CreateSerializer(Type t)
         {
             if (t.IsEnum)
             {
                 // enum
                 Type constructedType = typeof(EnumStringSerializer<>).MakeGenericType(t);
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
                 Type constructedType = typeof(TypedArraySerializer<>).MakeGenericType(t.GetElementType());
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.GetInterfaces().Any(x =>
             x.IsGenericType &&
@@ -75,19 +75,19 @@ namespace ObjectStructure.Json
             {
                 // IList<T>
                 Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if(t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else
             {
                 // object
                 Type constructedType = typeof(ReflectionSerializer<>).MakeGenericType(t);
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion
@@ -173,7 +173,7 @@ namespace ObjectStructure.Json
         }
         #endregion
 
-        public void AddType<T>(SerializerBase<T> serializer, DeserializerBase<T> deserializer)
+        public void AddType<T>(ISerializer<T> serializer, DeserializerBase<T> deserializer)
         {
             m_serializerMap.Add(typeof(T), serializer);
             m_deserializerMap.Add(typeof(T), deserializer);

@@ -1,12 +1,26 @@
 # ObjectStructure
-.Net3.5(Unity) Serialize library.
+.Net3.5(Unity) Serialization library.
+
+```
++-------------+             +-----------+
+|IDeserializer| -> value -> |ISerializer|
++-------------+             +-----------+
+  A                           |
+  |                           V
++-------+    convert        +----------+
+|IParser| ----------------> |IFormatter|
++-------+                   +----------+
+  A                           |
+  |                           V
+JSON, MessagePack           JSON, MessagePack
+```
 
 ## Features
 * JSON
 * MessagePack
-* parser without deserialize
-* inplace serialize(json)
-* inplace deserialize(json)
+* separate parser and deserializer
+* inplace serialization(json)
+* inplace deserialization(json)
 
 ## Usage
 

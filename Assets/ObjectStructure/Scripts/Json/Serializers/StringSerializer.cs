@@ -1,26 +1,75 @@
 ﻿using System;
 using System.Text;
 
+
 namespace ObjectStructure.Json.Serializers
 {
     public class StringSerializer : SerializerBase<String>
     {
         public override void Serialize(String s, IWriteStream w, TypeRegistory r)
         {
-            StaticSerialize(s, w);
+            Quote(s, w);
         }
 
-        public static void StaticSerialize(String s, IWriteStream w)
+        public static void Escape(String s, IWriteStream w)
         {
-            w.Write('"');
-            w.Write(s);
-            w.Write('"');
-        }
+            var it = s.GetEnumerator();
+            while(it.MoveNext())
+            {
+                switch(it.Current)
+                {
+                    case '"':
+                    case '\\':
+                    case '/':
+                        // \\ prefix
+                        w.Write('\\');
+                        w.Write(it.Current);
+                        break;
 
-        public static string Quote(string src)
+                    case '\b':
+                        w.Write('\\');
+                        w.Write('b');
+                        break;
+                    case '\f':
+                        w.Write('\\');
+                        w.Write('f');
+                        break;
+                    case '\n':
+                        w.Write('\\');
+                        w.Write('n');
+                        break;
+                    case '\r':
+                        w.Write('\\');
+                        w.Write('r');
+                        break;
+                    case '\t':
+                        w.Write('\\');
+                        w.Write('t');
+                        break;
+
+                    default:
+                        w.Write(it.Current);
+                        break;
+                }
+            }
+        }
+        public static string Escape(String s)
         {
             var sb = new StringBuilder();
-            StaticSerialize(src, new StringBuilderStream(sb));
+            Escape(s, new StringBuilderStream(sb));
+            return sb.ToString();
+        }
+
+        public static void Quote(String s, IWriteStream w)
+        {
+            w.Write('"');
+            Escape(s, w);
+            w.Write('"');
+        }
+        public static string Quote(string s)
+        {
+            var sb = new StringBuilder();
+            Quote(s, new StringBuilderStream(sb));
             return sb.ToString();
         }
     }

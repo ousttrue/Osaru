@@ -24,6 +24,12 @@ public class Benchmark
         public virtual string LastName { get; set; }
         public virtual Sex Sex { get; set; }
 
+        public override string ToString()
+        {
+            return String.Format("{{{0}, {1}, {2}, {3}}}"
+                , Age, FirstName, LastName, Sex);
+        }
+
         public bool Equals(Person other)
         {
             if (other == null)

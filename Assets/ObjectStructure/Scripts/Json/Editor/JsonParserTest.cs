@@ -1,10 +1,11 @@
 ﻿using NUnit.Framework;
 using ObjectStructure.Json;
+using ObjectStructure.Json.Deserializers;
 using ObjectStructure.Json.Serializers;
 using System.Linq;
 
 
-public class JsonSanTest
+public class JsonParserTest
 {
     [Test]
     public void NullTest()
@@ -95,13 +96,66 @@ public class JsonSanTest
         {
             var value = @"fuga
   hoge";
-            var quoted = "\"fuga\r\n  hoge\"";
+            var quoted = "\"fuga\\r\\n  hoge\"";
             Assert.AreEqual(quoted, StringSerializer.Quote(value));
             var node = JsonParser.Parse(quoted);
             Assert.AreEqual(0, node.Start);
             Assert.AreEqual(quoted.Length, node.End);
             Assert.AreEqual(JsonValueType.String, node.ValueType);
             Assert.AreEqual(value, node.GetString());
+        }
+    }
+
+    [Test]
+    public void StringEscapeTest()
+    {
+        {
+            var value = "\"";
+            var escaped = "\\\"";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "\\";
+            var escaped = "\\\\";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "/";
+            var escaped = "\\/";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "\b";
+            var escaped = "\\b";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "\f";
+            var escaped = "\\f";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "\n";
+            var escaped = "\\n";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "\r";
+            var escaped = "\\r";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
+        }
+        {
+            var value = "\t";
+            var escaped = "\\t";
+            Assert.AreEqual(escaped, StringSerializer.Escape(value));
+            Assert.AreEqual(value, StringDeserializer.Unescape(escaped));
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace ObjectStructure.Json.Deserializers
+namespace ObjectStructure.Serialization.Deserializers
 {
     public class EnumStringDeserializer<T> : IDeserializer<T>
     {

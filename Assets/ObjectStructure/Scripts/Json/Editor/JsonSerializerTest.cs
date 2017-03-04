@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using ObjectStructure.Serialization.Serializers;
+using ObjectStructure.Serialization;
 
 
 namespace ObjectStruct

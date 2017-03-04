@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace ObjectStructure.Json.Deserializers
+namespace ObjectStructure.Serialization.Deserializers
 {
     #region Byte, UInt16, 32, 64
     public class ByteDeserializer : IDeserializer<Byte>

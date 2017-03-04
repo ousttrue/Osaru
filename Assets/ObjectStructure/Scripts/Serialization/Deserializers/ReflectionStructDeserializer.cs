@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 
 
-namespace ObjectStructure.Json.Deserializers
+namespace ObjectStructure.Serialization.Deserializers
 {
     public class ReflectionStructDeserializer<T> : IDeserializer<T>
         where T: struct

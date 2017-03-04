@@ -357,7 +357,7 @@ public class Benchmark
         // so, get serializer at first.
         // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
 
-        var r = new ObjectStructure.Json.TypeRegistory();
+        var r = new ObjectStructure.Serialization.TypeRegistory();
         var serializer = (ISerializer<T>)r.GetSerializer<T>();
         var deserializer = r.GetDeserializer<T>();
 

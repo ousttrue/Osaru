@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 
-namespace ObjectStructure.Json.Deserializers
+namespace ObjectStructure.Serialization.Deserializers
 {
     public class GenericListDeserializer<T, U> : IDeserializer<U>
         where U: IList<T>

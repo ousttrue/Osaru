@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using ObjectStructure.Json.Deserializers;
-using ObjectStructure.Serialization;
 using ObjectStructure.Serialization.Serializers;
+using ObjectStructure.Serialization.Deserializers;
 
 
-namespace ObjectStructure.Json
+namespace ObjectStructure.Serialization
 {
     /// <summary>
     /// not thread safe
@@ -27,7 +26,7 @@ namespace ObjectStructure.Json
             {typeof(UInt64), new LambdaSerializer<UInt64>((x, w)=> w.Write(x.ToString())) },
             {typeof(Single), new LambdaSerializer<Single>((x, w)=> w.Write(x.ToString())) },
             {typeof(Double), new LambdaSerializer<Double>((x, w)=> w.Write(x.ToString())) },
-            {typeof(string), new LambdaSerializer<String>((x, w)=> w.Write(JsonString.Quote(x))) },
+            {typeof(string), new LambdaSerializer<String>((x, w)=> w.Write(Json.JsonString.Quote(x))) },
         };
 
         public ITypeInitializer GetSerializer(Type t)

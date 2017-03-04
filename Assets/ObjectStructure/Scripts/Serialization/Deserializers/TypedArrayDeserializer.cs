@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 
 
-namespace ObjectStructure.Json.Deserializers
+namespace ObjectStructure.Serialization.Deserializers
 {
     public class TypedArrayDeserializer<T> : IDeserializer<T[]>
     {

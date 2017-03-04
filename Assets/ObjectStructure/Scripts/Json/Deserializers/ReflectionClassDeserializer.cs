@@ -69,7 +69,7 @@ namespace ObjectStructure.Json.Deserializers
                 });
 
             m_deserializers = fieldDeserializers.Concat(propertyDeserializers)
-                .ToDictionary(x => x.Name, x => x.Deserializer)
+                .ToDictionary(x => String.Intern(x.Name), x => x.Deserializer)
                 ;
         }
 

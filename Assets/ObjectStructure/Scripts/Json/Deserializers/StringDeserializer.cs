@@ -76,7 +76,12 @@ namespace ObjectStructure.Json.Deserializers
         {
             var sb = new StringBuilder();
             Unquote(src, new StringBuilderStream(sb));
-            return sb.ToString();
+            var str = sb.ToString();
+            if (str.Length < 32)
+            {
+                str = String.Intern(str);
+            }
+            return str;
         }
     }
 }

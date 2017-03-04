@@ -2,7 +2,8 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using ObjectStructure.Json.Serializers;
+using ObjectStructure.Serialization.Serializers;
+
 
 namespace ObjectStruct
 {

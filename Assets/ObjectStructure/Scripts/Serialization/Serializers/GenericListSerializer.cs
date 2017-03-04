@@ -1,15 +1,19 @@
-﻿namespace ObjectStructure.Json.Serializers
+﻿using System.Collections.Generic;
+
+
+namespace ObjectStructure.Serialization.Serializers
 {
-    public class TypedArraySerializer<T> : ISerializer<T[]>
+    public class GenericListSerializer<T, U> : ISerializer<U>
+        where U: IList<T>
     {
-        ISerializer<T> m_elementSerializer = null;
+        ISerializer<T> m_elementSerializer;
 
         public void Setup(ITypeRegistory r)
         {
             m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public void Serialize(T[] t, IWriteStream w)
+        public void Serialize(U t, IWriteStream w)
         {
             w.Write('[');
             bool isFirst = true;

@@ -2,7 +2,7 @@
 using ObjectStructure;
 using ObjectStructure.Json;
 using ObjectStructure.Json.Deserializers;
-using ObjectStructure.Json.Serializers;
+using ObjectStructure.Serialization.Serializers;
 using System.Linq;
 
 

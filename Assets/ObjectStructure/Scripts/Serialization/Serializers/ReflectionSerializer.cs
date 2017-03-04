@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 
 
-namespace ObjectStructure.Json.Serializers
+namespace ObjectStructure.Serialization.Serializers
 {
     public class ReflectionSerializer<T> : ISerializer<T>
     {

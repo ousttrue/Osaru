@@ -5,7 +5,8 @@ using System.Linq;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
-using ObjectStructure.Json.Serializers;
+using ObjectStructure.Serialization.Serializers;
+
 
 /// <summary>
 /// from https://github.com/neuecc/ZeroFormatter/blob/master/sandbox/PerformanceComparison/Program.cs

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace ObjectStructure.Json.Serializers
+namespace ObjectStructure.Serialization.Serializers
 {
     public class LambdaSerializer<T> : ISerializer<T>
     {

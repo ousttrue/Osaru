@@ -1,14 +1,9 @@
 ﻿using System.Text;
 
 
-namespace ObjectStructure.Json.Serializers
+namespace ObjectStructure.Serialization.Serializers
 {
-    public interface ISerializer<T> : Serialization.ITypeInitializer
-    {
-        void Serialize(T t, IWriteStream w);
-    }
-
-    public static class SerializerBaseExtensions
+    public static class ISerializerExtensions
     {
         public static void Serialize<T>(this ISerializer<T> s, object o, IWriteStream w)
         {

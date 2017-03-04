@@ -2,7 +2,7 @@
 using System.Text;
 
 
-namespace ObjectStructure.Json.Serializers
+namespace ObjectStructure.Serialization.Serializers
 {
     public class StringSerializer : ISerializer<String>
     {

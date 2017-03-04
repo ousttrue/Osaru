@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class GenericListDeserializer<PARSER, T, U> : IDeserializer<PARSER, U>
-        where PARSER : IParser<PARSER>
+    public class GenericListDeserializer<T, U> : IDeserializer<U>
         where U: IList<T>
     {
-        IDeserializer<PARSER, T> m_elementDeserializer;
+        IDeserializer<T> m_elementDeserializer;
 
         public void Setup(ITypeRegistory r)
         {
-            m_elementDeserializer = (IDeserializer<PARSER, T>)r.GetDeserializer<T>();
+            m_elementDeserializer = r.GetDeserializer<T>();
         }
 
-        public void Deserialize(PARSER json, ref U outValue)
+        public void Deserialize<PARSER>(PARSER json, ref U outValue)
+            where PARSER : IParser<PARSER>
         {
             if (outValue == null)
             {

@@ -3,17 +3,17 @@
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class TypedArrayDeserializer<PARSER, T> : IDeserializer<PARSER, T[]>
-        where PARSER : IParser<PARSER>
+    public class TypedArrayDeserializer<T> : IDeserializer<T[]>
     {
-        IDeserializer<PARSER, T> m_elementDeserializer;
+        IDeserializer<T> m_elementDeserializer;
 
         public void Setup(ITypeRegistory r)
         {
-            m_elementDeserializer = (IDeserializer<PARSER, T>)r.GetDeserializer<T>();
+            m_elementDeserializer = r.GetDeserializer<T>();
         }
 
-        public void Deserialize(PARSER json, ref T[] outValue)
+        public void Deserialize<PARSER>(PARSER json, ref T[] outValue)
+        where PARSER : IParser<PARSER>
         {
             var count = json.ArrayItems.Count();
             if (outValue == null || outValue.Length != count)

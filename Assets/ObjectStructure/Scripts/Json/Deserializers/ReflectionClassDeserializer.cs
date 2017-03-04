@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ObjectStructure.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,66 +7,90 @@ using System.Reflection;
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class ReflectionClassDeserializer<PARSER, T> : IDeserializer<PARSER, T>
-        where PARSER : IParser<PARSER>
+    public class ReflectionClassDeserializer<T> : IDeserializer<T>
         where T : class
     {
-        delegate void DeserializeFunc(PARSER parser, ref T outValue);
-        Dictionary<string, DeserializeFunc> m_deserializers=new Dictionary<string, DeserializeFunc>();
-
-        static DeserializeFunc CreateFunc<U>(ITypeRegistory r, Setter<U> setter)
+        class DeserializeCaller
         {
-            var deserializer = (IDeserializer<PARSER, U>)r.GetDeserializer<U>();
-
-            return new DeserializeFunc(
-            (PARSER json, ref T outValue) =>
+            delegate void Setter<U>(object outValue, U value);
+            static Setter<U> CreateFieldSetter<U>(FieldInfo fi)
             {
-                var value = default(U);
-                deserializer.Deserialize(json, ref value);
-                setter(outValue, value); 
-            });
-        }
+                return (o, v) => fi.SetValue(o, v);
+            }
+            static Setter<U> CreatePropertySetter<U>(PropertyInfo pi)
+            {
+                return (o, v) => pi.SetValue(o, v, null);
+            }
 
-        delegate void Setter<U>(object outValue, U value);
-        static Setter<U> CreateFieldSetter<U>(FieldInfo fi)
-        {
-            return (o, v) => fi.SetValue(o, v);
+            delegate void DeserializeFunc<PARSER>(PARSER json, ref T outValue);
+            static DeserializeFunc<PARSER> CreateFunc<PARSER, U>(IDeserializer<U> deserializer, Setter<U> setter)
+                where PARSER : IParser<PARSER>
+            {
+                return new DeserializeFunc<PARSER>(
+                (PARSER json, ref T outValue) =>
+                {
+                    var value = default(U);
+                    deserializer.Deserialize(json, ref value);
+                    setter(outValue, value);
+                });
+            }
+
+            object m_setter;
+            Type m_type;
+            ITypeInitializer m_deserializer;
+            public DeserializeCaller(FieldInfo fi, ITypeInitializer deserializer)
+            {
+                m_type = fi.FieldType;
+                m_deserializer = deserializer;
+                var genericFieldSetter = GetType().GetMethod("CreateFieldSetter", BindingFlags.Static | BindingFlags.NonPublic);
+                m_setter = genericFieldSetter.MakeGenericMethod(m_type).Invoke(null, new object[] { fi });
+            }
+            public DeserializeCaller(PropertyInfo pi, ITypeInitializer deserializer)
+            {
+                m_type = pi.PropertyType;
+                m_deserializer = deserializer;
+                var genericPropertySetter = GetType().GetMethod("CreatePropertySetter", BindingFlags.Static | BindingFlags.NonPublic);
+                m_setter = genericPropertySetter.MakeGenericMethod(m_type).Invoke(null, new object[] { pi });
+            }
+
+            object m_deserializerFunc;
+            public void Deserialize<PARSER>(PARSER parser, ref T parentValue)
+            {
+                if (m_deserializerFunc == null)
+                {
+                    var genericMethod = GetType().GetMethod("CreateFunc", BindingFlags.Static | BindingFlags.NonPublic);
+                    var method = genericMethod.MakeGenericMethod(typeof(PARSER), m_type);
+                    m_deserializerFunc = method.Invoke(null, new object[] { m_deserializer, m_setter });
+                }
+                var func = (DeserializeFunc<PARSER>)m_deserializerFunc;
+                func(parser, ref parentValue);
+            }
         }
-        static Setter<U> CreatePropertySetter<U>(PropertyInfo pi)
-        {
-            return (o, v) => pi.SetValue(o, v, null);
-        }
+        Dictionary<string, DeserializeCaller> m_deserializers = new Dictionary<string, DeserializeCaller>();
 
         public void Setup(ITypeRegistory r)
         {
-            var genericMethod = GetType().GetMethod("CreateFunc", BindingFlags.Static|BindingFlags.NonPublic);
-            var genericFieldSetter = GetType().GetMethod("CreateFieldSetter", BindingFlags.Static | BindingFlags.NonPublic);
             var fieldDeserializers = typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
                 .Where(x => Attribute.IsDefined(x.FieldType, typeof(SerializableAttribute)))
                 .Select(x =>
                 {
-                    var method = genericMethod.MakeGenericMethod(x.FieldType);
-                    var setter = genericFieldSetter.MakeGenericMethod(x.FieldType).Invoke(null, new object[] { x });
                     return new
                     {
                         Name = x.Name,
-                        Deserializer = (DeserializeFunc)method.Invoke(null, new object[] { r, setter })
+                        Deserializer = new DeserializeCaller(x, r.GetDeserializer(x.FieldType))
                     };
                 });
-            var genericPropertySetter = GetType().GetMethod("CreatePropertySetter", BindingFlags.Static | BindingFlags.NonPublic);
             var propertyDeserializers = typeof(T).GetProperties(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
                 .Where(x => Attribute.IsDefined(x.PropertyType, typeof(SerializableAttribute)))
                 .Where(x => x.CanRead && x.CanWrite && x.GetIndexParameters().Length == 0)
                 .Select(x =>
                 {
-                    var method = genericMethod.MakeGenericMethod(x.PropertyType);
-                    var setter = genericPropertySetter.MakeGenericMethod(x.PropertyType).Invoke(null, new object[] { x });
                     return new
                     {
                         Name = x.Name,
-                        Deserializer = (DeserializeFunc)method.Invoke(null, new object[] { r, setter })
+                        Deserializer = new DeserializeCaller(x, r.GetDeserializer(x.PropertyType))
                     };
                 });
 
@@ -74,7 +99,8 @@ namespace ObjectStructure.Json.Deserializers
                 ;
         }
 
-        public void Deserialize(PARSER json, ref T outValue)
+        public void Deserialize<PARSER>(PARSER json, ref T outValue)
+            where PARSER: IParser<PARSER>
         {
             if (outValue == null)
             {
@@ -83,10 +109,10 @@ namespace ObjectStructure.Json.Deserializers
 
             foreach(var kv in json.ObjectItems)
             {
-                DeserializeFunc d;
+                DeserializeCaller d;
                 if(m_deserializers.TryGetValue(kv.Key, out d))
                 {
-                    d(kv.Value, ref outValue);
+                    d.Deserialize(kv.Value, ref outValue);
                 }
             }
         }

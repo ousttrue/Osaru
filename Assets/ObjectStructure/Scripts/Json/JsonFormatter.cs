@@ -62,9 +62,17 @@ namespace ObjectStructure.Json
 
                 case Current.OBJECT:
                     {
-                        if (top.Count != 0 && top.Count%2==0)
+                        if(top.Count%2==0)
                         {
-                            m_w.Write(',');
+                            if (!isKey) throw new JsonFormatException("key exptected");
+                            if (top.Count != 0)
+                            {
+                                m_w.Write(',');
+                            }
+                        }
+                        else
+                        {
+                            if (isKey) throw new JsonFormatException("key not exptected");
                         }
                     }
                     break;

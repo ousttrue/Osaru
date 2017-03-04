@@ -8,7 +8,7 @@ using ObjectStructure.Serialization.Deserializers;
 namespace ObjectStructure.Serialization
 {
     /// <summary>
-    /// not thread safe
+    /// not thread safe. use thread local
     /// </summary>
     public class TypeRegistory: ITypeRegistory
     {

@@ -1,6 +1,6 @@
 ﻿namespace ObjectStructure.MessagePack.Deserializers
 {
-    public abstract class DeserializerBase<T> : IDeserializer
+    public abstract class IDeserializer<T> : IDeserializer
     {
         public object DeserializeObject(MsgPackValue value)
         {

@@ -27,7 +27,7 @@ namespace ObjectStruct
 
             }
             var json = JsonParser.Parse(serialized);
-            deserializer.Deserialize(json, ref deserialized, typeRegistory);
+            deserializer.Deserialize(json, ref deserialized);
 
             Assert.AreEqual(value, deserialized);
         }

@@ -1,21 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class LambdaDeserializer<T> : DeserializerBase<T>
+    public class LambdaDeserializer<PARSER, T> : IDeserializer<PARSER, T>
+        where PARSER : IParser<PARSER>
     {
-        public delegate void DeserializeFunc(IParser json, ref T outValue, ITypeRegistory r);
+        public delegate void DeserializeFunc(PARSER parser, ref T outValue);
         DeserializeFunc m_deserializer;
         public LambdaDeserializer(DeserializeFunc deserializer)
         {
             m_deserializer = deserializer;
         }
 
-        public override void Deserialize<PARSER>(PARSER json, ref T outValue, ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
-            m_deserializer(json, ref outValue, r);
+        }
+
+        public void Deserialize(PARSER parser, ref T outValue)
+        {
+            m_deserializer(parser, ref outValue);
         }
     }
 }

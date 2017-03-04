@@ -93,29 +93,29 @@ namespace ObjectStructure.Json
         #endregion
 
         #region Deserialize
-        Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
+        Dictionary<Type, ITypeInitializer> m_deserializerMap = new Dictionary<Type, ITypeInitializer>
         {
-            {typeof(SByte), new LambdaDeserializer<SByte>((IParser json, ref SByte outValue, ITypeRegistory r) => outValue=json.GetSByte() )},
-            {typeof(Int16), new LambdaDeserializer<Int16>((IParser json, ref Int16 outValue, ITypeRegistory r) => outValue=json.GetInt16() )},
-            {typeof(Int32), new LambdaDeserializer<Int32>((IParser json, ref Int32 outValue, ITypeRegistory r) => outValue=json.GetInt32() )},
-            {typeof(Int64), new LambdaDeserializer<Int64>((IParser json, ref Int64 outValue, ITypeRegistory r) => outValue=json.GetInt64() )},
-            {typeof(Byte),  new LambdaDeserializer<Byte>((IParser json, ref Byte outValue, ITypeRegistory r) => outValue=json.GetByte() )},
-            {typeof(UInt16), new LambdaDeserializer<UInt16>((IParser json, ref UInt16 outValue, ITypeRegistory r) => outValue=json.GetUInt16() )},
-            {typeof(UInt32), new LambdaDeserializer<UInt32>((IParser json, ref UInt32 outValue, ITypeRegistory r) => outValue=json.GetUInt32() )},
-            {typeof(UInt64), new LambdaDeserializer<UInt64>((IParser json, ref UInt64 outValue, ITypeRegistory r) => outValue=json.GetUInt64() )},
-            {typeof(Single), new LambdaDeserializer<Single>((IParser json, ref Single outValue, ITypeRegistory r) => outValue=json.GetSingle() )},
-            {typeof(Double), new LambdaDeserializer<Double>((IParser json, ref Double outValue, ITypeRegistory r) => outValue=json.GetDouble() )},
-            {typeof(String), new LambdaDeserializer<String>((IParser json, ref String outValue, ITypeRegistory r) => outValue=json.GetString() )},
+            {typeof(SByte), new LambdaDeserializer<JsonParser, SByte>((JsonParser parser, ref SByte outValue) => outValue=parser.GetSByte() )},
+            {typeof(Int16), new LambdaDeserializer<JsonParser, Int16>((JsonParser parser, ref Int16 outValue) => outValue=parser.GetInt16() )},
+            {typeof(Int32), new LambdaDeserializer<JsonParser, Int32>((JsonParser parser, ref Int32 outValue) => outValue=parser.GetInt32() )},
+            {typeof(Int64), new LambdaDeserializer<JsonParser, Int64>((JsonParser parser, ref Int64 outValue) => outValue=parser.GetInt64() )},
+            {typeof(Byte),  new LambdaDeserializer<JsonParser, Byte>((JsonParser parser, ref Byte outValue) => outValue=parser.GetByte() )},
+            {typeof(UInt16), new LambdaDeserializer<JsonParser, UInt16>((JsonParser parser, ref UInt16 outValue) => outValue=parser.GetUInt16() )},
+            {typeof(UInt32), new LambdaDeserializer<JsonParser, UInt32>((JsonParser parser, ref UInt32 outValue) => outValue=parser.GetUInt32() )},
+            {typeof(UInt64), new LambdaDeserializer<JsonParser, UInt64>((JsonParser parser, ref UInt64 outValue) => outValue=parser.GetUInt64() )},
+            {typeof(Single), new LambdaDeserializer<JsonParser, Single>((JsonParser parser, ref Single outValue) => outValue=parser.GetSingle() )},
+            {typeof(Double), new LambdaDeserializer<JsonParser, Double>((JsonParser parser, ref Double outValue) => outValue=parser.GetDouble() )},
+            {typeof(String), new LambdaDeserializer<JsonParser, String>((JsonParser parser, ref String outValue) => outValue=parser.GetString() )},
         };
 
-        public DeserializerBase<T> GetDeserializer<T>()
+        public IDeserializer<JsonParser, T> GetDeserializer<T>()
         {
-            return (DeserializerBase<T>)GetDeserializer(typeof(T));
+            return (IDeserializer<JsonParser, T>)GetDeserializer(typeof(T));
         }
 
-        public IDeserializer GetDeserializer(Type t)
+        public ITypeInitializer GetDeserializer(Type t)
         {
-            IDeserializer deserializer;
+            ITypeInitializer deserializer;
             if (m_deserializerMap.TryGetValue(t, out deserializer))
             {
                 return deserializer;
@@ -130,50 +130,50 @@ namespace ObjectStructure.Json
             return deserializer;
         }
 
-        IDeserializer CreateDeserializer(Type t)
+        ITypeInitializer CreateDeserializer(Type t)
         {
             if (t.IsEnum)
             {
                 // enum
-                Type constructedType = typeof(EnumStringDeserializer<>).MakeGenericType(t);
-                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+                var constructedType = typeof(EnumStringDeserializer<,>).MakeGenericType(typeof(JsonParser), t);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
-                Type constructedType = typeof(TypedArrayDeserializer<>).MakeGenericType(t.GetElementType());
-                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+                var constructedType = typeof(TypedArrayDeserializer<,>).MakeGenericType(typeof(JsonParser), t.GetElementType());
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.GetInterfaces().Any(x =>
             x.IsGenericType &&
             x.GetGenericTypeDefinition() == typeof(IList<>)))
             {
                 // IList<T>
-                Type constructedType = typeof(GenericListDeserializer<>).MakeGenericType(t.GetGenericArguments());
-                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+                var constructedType = typeof(GenericListDeserializer<,,>).MakeGenericType(typeof(JsonParser), t.GetGenericArguments().First(), t);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
-                Type constructedType = typeof(GenericListDeserializer<>).MakeGenericType(t.GetGenericArguments());
-                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+                var constructedType = typeof(GenericListDeserializer<,,>).MakeGenericType(typeof(JsonParser), t.GetGenericArguments().First(), t);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsClass)
             {
                 // class
-                Type constructedType = typeof(ReflectionClassDeserializer<>).MakeGenericType(t);
-                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+                var constructedType = typeof(ReflectionClassDeserializer<,>).MakeGenericType(typeof(JsonParser), t);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else
             {
                 // struct
-                Type constructedType = typeof(ReflectionStructDeserializer<>).MakeGenericType(t);
-                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+                Type constructedType = typeof(ReflectionStructDeserializer<,>).MakeGenericType(typeof(JsonParser), t);
+                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion
 
-        public void AddType<T>(ISerializer<T> serializer, DeserializerBase<T> deserializer)
+        public void AddType<T>(ISerializer<T> serializer, IDeserializer<JsonParser, T> deserializer)
         {
             m_serializerMap.Add(typeof(T), serializer);
             m_deserializerMap.Add(typeof(T), deserializer);

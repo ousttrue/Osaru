@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace ObjectStructure.MessagePack.Deserializers
 {
-    public class GenericListDeserializer<T, V> : DeserializerBase<T>
+    public class GenericListDeserializer<T, V> : IDeserializer<T>
         where T : IList<V>
     {
-        DeserializerBase<V> m_v;
+        IDeserializer<V> m_v;
 
         public GenericListDeserializer()
         {

@@ -359,7 +359,7 @@ public class Benchmark
 
         var r = new ObjectStructure.Json.TypeRegistory();
         var serializer = (ISerializer<T>)r.GetSerializer<T>();
-        var deserializer = r.GetDeserializer(typeof(T));
+        var deserializer = r.GetDeserializer<T>();
 
         using (new Measure("Serialize"))
         {
@@ -374,7 +374,7 @@ public class Benchmark
             for (int i = 0; i < Iteration; i++)
             {
                 //copy = ObjectStructure.MessagePack.Deserializer.Deserialize<T>(bytes);
-                copy = (T)deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(json), r);
+                deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(json), ref copy);
             }
         }
 

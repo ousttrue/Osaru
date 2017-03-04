@@ -3,11 +3,16 @@
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class EnumStringDeserializer<T> : DeserializerBase<T>
+    public class EnumStringDeserializer<PARSER, T> : IDeserializer<PARSER, T>
+        where PARSER : IParser<PARSER>
     {
-        public override void Deserialize<PARSER>(PARSER json, ref T outValue, ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
-            outValue = (T)Enum.Parse(typeof(T), json.GetString());
+        }
+
+        public void Deserialize(PARSER parser, ref T outValue)
+        {
+            outValue = (T)Enum.Parse(typeof(T), parser.GetString());
         }
     }
 }

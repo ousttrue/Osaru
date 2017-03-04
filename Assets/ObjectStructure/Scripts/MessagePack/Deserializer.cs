@@ -56,9 +56,9 @@ namespace ObjectStructure.MessagePack
             }
         }
 
-        public static DeserializerBase<T> GetDeserializer<T>()
+        public static IDeserializer<T> GetDeserializer<T>()
         {
-            return (DeserializerBase<T>)GetDeserializer(typeof(T));
+            return (IDeserializer<T>)GetDeserializer(typeof(T));
         }
 
         public static IDeserializer GetDeserializer(Type t)

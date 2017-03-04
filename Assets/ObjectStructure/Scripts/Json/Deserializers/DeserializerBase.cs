@@ -1,38 +1,19 @@
-﻿using System;
-
-namespace ObjectStructure.Json.Deserializers
+﻿namespace ObjectStructure.Json.Deserializers
 {
-    public interface IDeserializer
+    public interface IDeserializer<PARSER, T>: Serialization.ITypeInitializer
+        where PARSER: IParser<PARSER>
     {
-        void Setup(ITypeRegistory r);
-        object Deserialize<PARSER>(PARSER json, ITypeRegistory r)
-            where PARSER : IParser;
+        void Deserialize(PARSER json, ref T outValue);
     }
-    public abstract class DeserializerBase<T> : IDeserializer
+
+    public static class IDeserializerExtensions
     {
-        public virtual void Setup(ITypeRegistory r)
-        {
-            // default, do nothing
-        }
-
-        public object Deserialize<PARSER>(PARSER json, ITypeRegistory r)
-            where PARSER : IParser
+        public static object Deserialize<PARSER, T>(this IDeserializer<PARSER, T> d, PARSER json)
+            where PARSER: IParser<PARSER>
         {
             var value = default(T);
-            Deserialize(json, ref value, r);
+            d.Deserialize(json, ref value);
             return value;
         }
-
-        public abstract void Deserialize<PARSER>(PARSER json, ref T outValue, ITypeRegistory r)
-            where PARSER : IParser;
-
-        /*
-        public T Deserialize(PARSER json, ITypeRegistory r)
-        {
-            var value = default(T);
-            Deserialize(json, ref value, r);
-            return value;
-        }
-        */
     }
 }

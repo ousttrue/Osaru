@@ -3,7 +3,7 @@ using System;
 
 namespace ObjectStructure.MessagePack.Deserializers
 {
-    public class LambdaDeserilaizer<T> : DeserializerBase<T>
+    public class LambdaDeserilaizer<T> : IDeserializer<T>
     {
         delegate T DeserializeFunc(MsgPackValue value);
 

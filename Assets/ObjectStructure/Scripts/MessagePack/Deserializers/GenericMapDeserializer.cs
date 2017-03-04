@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace ObjectStructure.MessagePack.Deserializers
 {
-    public class GenericMapDeserializer<T, K, V> : DeserializerBase<T>
+    public class GenericMapDeserializer<T, K, V> : IDeserializer<T>
         where T : IDictionary<K, V>
     {
-        DeserializerBase<K> m_k;
-        DeserializerBase<V> m_v;
+        IDeserializer<K> m_k;
+        IDeserializer<V> m_v;
 
         public GenericMapDeserializer()
         {

@@ -1,6 +1,6 @@
 namespace ObjectStructure.MessagePack.Deserializers
 {
-    public class ArrayDeserializer<T> : DeserializerBase<T[]>
+    public class ArrayDeserializer<T> : IDeserializer<T[]>
     {
         public override T[] Deserialize(MsgPackValue value)
         {

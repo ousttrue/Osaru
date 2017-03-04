@@ -17,7 +17,7 @@ namespace ObjectStructure.Json
         public JsonValueException(string msg) : base(msg) { }
     }
 
-    public struct JsonParser: IParser
+    public struct JsonParser: IParser<JsonParser>
     {
         StringSegment m_segment;
         public StringSegment Segment
@@ -282,7 +282,7 @@ namespace ObjectStructure.Json
         #endregion
 
         #region CollectionType
-        public IParser this[string key]
+        public JsonParser this[string key]
         {
             get
             {
@@ -297,7 +297,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public IParser this[int index]
+        public JsonParser this[int index]
         {
             get
             {
@@ -313,7 +313,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public IEnumerable<KeyValuePair<String, IParser>> ObjectItems
+        public IEnumerable<KeyValuePair<String, JsonParser>> ObjectItems
         {
             get
             {
@@ -324,17 +324,17 @@ namespace ObjectStructure.Json
                     var key = it.Current.GetString();
 
                     it.MoveNext();
-                    yield return new KeyValuePair<string, IParser>(key, it.Current);
+                    yield return new KeyValuePair<string, JsonParser>(key, it.Current);
                 }
             }
         }
 
-        public IEnumerable<IParser> ArrayItems
+        public IEnumerable<JsonParser> ArrayItems
         {
             get
             {
                 if (ValueType != JsonValueType.Array) throw new JsonValueException("is not array");
-                return GetNodes(false).Cast<IParser>();
+                return GetNodes(false).Cast<JsonParser>();
             }
         }
 

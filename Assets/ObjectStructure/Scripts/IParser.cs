@@ -17,7 +17,8 @@ namespace ObjectStructure
         Close, // internal use
     }
 
-    public interface IParser
+    public interface IParser<T>
+        where T: IParser<T>
     {
         String GetString();
 
@@ -34,11 +35,11 @@ namespace ObjectStructure
         Single GetSingle();
         Double GetDouble();
 
-        IEnumerable<IParser> ArrayItems { get; }
-        IParser this[int index] { get; }
+        IEnumerable<T> ArrayItems { get; }
+        T this[int index] { get; }
 
-        IEnumerable<KeyValuePair<String, IParser>> ObjectItems { get; }
-        IParser this[string key] { get; }
+        IEnumerable<KeyValuePair<String, T>> ObjectItems { get; }
+        T this[string key] { get; }
 
         JsonValueType ValueType { get; }
     }

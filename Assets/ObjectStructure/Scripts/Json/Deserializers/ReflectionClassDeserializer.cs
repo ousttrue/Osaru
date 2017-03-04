@@ -6,21 +6,22 @@ using System.Reflection;
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class ReflectionClassDeserializer<T> : DeserializerBase<T>
-        where T: class
+    public class ReflectionClassDeserializer<PARSER, T> : IDeserializer<PARSER, T>
+        where PARSER : IParser<PARSER>
+        where T : class
     {
-        delegate void DeserializeFunc(IParser json, ref T outValue, ITypeRegistory r);
+        delegate void DeserializeFunc(PARSER parser, ref T outValue);
         Dictionary<string, DeserializeFunc> m_deserializers=new Dictionary<string, DeserializeFunc>();
 
         static DeserializeFunc CreateFunc<U>(ITypeRegistory r, Setter<U> setter)
         {
-            var deserializer = r.GetDeserializer<U>();
+            var deserializer = (IDeserializer<PARSER, U>)r.GetDeserializer<U>();
 
             return new DeserializeFunc(
-            (IParser json, ref T outValue, ITypeRegistory rr) =>
+            (PARSER json, ref T outValue) =>
             {
                 var value = default(U);
-                deserializer.Deserialize(json, ref value, rr);
+                deserializer.Deserialize(json, ref value);
                 setter(outValue, value); 
             });
         }
@@ -35,7 +36,7 @@ namespace ObjectStructure.Json.Deserializers
             return (o, v) => pi.SetValue(o, v, null);
         }
 
-        public override void Setup(ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
             var genericMethod = GetType().GetMethod("CreateFunc", BindingFlags.Static|BindingFlags.NonPublic);
             var genericFieldSetter = GetType().GetMethod("CreateFieldSetter", BindingFlags.Static | BindingFlags.NonPublic);
@@ -73,7 +74,7 @@ namespace ObjectStructure.Json.Deserializers
                 ;
         }
 
-        public override void Deserialize<PARSER>(PARSER json, ref T outValue, ITypeRegistory r)
+        public void Deserialize(PARSER json, ref T outValue)
         {
             if (outValue == null)
             {
@@ -85,7 +86,7 @@ namespace ObjectStructure.Json.Deserializers
                 DeserializeFunc d;
                 if(m_deserializers.TryGetValue(kv.Key, out d))
                 {
-                    d(kv.Value, ref outValue, r);
+                    d(kv.Value, ref outValue);
                 }
             }
         }

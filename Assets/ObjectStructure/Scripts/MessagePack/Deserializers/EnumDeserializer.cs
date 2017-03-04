@@ -3,7 +3,7 @@ using System;
 
 namespace ObjectStructure.MessagePack.Deserializers
 {
-    public class EnumDeserializer<T, U> : DeserializerBase<T>
+    public class EnumDeserializer<T, U> : IDeserializer<T>
     {
         public override T Deserialize(MsgPackValue value)
         {

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ObjectStructure.MessagePack.Deserializers
 {
-    public class StructReflectionDeserializer<T> : DeserializerBase<T>
+    public class StructReflectionDeserializer<T> : IDeserializer<T>
             where T : struct
     {
         delegate void MemberDeserializeFunc(ref T obj, MsgPackValue value);

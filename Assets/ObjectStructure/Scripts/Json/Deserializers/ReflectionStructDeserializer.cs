@@ -6,21 +6,22 @@ using System.Reflection;
 
 namespace ObjectStructure.Json.Deserializers
 {
-    public class ReflectionStructDeserializer<T> : DeserializerBase<T>
+    public class ReflectionStructDeserializer<PARSER, T> : IDeserializer<PARSER, T>
         where T: struct
+        where PARSER : IParser<PARSER>
     {
-        delegate void BoxingDeserializeFunc(IParser json, object outValue, ITypeRegistory r);
+        delegate void BoxingDeserializeFunc(PARSER json, object outValue);
         Dictionary<string, BoxingDeserializeFunc> m_deserializers=new Dictionary<string, BoxingDeserializeFunc>();
 
         static BoxingDeserializeFunc CreateFunc<U>(ITypeRegistory r, Setter<U> setter)
         {
-            var deserializer = r.GetDeserializer<U>();
+            var deserializer = (IDeserializer<PARSER, U>)r.GetDeserializer<U>();
 
             return new BoxingDeserializeFunc(
-            (IParser json, object boxedValue, ITypeRegistory rr) =>
+            (PARSER json, object boxedValue) =>
             {
                 var value = default(U);
-                deserializer.Deserialize(json, ref value, rr);
+                deserializer.Deserialize(json, ref value);
                 //x.SetValueDirect(__makeref(outValue), value); Unity not implemented
                 setter(boxedValue, value); 
             });
@@ -36,7 +37,7 @@ namespace ObjectStructure.Json.Deserializers
             return (o, v) => pi.SetValue(o, v, null);
         }
 
-        public override void Setup(ITypeRegistory r)
+        public void Setup(ITypeRegistory r)
         {
             var genericMethod = GetType().GetMethod("CreateFunc", BindingFlags.Static|BindingFlags.NonPublic);
             var genericFieldSetter = GetType().GetMethod("CreateFieldSetter", BindingFlags.Static | BindingFlags.NonPublic);
@@ -76,7 +77,7 @@ namespace ObjectStructure.Json.Deserializers
                 .ToDictionary(x => String.Intern(x.Name), x => x.Deserializer);
         }
 
-        public override void Deserialize<PARSER>(PARSER json, ref T outValue, ITypeRegistory r)
+        public void Deserialize(PARSER json, ref T outValue)
         {
             var boxed = (object)outValue;
             foreach(var kv in json.ObjectItems)
@@ -84,7 +85,7 @@ namespace ObjectStructure.Json.Deserializers
                 BoxingDeserializeFunc d;
                 if(m_deserializers.TryGetValue(kv.Key, out d))
                 {
-                    d(kv.Value, boxed, r);
+                    d(kv.Value, boxed);
                 }
             }
             // unboxing

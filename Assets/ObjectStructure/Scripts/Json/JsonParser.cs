@@ -277,7 +277,7 @@ namespace ObjectStructure.Json
         public string GetString()
         {
             if (ValueType != JsonValueType.String) throw new JsonValueException("is not string: "+m_segment);
-            return Deserializers.StringDeserializer.Unquote(m_segment.ToString());
+            return JsonString.Unquote(m_segment.ToString());
         }
         #endregion
 

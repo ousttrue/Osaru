@@ -12,9 +12,9 @@ namespace ObjectStructure.Serialization.Serializers
             m_stringSerializer = (ISerializer<string>)r.GetSerializer<String>();
         }
 
-        public void Serialize(T t, IWriteStream w)
+        public void Serialize(T t, IFormatter f)
         {
-            m_stringSerializer.Serialize(t.ToString(), w);
+            m_stringSerializer.Serialize(t.ToString(), f);
         }
     }
 }

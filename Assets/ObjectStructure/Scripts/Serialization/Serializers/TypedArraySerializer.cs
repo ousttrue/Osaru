@@ -9,23 +9,14 @@
             m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public void Serialize(T[] t, IWriteStream w)
+        public void Serialize(T[] t, IFormatter f)
         {
-            w.Write('[');
-            bool isFirst = true;
+            f.OpenList(t.Length);
             foreach (var item in t)
             {
-                if (isFirst)
-                {
-                    isFirst = false;
-                }
-                else
-                {
-                    w.Write(',');
-                }
-                m_elementSerializer.Serialize(item, w);
+                m_elementSerializer.Serialize(item, f);
             }
-            w.Write(']');
+            f.CloseLIst();
         }
     }
 }

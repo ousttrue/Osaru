@@ -13,23 +13,14 @@ namespace ObjectStructure.Serialization.Serializers
             m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public void Serialize(U t, IWriteStream w)
+        public void Serialize(U t, IFormatter f)
         {
-            w.Write('[');
-            bool isFirst = true;
+            f.OpenList(t.Count);
             foreach (var item in t)
             {
-                if (isFirst)
-                {
-                    isFirst = false;
-                }
-                else
-                {
-                    w.Write(',');
-                }
-                m_elementSerializer.Serialize(item, w);
+                m_elementSerializer.Serialize(item, f);
             }
-            w.Write(']');
+            f.CloseLIst();
         }
     }
 }

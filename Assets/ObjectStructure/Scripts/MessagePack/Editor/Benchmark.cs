@@ -365,7 +365,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                json = serializer.Serialize(original);
+                json = serializer.SerializeToJson(original);
             }
         }
 
@@ -384,7 +384,7 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                json = serializer.Serialize(copy);
+                json = serializer.SerializeToJson(copy);
             }
         }
 

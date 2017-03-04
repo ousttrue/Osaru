@@ -1,20 +1,22 @@
-﻿using System.Text;
+﻿using ObjectStructure.Json;
+using System.Text;
 
 
 namespace ObjectStructure.Serialization.Serializers
 {
     public static class ISerializerExtensions
     {
-        public static void Serialize<T>(this ISerializer<T> s, object o, IWriteStream w)
+        public static void Serialize<T>(this ISerializer<T> s, object o, IFormatter f)
         {
-            s.Serialize((T)o, w);
+            s.Serialize((T)o, f);
         }
 
-        public static string Serialize<T>(this ISerializer<T> s, object o)
+        public static string SerializeToJson<T>(this ISerializer<T> s, object o)
         {
             var sb = new StringBuilder();
             var w = new StringBuilderStream(sb);
-            s.Serialize(o, w);
+            var f = new JsonFormatter(w);
+            s.Serialize(o, f);
             return sb.ToString();
         }
     }

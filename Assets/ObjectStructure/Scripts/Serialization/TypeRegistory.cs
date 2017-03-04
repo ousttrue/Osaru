@@ -15,18 +15,18 @@ namespace ObjectStructure.Serialization
         #region Serialize
         Dictionary<Type, ITypeInitializer> m_serializerMap = new Dictionary<Type, ITypeInitializer>()
         {
-            {typeof(Boolean), new LambdaSerializer<Boolean>((x, w)=> w.Write(x ? "true" : "false")) },
-            {typeof(SByte), new LambdaSerializer<SByte>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Int16), new LambdaSerializer<Int16>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Int32), new LambdaSerializer<Int32>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Int64), new LambdaSerializer<Int64>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Byte), new LambdaSerializer<Byte>((x, w)=> w.Write(x.ToString())) },
-            {typeof(UInt16), new LambdaSerializer<UInt16>((x, w)=> w.Write(x.ToString())) },
-            {typeof(UInt32), new LambdaSerializer<UInt32>((x, w)=> w.Write(x.ToString())) },
-            {typeof(UInt64), new LambdaSerializer<UInt64>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Single), new LambdaSerializer<Single>((x, w)=> w.Write(x.ToString())) },
-            {typeof(Double), new LambdaSerializer<Double>((x, w)=> w.Write(x.ToString())) },
-            {typeof(string), new LambdaSerializer<String>((x, w)=> w.Write(Json.JsonString.Quote(x))) },
+            {typeof(Boolean), new LambdaSerializer<Boolean>((x, f)=> f.Value(x)) },
+            {typeof(SByte), new LambdaSerializer<SByte>((x, f)=> f.Value(x)) },
+            {typeof(Int16), new LambdaSerializer<Int16>((x, f)=> f.Value(x)) },
+            {typeof(Int32), new LambdaSerializer<Int32>((x, f)=> f.Value(x)) },
+            {typeof(Int64), new LambdaSerializer<Int64>((x, f)=> f.Value(x)) },
+            {typeof(Byte), new LambdaSerializer<Byte>((x, f)=>  f.Value(x)) },
+            {typeof(UInt16), new LambdaSerializer<UInt16>((x, f)=>  f.Value(x)) },
+            {typeof(UInt32), new LambdaSerializer<UInt32>((x, f)=>  f.Value(x)) },
+            {typeof(UInt64), new LambdaSerializer<UInt64>((x, f)=>  f.Value(x)) },
+            {typeof(Single), new LambdaSerializer<Single>((x, f)=>  f.Value(x)) },
+            {typeof(Double), new LambdaSerializer<Double>((x, f)=>  f.Value(x)) },
+            {typeof(string), new LambdaSerializer<String>((x, f)=> f.Value(x)) },
         };
 
         public ITypeInitializer GetSerializer(Type t)

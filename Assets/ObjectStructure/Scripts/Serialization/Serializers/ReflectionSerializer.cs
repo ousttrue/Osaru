@@ -9,40 +9,17 @@ namespace ObjectStructure.Serialization.Serializers
 {
     public class ReflectionSerializer<T> : ISerializer<T>
     {
-        delegate void SerializeFunc(T value, IWriteStream w);
+        delegate void SerializeFunc(T value, IFormatter f);
         SerializeFunc[] m_serializers;
-
-        struct KeySerializer
-        {
-            ISerializer<String> m_serializer;
-            StringBuilder m_sb;
-            IWriteStream m_writer;
-
-            public KeySerializer(ISerializer<String> serializer)
-            {
-                m_serializer = serializer;
-                m_sb = new StringBuilder();
-                m_writer = new StringBuilderStream(m_sb);
-            }
-
-            public string Serialize(string key)
-            {
-                m_writer.Clear();
-                m_serializer.Serialize(key, m_writer);
-                m_writer.Write(":");
-                return m_sb.ToString();
-            }
-        }
 
         public void Setup(ITypeRegistory r)
         {
-            var keyWriter = new KeySerializer((ISerializer<string>)r.GetSerializer(typeof(String)));
             var genericFieldMethod = GetType().GetMethod("CreateFieldSerializer", BindingFlags.Static | BindingFlags.NonPublic);
             var genericPropertyMethod = GetType().GetMethod("CreatePropertySerializer", BindingFlags.Static | BindingFlags.NonPublic);
 
             m_serializers =
-                FieldsSerializers(genericFieldMethod, r, keyWriter)
-                .Concat(PropertiesSerializers(genericPropertyMethod, r, keyWriter))
+                FieldsSerializers(genericFieldMethod, r)
+                .Concat(PropertiesSerializers(genericPropertyMethod, r))
                 .ToArray()
                 ;
         }
@@ -50,7 +27,7 @@ namespace ObjectStructure.Serialization.Serializers
         #region Field
         IEnumerable<SerializeFunc> FieldsSerializers(
             MethodInfo genericMethod
-            , ITypeRegistory r, KeySerializer keySerializer)
+            , ITypeRegistory r)
         {
             return typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
@@ -58,22 +35,20 @@ namespace ObjectStructure.Serialization.Serializers
                 .Select(x =>
                 {
                     var method = genericMethod.MakeGenericMethod(x.FieldType);
-                    return (SerializeFunc)method.Invoke(null, new object[] { r, keySerializer, x });
+                    return (SerializeFunc)method.Invoke(null, new object[] { r, x });
                 })
                 ;
         }
 
         static SerializeFunc CreateFieldSerializer<U>(
             ITypeRegistory r
-            , KeySerializer keySerializer
             , FieldInfo x)
         {
-            var key = keySerializer.Serialize(x.Name);
             var serializer = (ISerializer<U>)r.GetSerializer<U>();
-            return new SerializeFunc((value, w) =>
+            return new SerializeFunc((value, f) =>
             {
-                w.Write(key);
-                serializer.Serialize(x.GetValue(value), w);
+                f.Key(x.Name);
+                serializer.Serialize((U)x.GetValue(value), f);
             });
         }
         #endregion
@@ -81,7 +56,7 @@ namespace ObjectStructure.Serialization.Serializers
         #region Property
         static IEnumerable<SerializeFunc> PropertiesSerializers(
             MethodInfo genericMethod
-            , ITypeRegistory r, KeySerializer keySerializer)
+            , ITypeRegistory r)
         {
 
             return typeof(T).GetProperties(System.Reflection.BindingFlags.Public
@@ -91,43 +66,32 @@ namespace ObjectStructure.Serialization.Serializers
                 .Select(x =>
                 {
                     var method = genericMethod.MakeGenericMethod(x.PropertyType);
-                    return (SerializeFunc)method.Invoke(null, new object[] { r, keySerializer, x });
+                    return (SerializeFunc)method.Invoke(null, new object[] { r, x });
                 })
                 ;
         }
 
         static SerializeFunc CreatePropertySerializer<U>(
             ITypeRegistory r
-            , KeySerializer keySerializer
             , PropertyInfo x)
         {
-            var key = keySerializer.Serialize(x.Name);
             var serializer = (ISerializer<U>)r.GetSerializer<U>();
-            return new SerializeFunc((value, w) =>
+            return new SerializeFunc((value, f) =>
             {
-                w.Write(key);
-                serializer.Serialize(x.GetValue(value, null), w);
+                f.Key(x.Name);
+                serializer.Serialize((U)x.GetValue(value, null), f);
             });
         }
         #endregion
 
-        public void Serialize(T t, IWriteStream w)
+        public void Serialize(T t, IFormatter f)
         {
-            w.Write('{');
-            bool isFirst = true;
+            f.OpenMap(m_serializers.Count());
             foreach (var serializer in m_serializers)
             {
-                if (isFirst)
-                {
-                    isFirst = false;
-                }
-                else
-                {
-                    w.Write(',');
-                }
-                serializer(t, w);
+                serializer(t, f);
             }
-            w.Write('}');
+            f.CloseMap();
         }
     }
 }

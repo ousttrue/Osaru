@@ -5,8 +5,8 @@ namespace ObjectStructure.Serialization.Serializers
 {
     public class LambdaSerializer<T> : ISerializer<T>
     {
-        Action<T, IWriteStream> m_serializer;
-        public LambdaSerializer(Action<T, IWriteStream> serializer)
+        Action<T, IFormatter> m_serializer;
+        public LambdaSerializer(Action<T, IFormatter> serializer)
         {
             m_serializer = serializer;
         }
@@ -15,9 +15,9 @@ namespace ObjectStructure.Serialization.Serializers
         {
         }
 
-        public void Serialize(T t, IWriteStream w)
+        public void Serialize(T t, IFormatter f)
         {
-            m_serializer(t, w);
+            m_serializer(t, f);
         }
     }
 }

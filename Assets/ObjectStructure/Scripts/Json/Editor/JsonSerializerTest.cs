@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using ObjectStructure.Serialization.Serializers;
 using ObjectStructure.Serialization;
-
+using ObjectStructure;
 
 namespace ObjectStruct
 {
@@ -14,7 +14,7 @@ namespace ObjectStruct
             , T value, string expected)
         {
             var serializer = (ISerializer<T>)typeRegistory.GetSerializer<T>();
-            var serialized = serializer.Serialize(value);
+            var serialized = serializer.SerializeToJson(value);
             Assert.AreEqual(expected, serialized);
 
             var deserializer = typeRegistory.GetDeserializer<T>();

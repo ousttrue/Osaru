@@ -48,11 +48,11 @@ namespace ObjectStructure.Json
             return serializer;
         }
 
-        public ITypeInitializer GetSerializer<T>()
+        public ISerializer<T> GetSerializer<T>()
         {
             var t = typeof(T);
             var serializer= GetSerializer(t);
-            return serializer;
+            return (ISerializer<T>)serializer;
         }
 
         ITypeInitializer CreateSerializer(Type t)
@@ -73,14 +73,14 @@ namespace ObjectStructure.Json
             x.IsGenericType &&
             x.GetGenericTypeDefinition() == typeof(IList<>)))
             {
-                // IList<T>
-                Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
+                // where U: IList<T>
+                Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else if(t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
-                Type constructedType = typeof(GenericListSerializer<>).MakeGenericType(t.GetGenericArguments());
+                Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else

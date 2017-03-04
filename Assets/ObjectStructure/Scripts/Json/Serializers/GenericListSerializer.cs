@@ -3,7 +3,8 @@
 
 namespace ObjectStructure.Json.Serializers
 {
-    public class GenericListSerializer<T> : ISerializer<IList<T>>
+    public class GenericListSerializer<T, U> : ISerializer<U>
+        where U: IList<T>
     {
         ISerializer<T> m_elementSerializer;
 
@@ -12,7 +13,7 @@ namespace ObjectStructure.Json.Serializers
             m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public void Serialize(IList<T> t, IWriteStream w)
+        public void Serialize(U t, IWriteStream w)
         {
             w.Write('[');
             bool isFirst = true;

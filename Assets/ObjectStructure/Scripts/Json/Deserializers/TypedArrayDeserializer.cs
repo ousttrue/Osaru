@@ -7,12 +7,12 @@ namespace ObjectStructure.Json.Deserializers
     {
         DeserializerBase<T> m_elementDeserializer;
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(ITypeRegistory r)
         {
             m_elementDeserializer = r.GetDeserializer<T>();
         }
 
-        public override void Deserialize<PARSER>(PARSER json, ref T[] outValue, TypeRegistory r)
+        public override void Deserialize<PARSER>(PARSER json, ref T[] outValue, ITypeRegistory r)
         {
             var count = json.ArrayItems.Count();
             if (outValue == null || outValue.Length != count)

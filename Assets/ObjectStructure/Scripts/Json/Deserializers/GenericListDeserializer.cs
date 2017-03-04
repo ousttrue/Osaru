@@ -9,12 +9,12 @@ namespace ObjectStructure.Json.Deserializers
         DeserializerBase<T> m_elementDeserializer;
 
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(ITypeRegistory r)
         {
             m_elementDeserializer = r.GetDeserializer<T>();
         }
 
-        public override void Deserialize<PARSER>(PARSER json, ref List<T> outValue, TypeRegistory r)
+        public override void Deserialize<PARSER>(PARSER json, ref List<T> outValue, ITypeRegistory r)
         {
             if (outValue == null)
             {

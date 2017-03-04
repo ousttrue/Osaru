@@ -95,16 +95,16 @@ namespace ObjectStructure.Json
         #region Deserialize
         Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
         {
-            {typeof(SByte), new LambdaDeserializer<SByte>((IParser json, ref SByte outValue, TypeRegistory r) => outValue=json.GetSByte() )},
-            {typeof(Int16), new LambdaDeserializer<Int16>((IParser json, ref Int16 outValue, TypeRegistory r) => outValue=json.GetInt16() )},
-            {typeof(Int32), new LambdaDeserializer<Int32>((IParser json, ref Int32 outValue, TypeRegistory r) => outValue=json.GetInt32() )},
-            {typeof(Int64), new LambdaDeserializer<Int64>((IParser json, ref Int64 outValue, TypeRegistory r) => outValue=json.GetInt64() )},
-            {typeof(Byte),  new LambdaDeserializer<Byte>((IParser json, ref Byte outValue, TypeRegistory r) => outValue=json.GetByte() )},
-            {typeof(UInt16), new LambdaDeserializer<UInt16>((IParser json, ref UInt16 outValue, TypeRegistory r) => outValue=json.GetUInt16() )},
-            {typeof(UInt32), new LambdaDeserializer<UInt32>((IParser json, ref UInt32 outValue, TypeRegistory r) => outValue=json.GetUInt32() )},
-            {typeof(UInt64), new LambdaDeserializer<UInt64>((IParser json, ref UInt64 outValue, TypeRegistory r) => outValue=json.GetUInt64() )},
-            {typeof(Single), new LambdaDeserializer<Single>((IParser json, ref Single outValue, TypeRegistory r) => outValue=json.GetSingle() )},
-            {typeof(Double), new LambdaDeserializer<Double>((IParser json, ref Double outValue, TypeRegistory r) => outValue=json.GetDouble() )},
+            {typeof(SByte), new LambdaDeserializer<SByte>((IParser json, ref SByte outValue, ITypeRegistory r) => outValue=json.GetSByte() )},
+            {typeof(Int16), new LambdaDeserializer<Int16>((IParser json, ref Int16 outValue, ITypeRegistory r) => outValue=json.GetInt16() )},
+            {typeof(Int32), new LambdaDeserializer<Int32>((IParser json, ref Int32 outValue, ITypeRegistory r) => outValue=json.GetInt32() )},
+            {typeof(Int64), new LambdaDeserializer<Int64>((IParser json, ref Int64 outValue, ITypeRegistory r) => outValue=json.GetInt64() )},
+            {typeof(Byte),  new LambdaDeserializer<Byte>((IParser json, ref Byte outValue, ITypeRegistory r) => outValue=json.GetByte() )},
+            {typeof(UInt16), new LambdaDeserializer<UInt16>((IParser json, ref UInt16 outValue, ITypeRegistory r) => outValue=json.GetUInt16() )},
+            {typeof(UInt32), new LambdaDeserializer<UInt32>((IParser json, ref UInt32 outValue, ITypeRegistory r) => outValue=json.GetUInt32() )},
+            {typeof(UInt64), new LambdaDeserializer<UInt64>((IParser json, ref UInt64 outValue, ITypeRegistory r) => outValue=json.GetUInt64() )},
+            {typeof(Single), new LambdaDeserializer<Single>((IParser json, ref Single outValue, ITypeRegistory r) => outValue=json.GetSingle() )},
+            {typeof(Double), new LambdaDeserializer<Double>((IParser json, ref Double outValue, ITypeRegistory r) => outValue=json.GetDouble() )},
             {typeof(string), new StringDeserializer() }
         };
 

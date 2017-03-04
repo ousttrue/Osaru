@@ -9,15 +9,15 @@ namespace ObjectStructure.Json.Deserializers
     public class ReflectionClassDeserializer<T> : DeserializerBase<T>
         where T: class
     {
-        delegate void DeserializeFunc(IParser json, ref T outValue, TypeRegistory r);
+        delegate void DeserializeFunc(IParser json, ref T outValue, ITypeRegistory r);
         Dictionary<string, DeserializeFunc> m_deserializers=new Dictionary<string, DeserializeFunc>();
 
-        static DeserializeFunc CreateFunc<U>(TypeRegistory r, Setter<U> setter)
+        static DeserializeFunc CreateFunc<U>(ITypeRegistory r, Setter<U> setter)
         {
             var deserializer = r.GetDeserializer<U>();
 
             return new DeserializeFunc(
-            (IParser json, ref T outValue, TypeRegistory rr) =>
+            (IParser json, ref T outValue, ITypeRegistory rr) =>
             {
                 var value = default(U);
                 deserializer.Deserialize(json, ref value, rr);
@@ -35,7 +35,7 @@ namespace ObjectStructure.Json.Deserializers
             return (o, v) => pi.SetValue(o, v, null);
         }
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(ITypeRegistory r)
         {
             var genericMethod = GetType().GetMethod("CreateFunc", BindingFlags.Static|BindingFlags.NonPublic);
             var genericFieldSetter = GetType().GetMethod("CreateFieldSetter", BindingFlags.Static | BindingFlags.NonPublic);
@@ -73,7 +73,7 @@ namespace ObjectStructure.Json.Deserializers
                 ;
         }
 
-        public override void Deserialize<PARSER>(PARSER json, ref T outValue, TypeRegistory r)
+        public override void Deserialize<PARSER>(PARSER json, ref T outValue, ITypeRegistory r)
         {
             if (outValue == null)
             {

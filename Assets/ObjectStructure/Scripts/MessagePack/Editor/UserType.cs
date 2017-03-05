@@ -52,7 +52,7 @@ class UserType
 #endif
 }
 
-
+#if false
 [TestFixture]
 public class UserTypeTest
 {
@@ -121,3 +121,4 @@ public class UserTypeTest
         Assert.AreEqual(obj.Position, newObj.Position);
     }
 }
+#endif

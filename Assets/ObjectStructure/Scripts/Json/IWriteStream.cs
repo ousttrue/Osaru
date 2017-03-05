@@ -5,5 +5,6 @@
         void Clear();
         void Write(string src);
         void Write(char c);
+        string Buffer();
     }
 }

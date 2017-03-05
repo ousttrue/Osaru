@@ -8,7 +8,16 @@ using ObjectStructure.Serialization;
 public class ObjectTest
 {
     TypeRegistory m_r;
-
+    class Nest
+    {
+        public string Name { get; set; }
+    }
+    class Sample
+    {
+        public string Name { get; set; }
+        public int Number;
+        public Nest Nest;
+    }
     [SetUp]
     public void Setup()
     {
@@ -31,13 +40,13 @@ public class ObjectTest
     [Test]
     public void map_root()
     {
-        var src = new
+        var src = new Sample
         {
             Name = "Hoge",
 
             Number = 4
             ,
-            Nest = new
+            Nest = new Nest
             {
                 Name = "Nested"
             }
@@ -56,12 +65,12 @@ public class ObjectTest
     {
         var src = new[]
         {
-                new {
+                new Sample{
                 Name = "Hoge"
                 ,
                 Number = 4
                 ,
-                Nest = new
+                Nest = new Nest
                 {
                     Name = "Nested"
                 }

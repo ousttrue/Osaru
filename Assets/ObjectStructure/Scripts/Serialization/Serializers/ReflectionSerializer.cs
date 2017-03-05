@@ -9,13 +9,25 @@ namespace ObjectStructure.Serialization.Serializers
 {
     public class StructReflectionSerializer<T> : ISerializer<T>
     {
-        delegate void SerializeFunc(T value, IFormatter f);
+        protected delegate void SerializeFunc(T value, IFormatter f);
         SerializeFunc[] m_serializers;
 
         public override void Setup(TypeRegistory r)
         {
-            var genericFieldMethod = GetType().GetMethod("CreateFieldSerializer", BindingFlags.Static | BindingFlags.NonPublic);
-            var genericPropertyMethod = GetType().GetMethod("CreatePropertySerializer", BindingFlags.Static | BindingFlags.NonPublic);
+            var genericFieldMethod = GetType().GetMethod("CreateFieldSerializer"
+                , BindingFlags.Static | BindingFlags.NonPublic|BindingFlags.FlattenHierarchy);
+            var genericPropertyMethod = GetType().GetMethod("CreatePropertySerializer"
+                , BindingFlags.Static | BindingFlags.NonPublic|BindingFlags.FlattenHierarchy);
+
+            /*
+            foreach(var n in GetType().GetMethods())
+            {
+                int a = 0;
+            }
+
+            var genericFieldMethod = GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy).FirstOrDefault(x => x.Name=="CreateFieldSerializer");
+            var genericPropertyMethod = GetType().GetMethods().FirstOrDefault(x => x.Name=="CreatePropertySerializer");
+            */
 
             m_serializers =
                 FieldsSerializers(genericFieldMethod, r)
@@ -33,7 +45,7 @@ namespace ObjectStructure.Serialization.Serializers
         */
 
         #region Field
-        IEnumerable<SerializeFunc> FieldsSerializers(
+        static IEnumerable<SerializeFunc> FieldsSerializers(
             MethodInfo genericMethod
             , TypeRegistory r)
         {
@@ -48,7 +60,7 @@ namespace ObjectStructure.Serialization.Serializers
                 ;
         }
 
-        static SerializeFunc CreateFieldSerializer<U>(
+        protected static SerializeFunc CreateFieldSerializer<U>(
             TypeRegistory r
             , FieldInfo x)
         {
@@ -66,6 +78,12 @@ namespace ObjectStructure.Serialization.Serializers
             MethodInfo genericMethod
             , TypeRegistory r)
         {
+            var props = typeof(T).GetProperties(System.Reflection.BindingFlags.Public
+                | System.Reflection.BindingFlags.Instance);
+            foreach(var pi in props)
+            {
+                int a = 0;
+            }
 
             return typeof(T).GetProperties(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
@@ -79,7 +97,7 @@ namespace ObjectStructure.Serialization.Serializers
                 ;
         }
 
-        static SerializeFunc CreatePropertySerializer<U>(
+        protected static SerializeFunc CreatePropertySerializer<U>(
             TypeRegistory r
             , PropertyInfo x)
         {

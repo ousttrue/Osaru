@@ -14,6 +14,11 @@ namespace ObjectStructure
             m_sb = sb;
         }
 
+        public string Buffer()
+        {
+            return m_sb.ToString();
+        }
+
         public void Clear()
         {
             m_sb.Length = 0;

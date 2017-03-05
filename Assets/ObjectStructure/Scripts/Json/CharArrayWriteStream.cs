@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 
@@ -41,6 +42,11 @@ namespace ObjectStructure
         public void Write(string src)
         {
             Write((IEnumerable<char>)src);
+        }
+
+        public string Buffer()
+        {
+            return new String(m_buffer.Array.Skip(m_buffer.Offset).Take(m_buffer.Count).ToArray());
         }
     }
 }

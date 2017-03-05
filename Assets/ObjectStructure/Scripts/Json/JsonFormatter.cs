@@ -43,11 +43,13 @@ namespace ObjectStructure.Json
         public void Clear()
         {
             m_w.Clear();
+            m_stack.Clear();
+            m_stack.Push(new Context(Current.NONE));
         }
 
         public object Result()
         {
-            return m_w.ToString();
+            return m_w.Buffer();
         }
 
         void CommaCheck(bool isKey=false)

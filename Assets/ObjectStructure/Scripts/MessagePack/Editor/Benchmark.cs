@@ -9,12 +9,21 @@ using ObjectStructure.Serialization.Serializers;
 using ObjectStructure;
 using ObjectStructure.Json;
 using ObjectStructure.MessagePack;
+using ObjectStructure.Serialization;
 
 /// <summary>
 /// from https://github.com/neuecc/ZeroFormatter/blob/master/sandbox/PerformanceComparison/Program.cs
 /// </summary>
 public class Benchmark
 {
+    TypeRegistory m_r;
+
+    [SetUp]
+    public void Setup()
+    {
+        m_r = new TypeRegistory();
+    }
+
     string HtmlPath = UnityEngine.Application.dataPath + "/ObjectStructure/Scripts/MessagePack/Editor/CSharpHtml.txt";
 
     const int Iteration = 10;
@@ -223,21 +232,21 @@ public class Benchmark
         UnityEngine.Debug.LogFormat("[Benchmark]{0}", sw.Elapsed);
     }
 
-    static T SerializeMsgPack<T>(T value)
+    T SerializeMsgPack<T>(T value)
     {
         var formatter = new MessagePackFormatter();
         Func<Byte[], MsgPackValue> parser = x => MsgPackValue.Parse(x);
 
-        return Serialize(formatter, parser, value);
+        return Serialize(m_r, formatter, parser, value);
     }
 
-    static T SerializeJson<T>(T value)
+    T SerializeJson<T>(T value)
     {
         var s = new StringBuilderStream(new StringBuilder());
         var formatter = new JsonFormatter(s);
         Func<string, JsonParser> parser = x => JsonParser.Parse(x);
 
-        return Serialize(formatter, parser, value);
+        return Serialize(m_r, formatter, parser, value);
     }
 
     [Test]
@@ -310,7 +319,8 @@ public class Benchmark
         UnityEngine.Debug.LogFormat("[Json]{0}", sw.Elapsed);
     }
 
-    static T Serialize<Formatter, Parser, T, DST>(Formatter f
+    static T Serialize<Formatter, Parser, T, DST>(TypeRegistory r
+        , Formatter f
         , Func<DST, Parser> parser, T original)
         where Formatter: IFormatter
         where Parser: IParser<Parser>
@@ -324,7 +334,6 @@ public class Benchmark
         // so, get serializer at first.
         // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
 
-        var r = new ObjectStructure.Serialization.TypeRegistory();
         var serializer = (ISerializer<T>)r.GetSerializer<T>();
         var deserializer = r.GetDeserializer<T>();
 

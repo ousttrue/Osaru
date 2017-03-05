@@ -33,7 +33,7 @@ Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
 
 # ToDO
 * [x] integrate [MsgPack library](https://github.com/ousttrue/NMessagePack)
-* [ ] reorganize messagepack library
+* [x] reorganize messagepack library
 * [ ] json from messagepack
 * [ ] messagepack from json
 * [ ] RPC

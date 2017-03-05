@@ -26,7 +26,7 @@ namespace ObjectStructureTest
             m_r = new TypeRegistory();
         }
 
-        string HtmlPath = UnityEngine.Application.dataPath + "/ObjectStructure/Scripts/MessagePack/Editor/CSharpHtml.txt";
+        string HtmlPath = UnityEngine.Application.dataPath + "/ObjectStructure/Tests/CSharpHtml.txt";
 
         const int Iteration = 10;
         static bool dryRun = true;

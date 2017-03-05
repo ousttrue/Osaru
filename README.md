@@ -17,14 +17,18 @@ MessagePack(byte[])         MessagePack(byte[])
 ```
 
 # Features
-* JSON
-* MessagePack
 * separate parser and deserializer
 * inplace serialization
 * inplace deserialization
 
-# RPC
+# Formats
+
+## JSON
+* http://www.json.org/index.html
 * http://www.jsonrpc.org/specification
+
+## MessagePack
+* https://github.com/msgpack/msgpack/blob/master/spec.md
 * https://github.com/msgpack-rpc/msgpack-rpc/blob/master/spec.md
 
 # Usage
@@ -34,6 +38,23 @@ var src = "{\"key\":{ \"nestedKey\": \"nestedValue\" } }";
 var json = JsonParser.Parse(src);
 
 Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
+```
+
+## RPC
+
+```cs
+var d = new RPCDispatcher();
+
+d.AddMethod("Add", (int a, int b)=>a+b);
+
+var json = "{\"jsonrpc\":\"2.0\", \"method\":\"Add\", \"params\":[1, 2], \"id\":1}";
+
+var request = JsonRPC20.Request(JsonParser.Parse(json));
+
+var f = new JsonFormatter();
+d.Dispatch(request, f);
+
+Assert.AreEqual("3", f.Result());
 ```
 
 # ToDO

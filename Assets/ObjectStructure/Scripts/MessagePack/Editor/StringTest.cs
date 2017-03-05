@@ -14,7 +14,6 @@ public class StringTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
 
     [Test]
@@ -22,7 +21,8 @@ public class StringTest
     {
         var bytes = m_r.SerializeToMessagePack("文字列");
 
-        String v = Deserializer.Deserialize<String>(bytes);
+        var v = default(String);
+        m_r.Deserialize(MsgPackValue.Parse(bytes), ref v);
 
         Assert.AreEqual("文字列", v);
     }

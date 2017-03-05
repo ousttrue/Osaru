@@ -13,7 +13,6 @@ public class ArrayTest
     [SetUp]
     public void Setup()
     {
-        Deserializer.Clear();
         m_r = new TypeRegistory();
     }
 
@@ -31,13 +30,13 @@ public class ArrayTest
                 (Byte)MsgPackType.NIL
             }, bytes);
 
-        Object[] a = Deserializer.Deserialize<object[]>(bytes);
+        var parsed = MsgPackValue.Parse(bytes);
 
-        Assert.AreEqual(4, a.Length);
-        Assert.AreEqual(0, a[0]);
-        Assert.AreEqual(1, a[1]);
-        Assert.False((Boolean)a[2]);
-        Assert.AreEqual(null, a[3]);
+        Assert.AreEqual(4, parsed.Count);
+        Assert.AreEqual(0, parsed[0].GetValue());
+        Assert.AreEqual(1, parsed[1].GetValue());
+        Assert.False((Boolean)parsed[2].GetValue());
+        Assert.AreEqual(null, parsed[3].GetValue());
     }
 
     [Test]

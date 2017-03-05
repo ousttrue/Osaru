@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using NUnit.Framework;
-
-using System.IO;
-using ObjectStructure.Serialization;
+﻿using NUnit.Framework;
 using ObjectStructure.MessagePack;
+using ObjectStructure.Serialization;
+using System;
+using System.Linq;
+
 
 [TestFixture]
 public class FloatTest
@@ -18,7 +14,6 @@ public class FloatTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
 
     [Test]

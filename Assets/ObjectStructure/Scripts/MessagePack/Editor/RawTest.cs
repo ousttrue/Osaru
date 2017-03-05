@@ -15,7 +15,6 @@ public class RawTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
 
     [Test]
@@ -24,17 +23,19 @@ public class RawTest
         var src = new Byte[] { 0, 1, 2 };
         var bytes = m_r.SerializeToMessagePack(src);
 
-        Byte[] v = Deserializer.Deserialize<Byte[]>(bytes);
+        var v = default(Byte[]);
+        m_r.Deserialize(MsgPackValue.Parse(bytes), ref v);
         Assert.AreEqual(src, v);
     }
 
     [Test]
     public void raw16()
     {
-        var src = Enumerable.Range(0, 50).Select(x => (Byte)x).ToList();
+        var src = Enumerable.Range(0, 50).Select(x => (Byte)x).ToArray();
         var bytes = m_r.SerializeToMessagePack(src);
 
-        Byte[] v = Deserializer.Deserialize<Byte[]>(bytes);
+        var v = default(Byte[]);
+        m_r.Deserialize(MsgPackValue.Parse(bytes), ref v);
         Assert.AreEqual(src.ToArray(), v);
     }
 }

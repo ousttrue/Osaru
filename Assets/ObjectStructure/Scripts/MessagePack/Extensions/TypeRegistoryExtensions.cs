@@ -28,5 +28,11 @@ namespace ObjectStructure.MessagePack
 
             return (Byte[])f.Result();
         }
+
+        public static void Deserialize<T>(this TypeRegistory r, MsgPackValue parser, ref T outValue)
+        {
+            var d = r.GetDeserializer<T>();
+            d.Deserialize(parser, ref outValue);
+        }
     }
 }

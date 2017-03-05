@@ -20,6 +20,8 @@ namespace ObjectStructure
     public interface IParser<T>
         where T: IParser<T>
     {
+        bool IsNull { get; }
+
         String GetString();
 
         Byte GetByte();
@@ -42,5 +44,8 @@ namespace ObjectStructure
         T this[string key] { get; }
 
         JsonValueType ValueType { get; }
+
+        int GetBytesSize();
+        void GetBytes(Byte[] bytes);
     }
 }

@@ -13,7 +13,6 @@ public class IntTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
 
     [Test]
@@ -24,7 +23,8 @@ public class IntTest
             var bytes = m_r.SerializeToMessagePack(i);
             Assert.AreEqual(new Byte[] { i }, bytes);
 
-            var j = Deserializer.Deserialize<Byte>(bytes);
+            var j = default(Byte);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -36,7 +36,8 @@ public class IntTest
         {
             var bytes = m_r.SerializeToMessagePack(i);
 
-            SByte j = Deserializer.Deserialize<SByte>(bytes);
+            var j = default(SByte);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -52,7 +53,8 @@ public class IntTest
                         0xcc, 0x93,
                         }, bytes);
 
-            Byte j = Deserializer.Deserialize<Byte>(bytes);
+            var j = default(Byte);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -68,7 +70,8 @@ public class IntTest
                         0xcc, 0x93,
                         }, bytes);
 
-            UInt16 j = Deserializer.Deserialize<UInt16>(bytes);
+            var j = default(UInt16);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -84,7 +87,8 @@ public class IntTest
                         0xcd, 0x01, 0x13
                         }, bytes);
 
-            UInt16 j = Deserializer.Deserialize<UInt16>(bytes);
+            var j = default(UInt16);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -100,7 +104,8 @@ public class IntTest
                         0xce, 0x00, 0x01, 0x00, 0x13
                         }, bytes);
 
-            UInt32 j = Deserializer.Deserialize<UInt32>(bytes);
+            var j = default(UInt32);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -117,7 +122,8 @@ public class IntTest
                         0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x13
                         }, bytes);
 
-            UInt64 j = Deserializer.Deserialize<UInt64>(bytes);
+            var j = default(UInt64);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -134,7 +140,8 @@ public class IntTest
                         0xd0, 0xc0,
                         }, bytes);
 
-            SByte j = Deserializer.Deserialize<SByte>(bytes);
+            var j = default(SByte);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -151,7 +158,8 @@ public class IntTest
                         0xd1, 0xFF, 0x6a
                         }, bytes);
 
-            Int16 j = Deserializer.Deserialize<Int16>(bytes);
+            var j = default(Int16);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -168,7 +176,8 @@ public class IntTest
                         0xd2, 0xff, 0xff, 0x77, 0x48
                         }, bytes);
 
-            Int32 j = Deserializer.Deserialize<Int32>(bytes);
+            var j = default(Int32);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }
@@ -185,7 +194,8 @@ public class IntTest
                         0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xfe
                         }, bytes);
 
-            var j = Deserializer.Deserialize<Int64>(bytes);
+            var j = default(Int64);
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(i, j);
         }
     }

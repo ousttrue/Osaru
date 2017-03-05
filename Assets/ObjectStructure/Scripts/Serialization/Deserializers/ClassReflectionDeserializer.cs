@@ -102,6 +102,12 @@ namespace ObjectStructure.Serialization.Deserializers
         public void Deserialize<PARSER>(PARSER json, ref T outValue)
             where PARSER: IParser<PARSER>
         {
+            if (json.IsNull)
+            {
+                outValue = null;
+                return;
+            }
+
             if (outValue == null)
             {
                 outValue=Activator.CreateInstance<T>();

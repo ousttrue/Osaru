@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace ObjectStructure.MessagePack.Deserializers
 {
+    /*
     public class GenericMapDeserializer<T, K, V> : IDeserializer<T>
         where T : IDictionary<K, V>
     {
@@ -19,7 +20,7 @@ namespace ObjectStructure.MessagePack.Deserializers
         public override T Deserialize(MsgPackValue value)
         {
             var list = Activator.CreateInstance<T>();
-            foreach (var kv in value.Items)
+            foreach (var kv in value.ObjectItems)
             {
                 list.Add(
                     m_k.Deserialize(kv.Key)
@@ -29,4 +30,5 @@ namespace ObjectStructure.MessagePack.Deserializers
             return list;
         }
     }
+    */
 }

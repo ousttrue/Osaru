@@ -15,7 +15,6 @@ public class MapTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
 
     [Test]
@@ -32,8 +31,8 @@ public class MapTest
         var value = MsgPackValue.Parse(bytes);
 
         Assert.AreEqual(2, value.Count);
-        Assert.AreEqual(1, value.Values.First().GetValue());
-        Assert.AreEqual(3, value.Values.Skip(1).First().GetValue());
+        Assert.AreEqual(1, value.GetValueByIntKey(0).GetValue());
+        Assert.AreEqual(3, value.GetValueByIntKey(2).GetValue());
     }
 
     [Test]
@@ -58,6 +57,6 @@ public class MapTest
 
         var value = MsgPackValue.Parse(bytes);
 
-        Assert.AreEqual(size, value.Values.Count());
+        Assert.AreEqual(size, value.ObjectItems.Count());
     }
 }

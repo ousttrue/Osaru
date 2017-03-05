@@ -14,7 +14,6 @@ public class BooleanTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
 
     [Test]
@@ -27,7 +26,8 @@ public class BooleanTest
             var bytes = ms.ToArray();
             Assert.AreEqual(new Byte[] { 0xC0 }, bytes);
 
-            Object j = Deserializer.Deserialize<Object>(bytes);
+            Object j = null;
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(null, j);
         }
 
@@ -35,7 +35,8 @@ public class BooleanTest
             var bytes = m_r.SerializeToMessagePack((object)null);
             Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes);
 
-            Object j = Deserializer.Deserialize<Object>(bytes);
+            Object j = null;
+            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
             Assert.AreEqual(null, j);
         }
     }

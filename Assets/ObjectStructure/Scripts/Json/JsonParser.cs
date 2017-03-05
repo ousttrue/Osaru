@@ -433,6 +433,16 @@ namespace ObjectStructure.Json
                 }
             }
         }
+
+        public int GetBytesSize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetBytes(byte[] bytes)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

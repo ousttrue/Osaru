@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 
 namespace ObjectStructure.Serialization.Serializers
 {
     public class StructReflectionSerializer<T> : ISerializer<T>
+        where T: struct
     {
         protected delegate void SerializeFunc(T value, IFormatter f);
         SerializeFunc[] m_serializers;
@@ -118,20 +118,6 @@ namespace ObjectStructure.Serialization.Serializers
                 serializer(t, f);
             }
             f.CloseMap();
-        }
-    }
-
-    public class ClassReflectionSerializer<T> : StructReflectionSerializer<T>
-    {
-        public override void Serialize(T t, IFormatter f)
-        {
-            if (typeof(T).IsClass && t == null)
-            {
-                f.Null();
-                return;
-            }
-
-            base.Serialize(t, f);
         }
     }
 }

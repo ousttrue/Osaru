@@ -24,84 +24,6 @@ namespace ObjectStructure.MessagePack
                 return (int)count;
             }
         }
-        public IEnumerable<MsgPackValue> Keys
-        {
-            get
-            {
-                if (!FormatType.IsMap())
-                {
-                    throw new InvalidOperationException("no map Keys");
-                }
-
-                uint count;
-                var current = GetItemCount(out count);
-                var childCount = count * 2;
-                for (var i = 0; i < childCount; ++i)
-                {
-                    var child = new MsgPackValue(current);
-                    if (i % 2 == 0)
-                    {
-                        yield return child;
-                    }
-                    current = child.Parse();
-                }
-            }
-        }
-        public IEnumerable<MsgPackValue> Values
-        {
-            get
-            {
-                if (FormatType.IsMap())
-                {
-                    uint count;
-                    var current = GetItemCount(out count);
-                    var childCount = count * 2;
-                    for (var i = 0; i < childCount; ++i)
-                    {
-                        var child = new MsgPackValue(current);
-                        current = child.Parse();
-                        if (i % 2 == 1)
-                        {
-                            yield return child;
-                        }
-                    }
-                }
-                else if(FormatType.IsArray())
-                {
-                    uint count;
-                    var current = GetItemCount(out count);
-                    for (var i = 0; i < count; ++i)
-                    {
-                        var child = new MsgPackValue(current);
-                        current = child.Parse();
-                        yield return child;
-                    }
-                }
-            }
-        }
-        public IEnumerable<KeyValuePair<MsgPackValue, MsgPackValue>> Items
-        {
-            get
-            {
-                if (!FormatType.IsMap())
-                {
-                    throw new InvalidOperationException("no map Keys");
-                }
-
-                uint count;
-                var current = GetItemCount(out count);
-                var childCount = count * 2;
-                for (var i = 0; i < childCount; i+=2)
-                {
-                    var key = new MsgPackValue(current);
-                    current = key.Parse();
-                    var value = new MsgPackValue(current);
-                    current = value.Parse();
-                    yield return new KeyValuePair<MsgPackValue, MsgPackValue>(key, value);
-                }
-
-            }
-        }
 
         public ExtType ExtType
         {
@@ -126,7 +48,19 @@ namespace ObjectStructure.MessagePack
         {
             get
             {
-                throw new NotImplementedException();
+                if (!FormatType.IsArray())
+                {
+                    throw new InvalidOperationException("not array");
+                }
+
+                uint count;
+                var current = GetItemCount(out count);
+                for (var i = 0; i < count; ++i)
+                {
+                    var child = new MsgPackValue(current);
+                    current = child.Parse();
+                    yield return child;
+                }
             }
         }
 
@@ -134,8 +68,48 @@ namespace ObjectStructure.MessagePack
         {
             get
             {
-                throw new NotImplementedException();
+                if (!FormatType.IsMap())
+                {
+                    throw new InvalidOperationException("not map");
+                }
+
+                uint count;
+                var current = GetItemCount(out count);
+                var childCount = count * 2;
+                for (var i = 0; i < childCount; i += 2)
+                {
+                    var key = new MsgPackValue(current);
+                    current = key.Parse();
+                    var value = new MsgPackValue(current);
+                    current = value.Parse();
+                    yield return new KeyValuePair<string, MsgPackValue>(key.GetString(), value);
+                }
             }
+        }
+
+        public MsgPackValue GetValueByIntKey(int target)
+        {
+            if (!FormatType.IsMap())
+            {
+                throw new InvalidOperationException("not map");
+            }
+
+            uint count;
+            var current = GetItemCount(out count);
+            var childCount = count * 2;
+            for (var i = 0; i < childCount; i += 2)
+            {
+                var key = new MsgPackValue(current);
+                current = key.Parse();
+                var value = new MsgPackValue(current);
+                current = value.Parse();
+                if (key.GetInt32() == target)
+                {
+                    return value;
+                }
+            }
+
+            throw new KeyNotFoundException();
         }
 
         public JsonValueType ValueType
@@ -146,33 +120,19 @@ namespace ObjectStructure.MessagePack
             }
         }
 
+        public bool IsNull
+        {
+            get
+            {
+                return FormatType == MsgPackType.NIL;
+            }
+        }
+
         public MsgPackValue this[int index]
         {
             get
             {
-                if (FormatType.IsMap())
-                {
-                    /*
-                    for (int i = 0; i < Children.Length; i += 2)
-                    {
-                        var child = Children[i];
-                        if (child.FormatType.IsInteger() && (int)child.GetValue() == index)
-                        {
-                            return Children[i + 1];
-                        }
-                    }
-                    throw new ArgumentException("not found: " + index);
-                    */
-                    throw new InvalidOperationException("index access to map");
-                }
-                if (FormatType.IsArray())
-                {
-                    return Values.Skip(index).First();
-                }
-                else
-                {
-                    throw new InvalidOperationException("is not collection");
-                }
+                return ArrayItems.Skip(index).First();
             }
         }
 
@@ -180,26 +140,7 @@ namespace ObjectStructure.MessagePack
         {
             get
             {
-                //if (String.IsNullOrEmpty(key)) throw new ArgumentNullException();
-                if (FormatType.IsMap())
-                {
-                    /*
-                    for (int i = 0; i < Children.Length; i += 2)
-                    {
-                        var child = Children[i];
-                        if (child.FormatType.IsString() && (String)child.GetValue() == key)
-                        {
-                            return Children[i + 1];
-                        }
-                    }
-                    throw new ArgumentException("not found: " + key);
-                    */
-                    return Items.First(x => x.Key.GetValue<string>() == key).Value;
-                }
-                else
-                {
-                    throw new InvalidOperationException("is not collection: " + key);
-                }
+                return ObjectItems.First(x => x.Key == key).Value;
             }
         }
 
@@ -877,57 +818,69 @@ namespace ObjectStructure.MessagePack
 
         public string GetString()
         {
-            throw new NotImplementedException();
+            return GetValue<String>();
         }
 
         public byte GetByte()
         {
-            throw new NotImplementedException();
+            return GetValue<Byte>();
         }
 
         public ushort GetUInt16()
         {
-            throw new NotImplementedException();
+            return GetValue<UInt16>();
         }
 
         public uint GetUInt32()
         {
-            throw new NotImplementedException();
+            return GetValue<UInt32>();
         }
 
         public ulong GetUInt64()
         {
-            throw new NotImplementedException();
+            return GetValue<UInt64>();
         }
 
         public sbyte GetSByte()
         {
-            throw new NotImplementedException();
+            return GetValue<SByte>();
         }
 
         public short GetInt16()
         {
-            throw new NotImplementedException();
+            return GetValue<Int16>();
         }
 
         public int GetInt32()
         {
-            throw new NotImplementedException();
+            return GetValue<Int32>();
         }
 
         public long GetInt64()
         {
-            throw new NotImplementedException();
+            return GetValue<Int64>();
         }
 
         public float GetSingle()
         {
-            throw new NotImplementedException();
+            return GetValue<Single>();
         }
 
         public double GetDouble()
         {
-            throw new NotImplementedException();
+            return GetValue<Double>();
+        }
+
+        public int GetBytesSize()
+        {
+            var body = GetBody();
+            return body.Count;
+        }
+
+        public void GetBytes(byte[] bytes)
+        {
+            var body = GetBody();
+            Array.Copy(body.Array, body.Offset, bytes, 0, body.Count);
         }
     }
 }

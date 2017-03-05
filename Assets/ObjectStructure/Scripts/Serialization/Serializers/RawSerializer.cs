@@ -4,14 +4,13 @@ using System.Collections.Generic;
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public class RawSerializer<T> : ISerializer<T>
-        where T: IList<Byte>
+    public class RawSerializer : ClassSerializerBase<Byte[]>
     {
         public override void Setup(TypeRegistory r)
         {
         }
 
-        public override void Serialize(T t, IFormatter f)
+        public override void NonNullSerialize(Byte[] t, IFormatter f)
         {
             f.Raw(t);
         }

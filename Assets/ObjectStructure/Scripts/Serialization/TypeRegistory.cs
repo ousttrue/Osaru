@@ -31,7 +31,8 @@ namespace ObjectStructure.Serialization
             {typeof(UInt64), new LambdaSerializer<UInt64>((x, f)=>  f.Value(x)) },
             {typeof(Single), new LambdaSerializer<Single>((x, f)=>  f.Value(x)) },
             {typeof(Double), new LambdaSerializer<Double>((x, f)=>  f.Value(x)) },
-            {typeof(string), new LambdaSerializer<String>((x, f)=> f.Value(x)) },
+            {typeof(String), new LambdaSerializer<String>((x, f)=> f.Value(x)) },
+            {typeof(Byte[]), new RawSerializer() },
         };
 
         public ISerializerBase GetSerializer(Type t)
@@ -65,12 +66,6 @@ namespace ObjectStructure.Serialization
             {
                 // enum
                 Type constructedType = typeof(EnumStringSerializer<>).MakeGenericType(t);
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
-            }
-            else if (typeof(IList<Byte>).IsAssignableFrom(t))
-            {
-                // raw
-                Type constructedType = typeof(RawSerializer<>).MakeGenericType(t);
                 return (ISerializerBase)Activator.CreateInstance(constructedType, null);
             }
             /*
@@ -130,12 +125,13 @@ namespace ObjectStructure.Serialization
             {typeof(Int32), new Int32Deserializer() },
             {typeof(Int64), new Int64Deserializer() },
             {typeof(Byte),  new ByteDeserializer() },
-            {typeof(UInt16), new Int16Deserializer() },
-            {typeof(UInt32), new Int32Deserializer() },
-            {typeof(UInt64), new Int64Deserializer() },
+            {typeof(UInt16), new UInt16Deserializer() },
+            {typeof(UInt32), new UInt32Deserializer() },
+            {typeof(UInt64), new UInt64Deserializer() },
             {typeof(Single), new SingleDeserializer() },
             {typeof(Double), new DoubleDeserializer() },
             {typeof(String), new StringDeserializer() },
+            {typeof(Byte[]), new RawDeserializer() },
         };
 
         public IDeserializer<T> GetDeserializer<T>()

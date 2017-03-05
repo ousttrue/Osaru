@@ -22,20 +22,7 @@ public class ObjectTest
     public void Setup()
     {
         m_r = new TypeRegistory();
-        Deserializer.Clear();
     }
-
-    /*
-    [Test]
-    public void obj()
-    {
-        var bytes = Serializer.Serialize((object)1);
-
-        int j=MsgPack.Unpack<int>(bytes);
-
-        Assert.AreEqual(1, j);
-    }
-    */
 
     [Test]
     public void map_root()

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+
 
 namespace ObjectStructure.Json
 {
@@ -200,6 +200,8 @@ namespace ObjectStructure.Json
         public void Raw(IList<byte> raw)
         {
             throw new NotImplementedException();
+            
+            // ToDo: Base64 encoding
         }
     }
 }

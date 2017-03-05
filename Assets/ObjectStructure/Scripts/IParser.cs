@@ -23,7 +23,9 @@ namespace ObjectStructure
         where T: IParser<T>
     {
         ParserValueType ValueType { get; }
-        bool IsNull { get; }
+        Boolean IsNull { get; }
+
+        Boolean GetBoolean();
 
         String GetString();
 
@@ -40,7 +42,7 @@ namespace ObjectStructure
         Single GetSingle();
         Double GetDouble();
 
-        IEnumerable<T> ArrayItems { get; }
+        IEnumerable<T> ListItems { get; }
         T this[int index] { get; }
 
         IEnumerable<KeyValuePair<String, T>> ObjectItems { get; }
@@ -48,5 +50,6 @@ namespace ObjectStructure
 
         int GetBytesSize();
         void GetBytes(Byte[] bytes);
+        void GetBytes(IFormatter f);
     }
 }

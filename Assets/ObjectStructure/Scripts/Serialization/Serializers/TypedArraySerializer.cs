@@ -11,12 +11,12 @@
 
         public override void Serialize(T[] t, IFormatter f)
         {
-            f.OpenList(t.Length);
+            f.BeginList(t.Length);
             foreach (var item in t)
             {
                 m_elementSerializer.Serialize(item, f);
             }
-            f.CloseLIst();
+            f.EndList();
         }
     }
 }

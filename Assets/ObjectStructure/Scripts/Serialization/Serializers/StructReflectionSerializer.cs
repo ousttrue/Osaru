@@ -112,12 +112,12 @@ namespace ObjectStructure.Serialization.Serializers
 
         public override void Serialize(T t, IFormatter f)
         {
-            f.OpenMap(m_serializers.Count());
+            f.BeginMap(m_serializers.Count());
             foreach (var serializer in m_serializers)
             {
                 serializer(t, f);
             }
-            f.CloseMap();
+            f.EndMap();
         }
     }
 }

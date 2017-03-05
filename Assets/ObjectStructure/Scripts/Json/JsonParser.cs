@@ -83,7 +83,7 @@ namespace ObjectStructure.Json
             private set;
         }
 
-        ParserValueType IParser<JsonParser>.ValueType
+        public ParserValueType ValueType
         {
             get
             {
@@ -300,9 +300,6 @@ namespace ObjectStructure.Json
             if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return double.Parse(m_segment.ToString());
         }
-        #endregion
-
-        #region StringType
         public string GetString()
         {
             if (JsonValueType != JsonValueType.String) throw new JsonValueException("is not string: "+m_segment);
@@ -330,7 +327,7 @@ namespace ObjectStructure.Json
         {
             get
             {
-                var it = ArrayItems.GetEnumerator();
+                var it = ListItems.GetEnumerator();
                 for(int i=0; it.MoveNext(); ++i)
                 {
                     if (i == index)
@@ -358,7 +355,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public IEnumerable<JsonParser> ArrayItems
+        public IEnumerable<JsonParser> ListItems
         {
             get
             {
@@ -469,6 +466,11 @@ namespace ObjectStructure.Json
         }
 
         public void GetBytes(byte[] bytes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetBytes(IFormatter f)
         {
             throw new NotImplementedException();
         }

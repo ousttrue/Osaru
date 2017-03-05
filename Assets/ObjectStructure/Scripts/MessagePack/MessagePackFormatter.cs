@@ -30,22 +30,22 @@ namespace ObjectStructure.MessagePack
             m_w.MsgPackNil();
         }
 
-        public void OpenList(int n)
+        public void BeginList(int n)
         {
             m_w.MsgPackArray(n);
         }
 
-        public void CloseLIst()
+        public void EndList()
         {
             //throw new NotImplementedException();
         }
 
-        public void OpenMap(int n)
+        public void BeginMap(int n)
         {
             m_w.MsgPackMap(n);
         }
 
-        public void CloseMap()
+        public void EndMap()
         {
             //throw new NotImplementedException();
         }
@@ -115,9 +115,9 @@ namespace ObjectStructure.MessagePack
             m_w.MsgPack(value);
         }
 
-        public void Raw(IList<byte> raw)
+        public void Raw(IEnumerable<byte> raw, int count)
         {
-            m_w.MsgPack(raw);
+            m_w.MsgPack(raw, count);
         }
     }
 }

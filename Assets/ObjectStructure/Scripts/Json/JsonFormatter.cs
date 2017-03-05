@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Text;
 
 namespace ObjectStructure.Json
 {
@@ -33,6 +33,10 @@ namespace ObjectStructure.Json
         }
 
         Stack<Context> m_stack = new Stack<Context>();
+
+        public JsonFormatter()
+            :this(new StringBuilderStream(new StringBuilder()))
+        {}
 
         public JsonFormatter(IWriteStream w)
         {
@@ -99,27 +103,27 @@ namespace ObjectStructure.Json
             m_w.Write("null");
         }
 
-        public void OpenList(int n)
+        public void BeginList(int n)
         {
             CommaCheck();
             m_w.Write('[');
             m_stack.Push(new Context(Current.ARRAY));
         }
 
-        public void CloseLIst()
+        public void EndList()
         {
             m_w.Write(']');
             m_stack.Pop();
         }
 
-        public void OpenMap(int n)
+        public void BeginMap(int n)
         {
             CommaCheck();
             m_w.Write('{');
             m_stack.Push(new Context(Current.OBJECT));
         }
 
-        public void CloseMap()
+        public void EndMap()
         {
             m_w.Write('}');
             m_stack.Pop();
@@ -197,7 +201,7 @@ namespace ObjectStructure.Json
             m_w.Write(x.ToString());
         }
 
-        public void Raw(IList<byte> raw)
+        public void Raw(IEnumerable<byte> raw, int count)
         {
             throw new NotImplementedException();
             

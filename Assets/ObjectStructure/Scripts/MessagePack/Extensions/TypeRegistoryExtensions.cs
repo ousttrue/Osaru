@@ -19,17 +19,17 @@ namespace ObjectStructure.MessagePack
         {
             var f = new MessagePackFormatter();
 
-            f.OpenMap(2);
+            f.BeginMap(2);
             r.GetSerializer<K0>().Serialize(key0, f);
             r.GetSerializer<T0>().Serialize(value0, f);
             r.GetSerializer<K1>().Serialize(key1, f);
             r.GetSerializer<T1>().Serialize(value1, f);
-            f.CloseMap();
+            f.EndMap();
 
             return (Byte[])f.Result();
         }
 
-        public static void Deserialize<T>(this TypeRegistory r, MsgPackValue parser, ref T outValue)
+        public static void Deserialize<T>(this TypeRegistory r, MessagePackParser parser, ref T outValue)
         {
             var d = r.GetDeserializer<T>();
             d.Deserialize(parser, ref outValue);

@@ -15,12 +15,12 @@ namespace ObjectStructure.Serialization.Serializers
 
         public override void NonNullSerialize(U t, IFormatter f)
         {
-            f.OpenList(t.Count);
+            f.BeginList(t.Count);
             foreach (var item in t)
             {
                 m_elementSerializer.Serialize(item, f);
             }
-            f.CloseLIst();
+            f.EndList();
         }
     }
 }

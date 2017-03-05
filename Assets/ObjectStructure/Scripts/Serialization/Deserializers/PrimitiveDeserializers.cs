@@ -3,6 +3,19 @@
 
 namespace ObjectStructure.Serialization.Deserializers
 {
+    public class BooleanDeserializer : IDeserializerBase<Boolean>
+    {
+        public void Setup(TypeRegistory r)
+        {
+        }
+
+        public void Deserialize<PARSER>(PARSER parser, ref Boolean outValue)
+            where PARSER : IParser<PARSER>
+        {
+            outValue = parser.GetBoolean();
+        }
+    }
+
     #region Byte, UInt16, 32, 64
     public class ByteDeserializer : IDeserializerBase<Byte>
     {

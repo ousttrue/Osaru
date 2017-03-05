@@ -2,25 +2,26 @@
 .Net3.5(Unity) Serialization library.
 
 ```
-+-------------+             +-----------+
-|IDeserializer| -> value -> |ISerializer|
-+-------------+             +-----------+
++----------------+          +-----------+
+|IDeserializer<T>| ->  T -> |ISerializer|
++----------------+          +-----------+
   A                           |
   |                           V
 +-------+    convert        +----------+
 |IParser| ----------------> |IFormatter|
 +-------+                   +----------+
-  A                           |
-  |                           V
-JSON, MessagePack           JSON, MessagePack
+ A     A                      |    |
+ |     |                      |    V
+ |  JSON(string)              V  JSON(string)
+MessagePack(byte[])         MessagePack(byte[])
 ```
 
 ## Features
 * JSON
 * MessagePack
 * separate parser and deserializer
-* inplace serialization(json)
-* inplace deserialization(json)
+* inplace serialization
+* inplace deserialization
 
 ## Usage
 
@@ -36,8 +37,7 @@ Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
 * [x] reorganize messagepack library
 * [ ] user class serializer
 * [ ] json formatter test
-* [ ] json from messagepack
-* [ ] messagepack from json
+* [x] json and messagepack converter
 * [ ] RPC
 * [ ] code generator for RPC client
 

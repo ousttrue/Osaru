@@ -15,14 +15,14 @@ namespace ObjectStructure.Serialization.Deserializers
         public void Deserialize<PARSER>(PARSER json, ref T[] outValue)
         where PARSER : IParser<PARSER>
         {
-            var count = json.ArrayItems.Count();
+            var count = json.ListItems.Count();
             if (outValue == null || outValue.Length != count)
             {
                 outValue = new T[count];
             }
 
             int i = 0;
-            foreach (var item in json.ArrayItems)
+            foreach (var item in json.ListItems)
             {
                 m_elementDeserializer.Deserialize(item, ref outValue[i++]);
             }

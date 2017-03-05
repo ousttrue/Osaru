@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ObjectStructure.MessagePack
 {
-    public struct MsgPackValue: IParser<MsgPackValue>
+    public struct MessagePackParser: IParser<MessagePackParser>
     {
         public BytesSegment Bytes { get; private set; }
 
@@ -44,7 +44,7 @@ namespace ObjectStructure.MessagePack
             }
         }
 
-        public IEnumerable<MsgPackValue> ArrayItems
+        public IEnumerable<MessagePackParser> ListItems
         {
             get
             {
@@ -57,14 +57,14 @@ namespace ObjectStructure.MessagePack
                 var current = GetItemCount(out count);
                 for (var i = 0; i < count; ++i)
                 {
-                    var child = new MsgPackValue(current);
+                    var child = new MessagePackParser(current);
                     current = child.Parse();
                     yield return child;
                 }
             }
         }
 
-        public IEnumerable<KeyValuePair<string, MsgPackValue>> ObjectItems
+        public IEnumerable<KeyValuePair<string, MessagePackParser>> ObjectItems
         {
             get
             {
@@ -78,16 +78,16 @@ namespace ObjectStructure.MessagePack
                 var childCount = count * 2;
                 for (var i = 0; i < childCount; i += 2)
                 {
-                    var key = new MsgPackValue(current);
+                    var key = new MessagePackParser(current);
                     current = key.Parse();
-                    var value = new MsgPackValue(current);
+                    var value = new MessagePackParser(current);
                     current = value.Parse();
-                    yield return new KeyValuePair<string, MsgPackValue>(key.GetString(), value);
+                    yield return new KeyValuePair<string, MessagePackParser>(key.GetString(), value);
                 }
             }
         }
 
-        public MsgPackValue GetValueByIntKey(int target)
+        public MessagePackParser GetValueByIntKey(int target)
         {
             if (!FormatType.IsMap())
             {
@@ -99,9 +99,9 @@ namespace ObjectStructure.MessagePack
             var childCount = count * 2;
             for (var i = 0; i < childCount; i += 2)
             {
-                var key = new MsgPackValue(current);
+                var key = new MessagePackParser(current);
                 current = key.Parse();
-                var value = new MsgPackValue(current);
+                var value = new MessagePackParser(current);
                 current = value.Parse();
                 if (key.GetInt32() == target)
                 {
@@ -128,15 +128,15 @@ namespace ObjectStructure.MessagePack
             }
         }
 
-        public MsgPackValue this[int index]
+        public MessagePackParser this[int index]
         {
             get
             {
-                return ArrayItems.Skip(index).First();
+                return ListItems.Skip(index).First();
             }
         }
 
-        public MsgPackValue this[string key]
+        public MessagePackParser this[string key]
         {
             get
             {
@@ -144,21 +144,21 @@ namespace ObjectStructure.MessagePack
             }
         }
 
-        public static MsgPackValue Parse(Byte[] bytes)
+        public static MessagePackParser Parse(Byte[] bytes)
         {
             return Parse(new BytesSegment(bytes));
         }
-        public static MsgPackValue Parse(BytesSegment bytes)
+        public static MessagePackParser Parse(BytesSegment bytes)
         {
-            var value = new MsgPackValue(bytes);
+            var value = new MessagePackParser(bytes);
             value.Parse();
             return value;
         }
 
-        MsgPackValue(Byte[] bytes) : this(new BytesSegment(bytes))
+        MessagePackParser(Byte[] bytes) : this(new BytesSegment(bytes))
         { }
 
-        MsgPackValue(BytesSegment bytes)
+        MessagePackParser(BytesSegment bytes)
         {
             Bytes = bytes;
         }
@@ -173,7 +173,7 @@ namespace ObjectStructure.MessagePack
                 //Children = new MsgPackValue[count];
                 for(var i=0; i<count; ++i)
                 { 
-                    var child = new MsgPackValue(current);
+                    var child = new MessagePackParser(current);
                     current = child.Parse();
                 }
             }
@@ -185,7 +185,7 @@ namespace ObjectStructure.MessagePack
                 var childCount = count * 2;
                 for (var i = 0; i < childCount; ++i)
                 {
-                    var child = new MsgPackValue(current);
+                    var child = new MessagePackParser(current);
                     current = child.Parse();
                 }
             }
@@ -816,6 +816,11 @@ namespace ObjectStructure.MessagePack
             }
         }
 
+        public bool GetBoolean()
+        {
+            return GetValue<Boolean>();
+        }
+
         public string GetString()
         {
             return GetValue<String>();
@@ -881,6 +886,12 @@ namespace ObjectStructure.MessagePack
         {
             var body = GetBody();
             Array.Copy(body.Array, body.Offset, bytes, 0, body.Count);
+        }
+
+        public void GetBytes(IFormatter f)
+        {
+            var body = GetBody();
+            f.Raw(body, body.Count);
         }
     }
 }

@@ -120,6 +120,7 @@ namespace ObjectStructure.Serialization
         #region Deserialize
         Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
         {
+            {typeof(Boolean), new BooleanDeserializer() },
             {typeof(SByte), new SByteDeserializer() },
             {typeof(Int16), new Int16Deserializer() },
             {typeof(Int32), new Int32Deserializer() },

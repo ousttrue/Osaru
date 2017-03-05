@@ -22,7 +22,7 @@ namespace ObjectStructure.Serialization.Deserializers
             }
             outValue.Clear();
 
-            foreach (var item in json.ArrayItems)
+            foreach (var item in json.ListItems)
             {
                 var value = default(T);
                 m_elementDeserializer.Deserialize(item, ref value);

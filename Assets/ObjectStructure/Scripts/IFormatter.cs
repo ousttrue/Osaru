@@ -8,10 +8,10 @@ namespace ObjectStructure
         void Clear();
         object Result();
 
-        void OpenList(int n);
-        void CloseLIst();
-        void OpenMap(int n);
-        void CloseMap();
+        void BeginList(int n);
+        void EndList();
+        void BeginMap(int n);
+        void EndMap();
 
         void Null();
 
@@ -33,6 +33,6 @@ namespace ObjectStructure
         void Value(Single value);
         void Value(Double value);
 
-        void Raw(IList<Byte> raw);
+        void Raw(IEnumerable<Byte> raw, int count);
     }
 }

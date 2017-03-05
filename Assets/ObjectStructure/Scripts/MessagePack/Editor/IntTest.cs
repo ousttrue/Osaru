@@ -3,200 +3,202 @@ using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
 using System;
 
-
-[TestFixture]
-public class IntTest
+namespace ObjectStructureTest.MessagePack
 {
-    TypeRegistory m_r;
-
-    [SetUp]
-    public void Setup()
+    [TestFixture]
+    public class IntTest
     {
-        m_r = new TypeRegistory();
-    }
+        TypeRegistory m_r;
 
-    [Test]
-    public void positive_fixnum()
-    {
-        for (Byte i = 0; i < 128; ++i)
+        [SetUp]
+        public void Setup()
         {
-            var bytes = m_r.SerializeToMessagePack(i);
-            Assert.AreEqual(new Byte[] { i }, bytes);
-
-            var j = default(Byte);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+            m_r = new TypeRegistory();
         }
-    }
 
-    [Test]
-    public void negative_fixnum()
-    {
-        for (SByte i = -32; i < 0; ++i)
+        [Test]
+        public void positive_fixnum()
         {
-            var bytes = m_r.SerializeToMessagePack(i);
+            for (Byte i = 0; i < 128; ++i)
+            {
+                var bytes = m_r.SerializeToMessagePack(i);
+                Assert.AreEqual(new Byte[] { i }, bytes);
 
-            var j = default(SByte);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(Byte);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void uint8()
-    {
+        [Test]
+        public void negative_fixnum()
         {
-            Byte i = 0x7F + 20;
+            for (SByte i = -32; i < 0; ++i)
+            {
+                var bytes = m_r.SerializeToMessagePack(i);
 
-            var bytes = m_r.SerializeToMessagePack(i);
-            Assert.AreEqual(new Byte[]{
+                var j = default(SByte);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
+        }
+
+        [Test]
+        public void uint8()
+        {
+            {
+                Byte i = 0x7F + 20;
+
+                var bytes = m_r.SerializeToMessagePack(i);
+                Assert.AreEqual(new Byte[]{
                         0xcc, 0x93,
                         }, bytes);
 
-            var j = default(Byte);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(Byte);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void cast_large_type()
-    {
+        [Test]
+        public void cast_large_type()
         {
-            Byte i = 0x7F + 20;
+            {
+                Byte i = 0x7F + 20;
 
-            var bytes = m_r.SerializeToMessagePack(i);
-            Assert.AreEqual(new Byte[]{
+                var bytes = m_r.SerializeToMessagePack(i);
+                Assert.AreEqual(new Byte[]{
                         0xcc, 0x93,
                         }, bytes);
 
-            var j = default(UInt16);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(UInt16);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void uint16()
-    {
+        [Test]
+        public void uint16()
         {
-            UInt16 i = 0xFF + 20;
+            {
+                UInt16 i = 0xFF + 20;
 
-            var bytes = m_r.SerializeToMessagePack(i);
-            Assert.AreEqual(new Byte[]{
+                var bytes = m_r.SerializeToMessagePack(i);
+                Assert.AreEqual(new Byte[]{
                         0xcd, 0x01, 0x13
                         }, bytes);
 
-            var j = default(UInt16);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(UInt16);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void uint32()
-    {
+        [Test]
+        public void uint32()
         {
-            UInt32 i = 0xFFFF + 20;
+            {
+                UInt32 i = 0xFFFF + 20;
 
-            var bytes = m_r.SerializeToMessagePack(i);
-            Assert.AreEqual(new Byte[]{
+                var bytes = m_r.SerializeToMessagePack(i);
+                Assert.AreEqual(new Byte[]{
                         0xce, 0x00, 0x01, 0x00, 0x13
                         }, bytes);
 
-            var j = default(UInt32);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(UInt32);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void uint64()
-    {
+        [Test]
+        public void uint64()
         {
-            UInt64 i = 0xFFFFFFFF;
-            i += 20;
+            {
+                UInt64 i = 0xFFFFFFFF;
+                i += 20;
 
-            var bytes = m_r.SerializeToMessagePack(i);
-            Assert.AreEqual(new Byte[]{
+                var bytes = m_r.SerializeToMessagePack(i);
+                Assert.AreEqual(new Byte[]{
                         0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x13
                         }, bytes);
 
-            var j = default(UInt64);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(UInt64);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void int8()
-    {
+        [Test]
+        public void int8()
         {
-            SByte i = -64;
+            {
+                SByte i = -64;
 
-            var bytes = m_r.SerializeToMessagePack(i);
+                var bytes = m_r.SerializeToMessagePack(i);
 
-            Assert.AreEqual(new Byte[]{
+                Assert.AreEqual(new Byte[]{
                         0xd0, 0xc0,
                         }, bytes);
 
-            var j = default(SByte);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(SByte);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void int16()
-    {
+        [Test]
+        public void int16()
         {
-            Int16 i = -150;
+            {
+                Int16 i = -150;
 
-            var bytes = m_r.SerializeToMessagePack(i);
+                var bytes = m_r.SerializeToMessagePack(i);
 
-            Assert.AreEqual(new Byte[]{
+                Assert.AreEqual(new Byte[]{
                         0xd1, 0xFF, 0x6a
                         }, bytes);
 
-            var j = default(Int16);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(Int16);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void int32()
-    {
+        [Test]
+        public void int32()
         {
-            Int32 i = -35000;
+            {
+                Int32 i = -35000;
 
-            var bytes = m_r.SerializeToMessagePack(i);
+                var bytes = m_r.SerializeToMessagePack(i);
 
-            Assert.AreEqual(new Byte[]{
+                Assert.AreEqual(new Byte[]{
                         0xd2, 0xff, 0xff, 0x77, 0x48
                         }, bytes);
 
-            var j = default(Int32);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(Int32);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
-    }
 
-    [Test]
-    public void int64()
-    {
+        [Test]
+        public void int64()
         {
-            Int64 i = -2147483650;
+            {
+                Int64 i = -2147483650;
 
-            var bytes = m_r.SerializeToMessagePack(i);
+                var bytes = m_r.SerializeToMessagePack(i);
 
-            Assert.AreEqual(new Byte[]{
+                Assert.AreEqual(new Byte[]{
                         0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xfe
                         }, bytes);
 
-            var j = default(Int64);
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(i, j);
+                var j = default(Int64);
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(i, j);
+            }
         }
     }
 }

@@ -4,62 +4,64 @@ using ObjectStructure.Serialization;
 using System;
 using System.IO;
 
-
-[TestFixture]
-public class BooleanTest
+namespace ObjectStructureTest.MessagePack
 {
-    TypeRegistory m_r;
-
-    [SetUp]
-    public void Setup()
+    [TestFixture]
+    public class BooleanTest
     {
-        m_r = new TypeRegistory();
-    }
+        TypeRegistory m_r;
 
-    [Test]
-    public void nil()
-    {
+        [SetUp]
+        public void Setup()
         {
-            var ms = new MemoryStream();
-            var w = new MsgPackWriter(ms); ;
-            w.MsgPackNil();
-            var bytes = ms.ToArray();
-            Assert.AreEqual(new Byte[] { 0xC0 }, bytes);
-
-            Object j = null;
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(null, j);
+            m_r = new TypeRegistory();
         }
 
+        [Test]
+        public void nil()
         {
-            var bytes = m_r.SerializeToMessagePack((object)null);
-            Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes);
+            {
+                var ms = new MemoryStream();
+                var w = new MsgPackWriter(ms); ;
+                w.MsgPackNil();
+                var bytes = ms.ToArray();
+                Assert.AreEqual(new Byte[] { 0xC0 }, bytes);
 
-            Object j = null;
-            m_r.Deserialize(MsgPackValue.Parse(bytes), ref j);
-            Assert.AreEqual(null, j);
+                Object j = null;
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(null, j);
+            }
+
+            {
+                var bytes = m_r.SerializeToMessagePack((object)null);
+                Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes);
+
+                Object j = null;
+                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+                Assert.AreEqual(null, j);
+            }
         }
-    }
 
-    [Test]
-    public void True()
-    {
-        var bytes = m_r.SerializeToMessagePack(true);
-        Assert.AreEqual(new Byte[] { 0xC3 }, bytes);
+        [Test]
+        public void True()
+        {
+            var bytes = m_r.SerializeToMessagePack(true);
+            Assert.AreEqual(new Byte[] { 0xC3 }, bytes);
 
-        var value = MsgPackValue.Parse(bytes);
-        var j = value.GetValue<Boolean>();
-        Assert.AreEqual(true, j);
-    }
+            var value = MessagePackParser.Parse(bytes);
+            var j = value.GetValue<Boolean>();
+            Assert.AreEqual(true, j);
+        }
 
-    [Test]
-    public void False()
-    {
-        var bytes = m_r.SerializeToMessagePack(false);
-        Assert.AreEqual(new Byte[] { 0xC2 }, bytes);
+        [Test]
+        public void False()
+        {
+            var bytes = m_r.SerializeToMessagePack(false);
+            Assert.AreEqual(new Byte[] { 0xC2 }, bytes);
 
-        var value = MsgPackValue.Parse(bytes);
-        var j = value.GetValue<Boolean>();
-        Assert.AreEqual(false, j);
+            var value = MessagePackParser.Parse(bytes);
+            var j = value.GetValue<Boolean>();
+            Assert.AreEqual(false, j);
+        }
     }
 }

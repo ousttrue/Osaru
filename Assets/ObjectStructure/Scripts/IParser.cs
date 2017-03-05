@@ -4,22 +4,25 @@ using System.Collections.Generic;
 
 namespace ObjectStructure
 {
-    public enum JsonValueType
+    public enum ParserValueType
     {
-        Unknown,
+        Unknown, // for Null
 
-        String,
-        Number,
-        Object,
-        Array,
+        List,
+        Map,
+
         Boolean,
-
-        Close, // internal use
+        Integer,
+        Float,
+        Double,
+        String,
+        Bytes,
     }
 
     public interface IParser<T>
         where T: IParser<T>
     {
+        ParserValueType ValueType { get; }
         bool IsNull { get; }
 
         String GetString();
@@ -42,8 +45,6 @@ namespace ObjectStructure
 
         IEnumerable<KeyValuePair<String, T>> ObjectItems { get; }
         T this[string key] { get; }
-
-        JsonValueType ValueType { get; }
 
         int GetBytesSize();
         void GetBytes(Byte[] bytes);

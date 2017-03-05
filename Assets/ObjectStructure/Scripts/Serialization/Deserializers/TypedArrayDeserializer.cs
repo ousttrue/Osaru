@@ -3,9 +3,9 @@
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class TypedArrayDeserializer<T> : IDeserializer<T[]>
+    public class TypedArrayDeserializer<T> : IDeserializerBase<T[]>
     {
-        IDeserializer<T> m_elementDeserializer;
+        IDeserializerBase<T> m_elementDeserializer;
 
         public void Setup(TypeRegistory r)
         {

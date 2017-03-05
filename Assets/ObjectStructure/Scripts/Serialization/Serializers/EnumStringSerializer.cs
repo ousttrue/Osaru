@@ -3,13 +3,13 @@
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public class EnumStringSerializer<T> : ISerializer<T>
+    public class EnumStringSerializer<T> : SerializerBase<T>
     {
-        ISerializer<string> m_stringSerializer;
+        SerializerBase<string> m_stringSerializer;
 
         public override void Setup(TypeRegistory r)
         {
-            m_stringSerializer = (ISerializer<string>)r.GetSerializer<String>();
+            m_stringSerializer = (SerializerBase<string>)r.GetSerializer<String>();
         }
 
         public override void Serialize(T t, IFormatter f)

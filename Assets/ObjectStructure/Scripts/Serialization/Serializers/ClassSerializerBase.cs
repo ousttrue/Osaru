@@ -3,7 +3,7 @@
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public abstract class ClassSerializerBase<T> : ISerializer<T>
+    public abstract class ClassSerializerBase<T> : SerializerBase<T>
         where T: class
     {
         public override void Serialize(T t, IFormatter f)

@@ -7,13 +7,13 @@ using System.Reflection;
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class StructReflectionDeserializer<T> : IDeserializer<T>
+    public class StructReflectionDeserializer<T> : IDeserializerBase<T>
         where T: struct
     {
         class DeserializerCaller
         {
             delegate void BoxingDeserializeFunc<PARSER>(PARSER json, object outValue);
-            static BoxingDeserializeFunc<PARSER> CreateFunc<PARSER, U>(IDeserializer<U> deserializer, Setter<U> setter)
+            static BoxingDeserializeFunc<PARSER> CreateFunc<PARSER, U>(IDeserializerBase<U> deserializer, Setter<U> setter)
                 where PARSER: IParser<PARSER>
             {
                 return new BoxingDeserializeFunc<PARSER>(

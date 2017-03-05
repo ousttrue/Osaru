@@ -1,12 +1,12 @@
 ﻿namespace ObjectStructure.Serialization.Serializers
 {
-    public class TypedArraySerializer<T> : ISerializer<T[]>
+    public class TypedArraySerializer<T> : SerializerBase<T[]>
     {
-        ISerializer<T> m_elementSerializer = null;
+        SerializerBase<T> m_elementSerializer = null;
 
         public override void Setup(TypeRegistory r)
         {
-            m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
+            m_elementSerializer = (SerializerBase<T>)r.GetSerializer<T>();
         }
 
         public override void Serialize(T[] t, IFormatter f)

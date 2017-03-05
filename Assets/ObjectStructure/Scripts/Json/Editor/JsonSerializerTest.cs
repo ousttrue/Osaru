@@ -10,7 +10,7 @@ public static class TypeRegistoryExtensions
     public static void TypeTest<T>(this ObjectStructure.Serialization.TypeRegistory typeRegistory
         , T value, string expected)
     {
-        var serializer = (ISerializer<T>)typeRegistory.GetSerializer<T>();
+        var serializer = (SerializerBase<T>)typeRegistory.GetSerializer<T>();
         var serialized = serializer.SerializeToJson(value);
         Assert.AreEqual(expected, serialized);
 

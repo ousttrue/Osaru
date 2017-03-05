@@ -112,11 +112,11 @@ namespace ObjectStructure.MessagePack
             throw new KeyNotFoundException();
         }
 
-        public JsonValueType ValueType
+        public ParserValueType ValueType
         {
             get
             {
-                throw new NotImplementedException();
+                return FormatType.ToParserValueType();
             }
         }
 

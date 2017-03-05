@@ -3,7 +3,7 @@
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class EnumStringDeserializer<T> : IDeserializer<T>
+    public class EnumStringDeserializer<T> : IDeserializerBase<T>
     {
         public void Setup(TypeRegistory r)
         {

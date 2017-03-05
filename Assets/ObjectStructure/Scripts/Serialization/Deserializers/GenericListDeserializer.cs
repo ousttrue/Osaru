@@ -3,10 +3,10 @@
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class GenericListDeserializer<T, U> : IDeserializer<U>
+    public class GenericListDeserializer<T, U> : IDeserializerBase<U>
         where U: IList<T>
     {
-        IDeserializer<T> m_elementDeserializer;
+        IDeserializerBase<T> m_elementDeserializer;
 
         public void Setup(TypeRegistory r)
         {

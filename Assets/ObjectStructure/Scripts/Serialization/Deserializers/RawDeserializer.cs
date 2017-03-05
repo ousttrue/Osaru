@@ -3,7 +3,7 @@
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class RawDeserializer : IDeserializer<Byte[]>
+    public class RawDeserializer : IDeserializerBase<Byte[]>
     {
         public void Setup(TypeRegistory r)
         {

@@ -1,12 +1,12 @@
-﻿using System;
+﻿
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public interface ISerializerBase : ITypeInitializer
+    public interface ISerializer : ITypeInitializer
     {
         void SerializeBoxing(object o, IFormatter f);
     }
-    public abstract class ISerializer<T> : ISerializerBase
+    public abstract class SerializerBase<T> : ISerializer
     {
         public void SerializeBoxing(object o, IFormatter f)
         {

@@ -17,6 +17,19 @@ namespace ObjectStructure.Json
         public JsonValueException(string msg) : base(msg) { }
     }
 
+    public enum JsonValueType
+    {
+        Unknown,
+
+        String,
+        Number,
+        Object,
+        Array,
+        Boolean,
+
+        Close, // internal use
+    }
+
     public struct JsonParser: IParser<JsonParser>
     {
         StringSegment m_segment;
@@ -33,7 +46,7 @@ namespace ObjectStructure.Json
 
         public void ParseToEnd()
         {
-            if (ValueType != JsonValueType.Object && ValueType != JsonValueType.Array)
+            if (JsonValueType != JsonValueType.Object && JsonValueType != JsonValueType.Array)
             {
                 throw new JsonParseException("require object or arrray");
             }
@@ -43,7 +56,7 @@ namespace ObjectStructure.Json
             }
 
             var close = GetNodes(true).Last();
-            if (close.ValueType != JsonValueType.Close)
+            if (close.JsonValueType != JsonValueType.Close)
             {
                 throw new JsonParseException("close expected");
             }
@@ -64,10 +77,26 @@ namespace ObjectStructure.Json
             }
         }
 
-        public JsonValueType ValueType
+        public JsonValueType JsonValueType
         {
             get;
             private set;
+        }
+
+        ParserValueType IParser<JsonParser>.ValueType
+        {
+            get
+            {
+                switch(JsonValueType)
+                {
+                    case JsonValueType.Array: return ParserValueType.List;
+                    case JsonValueType.Object: return ParserValueType.Map;
+                    case JsonValueType.Number: return ParserValueType.Double;
+                    case JsonValueType.String: return ParserValueType.String;
+                    case JsonValueType.Boolean: return ParserValueType.Boolean;
+                }
+                return ParserValueType.Unknown;
+            }
         }
 
         static StringSegment SearchTokenEnd(StringSegment segment)
@@ -135,16 +164,16 @@ namespace ObjectStructure.Json
         {
             switch (segment[0])
             {
-                case '{': ValueType = JsonValueType.Object; break;
-                case '[': ValueType = JsonValueType.Array; break;
-                case '"': ValueType = JsonValueType.String; break;
-                case 't': ValueType = JsonValueType.Boolean; break;
-                case 'f': ValueType = JsonValueType.Boolean; break;
-                case 'n': ValueType = JsonValueType.Unknown; break;
+                case '{': JsonValueType = JsonValueType.Object; break;
+                case '[': JsonValueType = JsonValueType.Array; break;
+                case '"': JsonValueType = JsonValueType.String; break;
+                case 't': JsonValueType = JsonValueType.Boolean; break;
+                case 'f': JsonValueType = JsonValueType.Boolean; break;
+                case 'n': JsonValueType = JsonValueType.Unknown; break;
 
                 case '}': // fall through
                 case ']': // fall through
-                    ValueType = JsonValueType.Close; break;
+                    JsonValueType = JsonValueType.Close; break;
 
                 case '-': // fall through
                 case '0': // fall through
@@ -157,14 +186,14 @@ namespace ObjectStructure.Json
                 case '7': // fall through
                 case '8': // fall through
                 case '9': // fall through
-                    ValueType = JsonValueType.Number; break;
+                    JsonValueType = JsonValueType.Number; break;
 
                 default:
-                    ValueType = JsonValueType.Unknown;
+                    JsonValueType = JsonValueType.Unknown;
                     throw new JsonParseException(segment.ToString() + " is not json");
             }
 
-            switch (ValueType)
+            switch (JsonValueType)
             {
                 case JsonValueType.Array: // fall through
                 case JsonValueType.Object: // fall through
@@ -211,7 +240,7 @@ namespace ObjectStructure.Json
 
         public bool GetBoolean()
         {
-            if (ValueType != JsonValueType.Boolean) throw new JsonValueException("is not boolean: "+m_segment);
+            if (JsonValueType != JsonValueType.Boolean) throw new JsonValueException("is not boolean: "+m_segment);
             var s = m_segment.ToString();
             switch (s)
             {
@@ -223,52 +252,52 @@ namespace ObjectStructure.Json
 
         public SByte GetSByte()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return SByte.Parse(m_segment.ToString());
         }
         public Int16 GetInt16()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return Int16.Parse(m_segment.ToString());
         }
         public Int32 GetInt32()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return Int32.Parse(m_segment.ToString());
         }
         public Int64 GetInt64()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return Int64.Parse(m_segment.ToString());
         }
         public Byte GetByte()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return Byte.Parse(m_segment.ToString());
         }
         public UInt16 GetUInt16()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return UInt16.Parse(m_segment.ToString());
         }
         public UInt32 GetUInt32()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return UInt32.Parse(m_segment.ToString());
         }
         public UInt64 GetUInt64()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return UInt64.Parse(m_segment.ToString());
         }
         public float GetSingle()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return float.Parse(m_segment.ToString());
         }
         public double GetDouble()
         {
-            if (ValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
+            if (JsonValueType != JsonValueType.Number) throw new JsonValueException("is not number: " + m_segment);
             return double.Parse(m_segment.ToString());
         }
         #endregion
@@ -276,7 +305,7 @@ namespace ObjectStructure.Json
         #region StringType
         public string GetString()
         {
-            if (ValueType != JsonValueType.String) throw new JsonValueException("is not string: "+m_segment);
+            if (JsonValueType != JsonValueType.String) throw new JsonValueException("is not string: "+m_segment);
             return JsonString.Unquote(m_segment.ToString());
         }
         #endregion
@@ -317,7 +346,7 @@ namespace ObjectStructure.Json
         {
             get
             {
-                if (ValueType != JsonValueType.Object) throw new JsonValueException("is not object");
+                if (JsonValueType != JsonValueType.Object) throw new JsonValueException("is not object");
                 var it = GetNodes(false).GetEnumerator();
                 while (it.MoveNext())
                 {
@@ -333,20 +362,20 @@ namespace ObjectStructure.Json
         {
             get
             {
-                if (ValueType != JsonValueType.Array) throw new JsonValueException("is not array");
+                if (JsonValueType != JsonValueType.Array) throw new JsonValueException("is not array");
                 return GetNodes(false).Cast<JsonParser>();
             }
         }
 
         IEnumerable<JsonParser> GetNodes(bool useCloseNode)
         {
-            if(ValueType!=JsonValueType.Array
-                && ValueType!=JsonValueType.Object)
+            if(JsonValueType!=JsonValueType.Array
+                && JsonValueType!=JsonValueType.Object)
             {
                 yield break;
             }
 
-            var closeChar = ValueType == JsonValueType.Array ? ']' : '}';
+            var closeChar = JsonValueType == JsonValueType.Array ? ']' : '}';
             bool isFirst = true;
             var current = m_segment.Skip(1);
             while (true)
@@ -399,14 +428,14 @@ namespace ObjectStructure.Json
 
                 // key
                 var key = Parse(current, true);
-                if (ValueType==JsonValueType.Object && key.ValueType != JsonValueType.String)
+                if (JsonValueType==JsonValueType.Object && key.JsonValueType != JsonValueType.String)
                 {
                     throw new JsonParseException("no string key is not allowed: " + key.Segment);
                 }
                 current = current.Skip(key.Segment.Count);
                 yield return key;
 
-                if (ValueType == JsonValueType.Object)
+                if (JsonValueType == JsonValueType.Object)
                 {
                     // search ':'
                     int valuePos;

@@ -3,7 +3,7 @@
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public class LambdaSerializer<T> : ISerializer<T>
+    public class LambdaSerializer<T> : SerializerBase<T>
     {
         Action<T, IFormatter> m_serializer;
         public LambdaSerializer(Action<T, IFormatter> serializer)

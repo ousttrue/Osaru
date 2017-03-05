@@ -4,7 +4,7 @@
 namespace ObjectStructure.Serialization.Deserializers
 {
     #region Byte, UInt16, 32, 64
-    public class ByteDeserializer : IDeserializer<Byte>
+    public class ByteDeserializer : IDeserializerBase<Byte>
     {
         public void Setup(TypeRegistory r)
         {
@@ -16,7 +16,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetByte();
         }
     }
-    public class UInt16Deserializer : IDeserializer<UInt16>
+    public class UInt16Deserializer : IDeserializerBase<UInt16>
     {
         public void Setup(TypeRegistory r)
         {
@@ -28,7 +28,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetUInt16();
         }
     }
-    public class UInt32Deserializer : IDeserializer<UInt32>
+    public class UInt32Deserializer : IDeserializerBase<UInt32>
     {
         public void Setup(TypeRegistory r)
         {
@@ -40,7 +40,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetUInt32();
         }
     }
-    public class UInt64Deserializer : IDeserializer<UInt64>
+    public class UInt64Deserializer : IDeserializerBase<UInt64>
     {
         public void Setup(TypeRegistory r)
         {
@@ -55,7 +55,7 @@ namespace ObjectStructure.Serialization.Deserializers
     #endregion
 
     #region SByte, Int16, 32, 64
-    public class SByteDeserializer : IDeserializer<SByte>
+    public class SByteDeserializer : IDeserializerBase<SByte>
     {
         public void Setup(TypeRegistory r)
         {
@@ -67,7 +67,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetSByte();
         }
     }
-    public class Int16Deserializer : IDeserializer<Int16>
+    public class Int16Deserializer : IDeserializerBase<Int16>
     {
         public void Setup(TypeRegistory r)
         {
@@ -79,7 +79,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetInt16();
         }
     }
-    public class Int32Deserializer : IDeserializer<Int32>
+    public class Int32Deserializer : IDeserializerBase<Int32>
     {
         public void Setup(TypeRegistory r)
         {
@@ -91,7 +91,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetInt32();
         }
     }
-    public class Int64Deserializer : IDeserializer<Int64>
+    public class Int64Deserializer : IDeserializerBase<Int64>
     {
         public void Setup(TypeRegistory r)
         {
@@ -106,7 +106,7 @@ namespace ObjectStructure.Serialization.Deserializers
     #endregion
 
     #region Single, Double
-    public class SingleDeserializer : IDeserializer<Single>
+    public class SingleDeserializer : IDeserializerBase<Single>
     {
         public void Setup(TypeRegistory r)
         {
@@ -118,7 +118,7 @@ namespace ObjectStructure.Serialization.Deserializers
             outValue = parser.GetSingle();
         }
     }
-    public class DoubleDeserializer : IDeserializer<Double>
+    public class DoubleDeserializer : IDeserializerBase<Double>
     {
         public void Setup(TypeRegistory r)
         {
@@ -132,7 +132,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     #endregion
 
-    public class StringDeserializer : IDeserializer<String>
+    public class StringDeserializer : IDeserializerBase<String>
     {
         public void Setup(TypeRegistory r)
         {

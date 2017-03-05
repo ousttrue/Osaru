@@ -3,7 +3,7 @@
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public class BoxingSerializer : ISerializer<Object>
+    public class BoxingSerializer : SerializerBase<Object>
     {
         TypeRegistory m_r;
         public BoxingSerializer(TypeRegistory r)

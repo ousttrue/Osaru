@@ -18,7 +18,7 @@ namespace ObjectStructure.Serialization
         }
 
         #region Serialize
-        Dictionary<Type, ISerializerBase> m_serializerMap = new Dictionary<Type, ISerializerBase>()
+        Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()
         {
             {typeof(Boolean), new LambdaSerializer<Boolean>((x, f)=> f.Value(x)) },
             {typeof(SByte), new LambdaSerializer<SByte>((x, f)=> f.Value(x)) },
@@ -35,9 +35,9 @@ namespace ObjectStructure.Serialization
             {typeof(Byte[]), new RawSerializer() },
         };
 
-        public ISerializerBase GetSerializer(Type t)
+        public ISerializer GetSerializer(Type t)
         {
-            ISerializerBase serializer;
+            ISerializer serializer;
             if (m_serializerMap.TryGetValue(t, out serializer))
             {
                 return serializer;
@@ -53,20 +53,20 @@ namespace ObjectStructure.Serialization
             return serializer;
         }
 
-        public ISerializer<T> GetSerializer<T>()
+        public SerializerBase<T> GetSerializer<T>()
         {
             var t = typeof(T);
             var serializer= GetSerializer(t);
-            return (ISerializer<T>)serializer;
+            return (SerializerBase<T>)serializer;
         }
 
-        ISerializerBase CreateSerializer(Type t)
+        ISerializer CreateSerializer(Type t)
         {
             if (t.IsEnum)
             {
                 // enum
                 Type constructedType = typeof(EnumStringSerializer<>).MakeGenericType(t);
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
             /*
             else if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IDictionary<,>))
@@ -86,7 +86,7 @@ namespace ObjectStructure.Serialization
             {
                 // T[]
                 Type constructedType = typeof(TypedArraySerializer<>).MakeGenericType(t.GetElementType());
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.GetInterfaces().Any(x =>
             x.IsGenericType &&
@@ -94,31 +94,31 @@ namespace ObjectStructure.Serialization
             {
                 // where U: IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
             else if(t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
             else if(!t.IsClass)
             {
                 // object
                 Type constructedType = typeof(StructReflectionSerializer<>).MakeGenericType(t);
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
             else
             {
                 // with nullcheck
                 Type constructedType = typeof(ClassReflectionSerializer<>).MakeGenericType(t);
-                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion
 
         #region Deserialize
-        Dictionary<Type, ITypeInitializer> m_deserializerMap = new Dictionary<Type, ITypeInitializer>
+        Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
         {
             {typeof(SByte), new SByteDeserializer() },
             {typeof(Int16), new Int16Deserializer() },
@@ -134,14 +134,14 @@ namespace ObjectStructure.Serialization
             {typeof(Byte[]), new RawDeserializer() },
         };
 
-        public IDeserializer<T> GetDeserializer<T>()
+        public IDeserializerBase<T> GetDeserializer<T>()
         {
-            return (IDeserializer<T>)GetDeserializer(typeof(T));
+            return (IDeserializerBase<T>)GetDeserializer(typeof(T));
         }
 
-        public ITypeInitializer GetDeserializer(Type t)
+        public IDeserializer GetDeserializer(Type t)
         {
-            ITypeInitializer deserializer;
+            IDeserializer deserializer;
             if (m_deserializerMap.TryGetValue(t, out deserializer))
             {
                 return deserializer;
@@ -156,19 +156,19 @@ namespace ObjectStructure.Serialization
             return deserializer;
         }
 
-        ITypeInitializer CreateDeserializer(Type t)
+        IDeserializer CreateDeserializer(Type t)
         {
             if (t.IsEnum)
             {
                 // enum
                 var constructedType = typeof(EnumStringDeserializer<>).MakeGenericType(t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
                 var constructedType = typeof(TypedArrayDeserializer<>).MakeGenericType(t.GetElementType());
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.GetInterfaces().Any(x =>
             x.IsGenericType &&
@@ -176,30 +176,30 @@ namespace ObjectStructure.Serialization
             {
                 // IList<T>
                 var constructedType = typeof(GenericListDeserializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 var constructedType = typeof(GenericListDeserializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.IsClass)
             {
                 // class
                 var constructedType = typeof(ClassReflectionDeserializer<>).MakeGenericType(t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else
             {
                 // struct
                 Type constructedType = typeof(StructReflectionDeserializer<>).MakeGenericType(t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion
 
-        public void AddType<T>(ISerializer<T> serializer, IDeserializer<T> deserializer)
+        public void AddType<T>(SerializerBase<T> serializer, IDeserializerBase<T> deserializer)
         {
             m_serializerMap.Add(typeof(T), serializer);
             m_deserializerMap.Add(typeof(T), deserializer);

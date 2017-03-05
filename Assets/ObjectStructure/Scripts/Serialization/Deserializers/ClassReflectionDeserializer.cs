@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class ClassReflectionDeserializer<T> : IDeserializer<T>
+    public class ClassReflectionDeserializer<T> : IDeserializerBase<T>
         where T : class
     {
         class DeserializeCaller
@@ -23,7 +23,7 @@ namespace ObjectStructure.Serialization.Deserializers
             }
 
             delegate void DeserializeFunc<PARSER>(PARSER json, ref T outValue);
-            static DeserializeFunc<PARSER> CreateFunc<PARSER, U>(IDeserializer<U> deserializer, Setter<U> setter)
+            static DeserializeFunc<PARSER> CreateFunc<PARSER, U>(IDeserializerBase<U> deserializer, Setter<U> setter)
                 where PARSER : IParser<PARSER>
             {
                 return new DeserializeFunc<PARSER>(

@@ -6,7 +6,7 @@ namespace ObjectStructure.MessagePack
 {
     public static class ISerializerExtensions
     {
-        public static byte[] SerializeToMessagePack<T>(this ISerializer<T> s, T o)
+        public static byte[] SerializeToMessagePack<T>(this SerializerBase<T> s, T o)
         {
             var f = new MessagePackFormatter();
             s.Serialize(o, f);

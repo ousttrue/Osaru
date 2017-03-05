@@ -324,5 +324,45 @@
                     return false;
             }
         }
+
+        public static ParserValueType ToParserValueType(this MsgPackType formatType)
+        {
+            switch(formatType)
+            {
+                case MsgPackType.FLOAT:
+                    return ParserValueType.Float;
+
+                case MsgPackType.DOUBLE:
+                    return ParserValueType.Double;
+
+                case MsgPackType.TRUE:
+                case MsgPackType.FALSE:
+                    return ParserValueType.Boolean;
+            }
+            if (formatType.IsArray())
+            {
+                return ParserValueType.List;
+            }
+            else if(formatType.IsMap())
+            {
+                return ParserValueType.Map;
+            }
+            else if (formatType.IsInteger())
+            {
+                return ParserValueType.Integer;
+            }
+            else if(formatType.IsString())
+            {
+                return ParserValueType.String;
+            }
+            else if (formatType.IsBinary())
+            {
+                return ParserValueType.Bytes;
+            }
+            else
+            {
+                return ParserValueType.Unknown;
+            }
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace ObjectStructure.Serialization.Serializers
             TypeRegistory r
             , FieldInfo x)
         {
-            var serializer = (ISerializer<U>)r.GetSerializer<U>();
+            var serializer = (SerializerBase<U>)r.GetSerializer<U>();
             return new SerializeFunc((value, f) =>
             {
                 f.Key(x.Name);
@@ -101,7 +101,7 @@ namespace ObjectStructure.Serialization.Serializers
             TypeRegistory r
             , PropertyInfo x)
         {
-            var serializer = (ISerializer<U>)r.GetSerializer<U>();
+            var serializer = (SerializerBase<U>)r.GetSerializer<U>();
             return new SerializeFunc((value, f) =>
             {
                 f.Key(x.Name);

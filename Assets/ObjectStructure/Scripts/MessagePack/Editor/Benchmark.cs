@@ -334,7 +334,7 @@ public class Benchmark
         // so, get serializer at first.
         // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
 
-        var serializer = (ISerializer<T>)r.GetSerializer<T>();
+        var serializer = (SerializerBase<T>)r.GetSerializer<T>();
         var deserializer = r.GetDeserializer<T>();
 
         using (new Measure("Serialize"))

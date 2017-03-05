@@ -16,14 +16,18 @@
 MessagePack(byte[])         MessagePack(byte[])
 ```
 
-## Features
+# Features
 * JSON
 * MessagePack
 * separate parser and deserializer
 * inplace serialization
 * inplace deserialization
 
-## Usage
+# RPC
+* http://www.jsonrpc.org/specification
+* https://github.com/msgpack-rpc/msgpack-rpc/blob/master/spec.md
+
+# Usage
 
 ```cs
 var src = "{\"key\":{ \"nestedKey\": \"nestedValue\" } }";
@@ -40,4 +44,5 @@ Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
 * [x] json and messagepack converter
 * [ ] RPC
 * [ ] code generator for RPC client
+* [ ] json base64 string for binary support
 

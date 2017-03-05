@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class ReflectionStructDeserializer<T> : IDeserializer<T>
+    public class StructReflectionDeserializer<T> : IDeserializer<T>
         where T: struct
     {
         class DeserializerCaller
@@ -71,7 +71,7 @@ namespace ObjectStructure.Serialization.Deserializers
         Dictionary<string, DeserializerCaller> m_deserializers=new Dictionary<string, DeserializerCaller>();
 
 
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
             var fieldDeserializers = typeof(T).GetFields(BindingFlags.Public
                 | BindingFlags.Instance)

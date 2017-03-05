@@ -1,16 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ObjectStructure
 {
     public interface IFormatter
     {
+        void Clear();
+        object Result();
+
         void OpenList(int n);
         void CloseLIst();
         void OpenMap(int n);
         void CloseMap();
 
+        void Null();
+
         void Key(String key);
-        void Value(String key);
+        void Value(String value);
 
         void Value(Boolean value);
 
@@ -26,5 +32,7 @@ namespace ObjectStructure
 
         void Value(Single value);
         void Value(Double value);
+
+        void Raw(IList<Byte> raw);
     }
 }

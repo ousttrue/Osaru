@@ -11,11 +11,11 @@ namespace ObjectStructure.Serialization.Serializers
             m_serializer = serializer;
         }
 
-        public void Setup(ITypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
         }
 
-        public void Serialize(T t, IFormatter f)
+        public override void Serialize(T t, IFormatter f)
         {
             m_serializer(t, f);
         }

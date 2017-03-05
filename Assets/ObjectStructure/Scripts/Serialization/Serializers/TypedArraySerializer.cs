@@ -4,12 +4,12 @@
     {
         ISerializer<T> m_elementSerializer = null;
 
-        public void Setup(ITypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
             m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public void Serialize(T[] t, IFormatter f)
+        public override void Serialize(T[] t, IFormatter f)
         {
             f.OpenList(t.Length);
             foreach (var item in t)

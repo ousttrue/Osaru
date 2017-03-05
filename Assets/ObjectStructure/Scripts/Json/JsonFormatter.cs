@@ -40,6 +40,16 @@ namespace ObjectStructure.Json
             m_stack.Push(new Context(Current.NONE));
         }
 
+        public void Clear()
+        {
+            m_w.Clear();
+        }
+
+        public object Result()
+        {
+            return m_w.ToString();
+        }
+
         void CommaCheck(bool isKey=false)
         {
             var top = m_stack.Pop();
@@ -79,6 +89,12 @@ namespace ObjectStructure.Json
             }
             top.Count += 1;
             m_stack.Push(top);
+        }
+
+        public void Null()
+        {
+            CommaCheck();
+            m_w.Write("null");
         }
 
         public void OpenList(int n)
@@ -177,6 +193,11 @@ namespace ObjectStructure.Json
         {
             CommaCheck();
             m_w.Write(x.ToString());
+        }
+
+        public void Raw(IList<byte> raw)
+        {
+            throw new NotImplementedException();
         }
     }
 }

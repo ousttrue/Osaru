@@ -8,12 +8,12 @@ namespace ObjectStructure.Serialization.Serializers
     {
         ISerializer<T> m_elementSerializer;
 
-        public void Setup(ITypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
             m_elementSerializer = (ISerializer<T>)r.GetSerializer<T>();
         }
 
-        public void Serialize(U t, IFormatter f)
+        public override void Serialize(U t, IFormatter f)
         {
             f.OpenList(t.Count);
             foreach (var item in t)

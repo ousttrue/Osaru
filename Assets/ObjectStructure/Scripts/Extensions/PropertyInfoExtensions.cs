@@ -31,6 +31,7 @@ namespace ObjectStructure.MessagePack
             });
         }
 
+        /*
         public delegate void PropSerializeFunc<T>(MsgPackWriter writer, T target);
         public static PropSerializeFunc<T> CreatePropSerializeFunc<T>(this PropertyInfo pi)
         {
@@ -51,5 +52,6 @@ namespace ObjectStructure.MessagePack
             var action = lambda.Compile();
             return new PropSerializeFunc<T>(action);
         }
+        */
     }
 }

@@ -1,64 +1,61 @@
 ﻿
-using ObjectStructure.MessagePack;
 using NUnit.Framework;
-using System;
-using System.IO;
+using ObjectStructure.MessagePack;
+using ObjectStructure.Serialization;
 
-namespace UniMsgPack
+
+[TestFixture]
+public class ObjectTest
 {
-    [TestFixture]
-    public class ObjectTest
+    TypeRegistory m_r;
+
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
+        m_r = new TypeRegistory();
+        Deserializer.Clear();
+    }
+
+    /*
+    [Test]
+    public void obj()
+    {
+        var bytes = Serializer.Serialize((object)1);
+
+        int j=MsgPack.Unpack<int>(bytes);
+
+        Assert.AreEqual(1, j);
+    }
+    */
+
+    [Test]
+    public void map_root()
+    {
+        var src = new
         {
-            Serializer.Clear();
-            Deserializer.Clear();
-            Experiment.Register();
-        }
+            Name = "Hoge",
 
-        /*
-        [Test]
-        public void obj()
-        {
-            var bytes = Serializer.Serialize((object)1);
-
-            int j=MsgPack.Unpack<int>(bytes);
-
-            Assert.AreEqual(1, j);
-        }
-        */
-
-        [Test]
-        public void map_root()
-        {
-            var src = new
+            Number = 4
+            ,
+            Nest = new
             {
-                Name = "Hoge",
+                Name = "Nested"
+            }
+        };
+        var bytes = m_r.SerializeToMessagePack(src);
 
-                Number = 4
-                ,
-                Nest = new
-                {
-                    Name = "Nested"
-                }
-            };
-            var bytes = Serializer.Serialize(src);
+        var value = MsgPackValue.Parse(bytes);
+        Assert.AreEqual(true, value.FormatType.IsMap());
+        Assert.AreEqual(src.Name, value["Name"].GetValue());
+        Assert.AreEqual(src.Number, value["Number"].GetValue());
+        Assert.AreEqual(src.Nest.Name, value["Nest"]["Name"].GetValue());
+    }
 
-            var value = MsgPackValue.Parse(bytes);
-            Assert.AreEqual(true, value.FormatType.IsMap());
-            Assert.AreEqual(src.Name, value["Name"].GetValue());
-            Assert.AreEqual(src.Number, value["Number"].GetValue());
-            Assert.AreEqual(src.Nest.Name, value["Nest"]["Name"].GetValue());
-        }
-
-        [Test]
-        public void array_root()
+    [Test]
+    public void array_root()
+    {
+        var src = new[]
         {
-            Experiment.Register();
-
-            var src = new[]
-            {
                 new {
                 Name = "Hoge"
                 ,
@@ -70,13 +67,12 @@ namespace UniMsgPack
                 }
                 }
             };
-            var bytes = Serializer.Serialize(src);
+        var bytes = m_r.SerializeToMessagePack(src);
 
-            var value = MsgPackValue.Parse(bytes);
+        var value = MsgPackValue.Parse(bytes);
 
-            Assert.AreEqual(src[0].Name, value[0]["Name"].GetValue());
-            Assert.AreEqual(src[0].Number, value[0]["Number"].GetValue());
-            Assert.AreEqual(src[0].Nest.Name, value[0]["Nest"]["Name"].GetValue());
-        }
+        Assert.AreEqual(src[0].Name, value[0]["Name"].GetValue());
+        Assert.AreEqual(src[0].Number, value[0]["Number"].GetValue());
+        Assert.AreEqual(src[0].Nest.Name, value[0]["Nest"]["Name"].GetValue());
     }
 }

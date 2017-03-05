@@ -2,6 +2,6 @@
 {
     public interface ITypeInitializer
     {
-        void Setup(ITypeRegistory r);
+        void Setup(TypeRegistory r);
     }
 }

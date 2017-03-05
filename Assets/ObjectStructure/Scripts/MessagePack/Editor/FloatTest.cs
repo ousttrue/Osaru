@@ -6,52 +6,53 @@ using System.Text;
 using NUnit.Framework;
 
 using System.IO;
+using ObjectStructure.Serialization;
+using ObjectStructure.MessagePack;
 
-namespace ObjectStructure.MessagePack
+[TestFixture]
+public class FloatTest
 {
-    [TestFixture]
-    public class FloatTest
+    TypeRegistory m_r;
+
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-            Serializer.Clear();
-            Deserializer.Clear();
-        }
+        m_r = new TypeRegistory();
+        Deserializer.Clear();
+    }
 
-        [Test]
-        public void Float32()
+    [Test]
+    public void Float32()
+    {
+        var i = 1.1f;
+        var float_be = new byte[]
         {
-            var i = 1.1f;
-            var float_be = new byte[]
-            {
                 0x3f, 0x8c, 0xcc, 0xcd
-            };
+        };
 
-            var bytes = Serializer.Serialize(i);
+        var bytes = m_r.SerializeToMessagePack(i);
 
-            var value = MsgPackValue.Parse(bytes);
-            var body = value.GetBody();
-            Assert.AreEqual(float_be, body.ToArray());
+        var value = MsgPackValue.Parse(bytes);
+        var body = value.GetBody();
+        Assert.AreEqual(float_be, body.ToArray());
 
-            Assert.AreEqual(i, value.GetValue());
-        }
+        Assert.AreEqual(i, value.GetValue());
+    }
 
-        [Test]
-        public void Float64()
-        {
-            var i = 1.1;
-            var double_be = new Byte[]{
+    [Test]
+    public void Float64()
+    {
+        var i = 1.1;
+        var double_be = new Byte[]{
                 0x3f, 0xf1, 0x99, 0x99, 0x99, 0x99, 0x99, 0x9a,
             };
 
-            var bytes = Serializer.Serialize(i);
+        var bytes = m_r.SerializeToMessagePack(i);
 
-            var value = MsgPackValue.Parse(bytes);
-            var body = value.GetBody();
-            Assert.AreEqual(double_be, body.ToArray());
+        var value = MsgPackValue.Parse(bytes);
+        var body = value.GetBody();
+        Assert.AreEqual(double_be, body.ToArray());
 
-            Assert.AreEqual(i, value.GetValue());
-        }
+        Assert.AreEqual(i, value.GetValue());
     }
 }

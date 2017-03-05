@@ -1,48 +1,47 @@
 ﻿using NUnit.Framework;
 using System;
 using ObjectStructure.MessagePack;
+using ObjectStructure.Serialization;
 
 
-namespace UniMsgPack
+[Serializable]
+struct Vector3
 {
-    [Serializable]
-    struct Vector3
+    public Single X;
+    public Single Y;
+    public Single Z;
+
+    public override bool Equals(object obj)
     {
-        public Single X;
-        public Single Y;
-        public Single Z;
-
-        public override bool Equals(object obj)
+        if (obj is Vector3)
         {
-            if (obj is Vector3)
-            {
-                var s = (Vector3)obj;
-                return s.X == X && s.Y == Y && s.Z == Z;
-            }
-            return base.Equals(obj);
+            var s = (Vector3)obj;
+            return s.X == X && s.Y == Y && s.Z == Z;
         }
-
-        public override string ToString()
-        {
-            return String.Format("[{0}, {1}, {2}]", X, Y, Z);
-        }
+        return base.Equals(obj);
     }
 
-
-    [Serializable]
-    class UserType
+    public override string ToString()
     {
-        public String Name
-        {
-            get;
-            set;
-        }
+        return String.Format("[{0}, {1}, {2}]", X, Y, Z);
+    }
+}
 
-        public Vector3 Position
-        {
-            get;
-            set;
-        }
+
+[Serializable]
+class UserType
+{
+    public String Name
+    {
+        get;
+        set;
+    }
+
+    public Vector3 Position
+    {
+        get;
+        set;
+    }
 
 #if USE_FORM
         public System.Drawing.Color Color
@@ -51,31 +50,33 @@ namespace UniMsgPack
             set;
         }
 #endif
+}
+
+
+[TestFixture]
+public class UserTypeTest
+{
+    TypeRegistory m_r;
+
+    [SetUp]
+    public void Setup()
+    {
+        m_r = new TypeRegistory();
+        Deserializer.Clear();
     }
 
-
-    [TestFixture]
-    public class UserTypeTest
+    [Test]
+    public void pack_and_unpack()
     {
-        [SetUp]
-        public void Setup()
+        var obj = new UserType
         {
-            Serializer.Clear();
-            Deserializer.Clear();
-            Experiment.Register();
-        }
-
-        [Test]
-        public void pack_and_unpack()
-        {
-            var obj = new UserType
-            {
-                Name = "hoge"
-                , Position = new Vector3 { X=1, Y=2, Z=3 }
+            Name = "hoge"
+            ,
+            Position = new Vector3 { X = 1, Y = 2, Z = 3 }
 #if USE_FORM
                 , Color = System.Drawing.Color.FromArgb(255, 128, 128, 255)
 #endif
-            };
+        };
 
 #if USE_FORM
             // register pack System.Drawing.Color
@@ -106,18 +107,17 @@ namespace UniMsgPack
                     o = System.Drawing.Color.FromArgb(a, r, g, b);
                 });
 #endif
-                  
-            // pack
-            var bytes = Serializer.Serialize(obj);
 
-            // unpack
-            UserType newObj=Deserializer.Deserialize<UserType>(bytes);
+        // pack
+        var bytes = m_r.SerializeToMessagePack(obj);
 
-            Assert.AreEqual(obj.Name, newObj.Name);
+        // unpack
+        UserType newObj = Deserializer.Deserialize<UserType>(bytes);
+
+        Assert.AreEqual(obj.Name, newObj.Name);
 #if USE_FORM
             Assert.AreEqual(obj.Color, newObj.Color);
 #endif
-            Assert.AreEqual(obj.Position, newObj.Position);
-        }
+        Assert.AreEqual(obj.Position, newObj.Position);
     }
 }

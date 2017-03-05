@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace ObjectStructure.Serialization.Deserializers
 {
-    public class ReflectionClassDeserializer<T> : IDeserializer<T>
+    public class ClassReflectionDeserializer<T> : IDeserializer<T>
         where T : class
     {
         class DeserializeCaller
@@ -68,7 +68,7 @@ namespace ObjectStructure.Serialization.Deserializers
         }
         Dictionary<string, DeserializeCaller> m_deserializers = new Dictionary<string, DeserializeCaller>();
 
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
             var fieldDeserializers = typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)

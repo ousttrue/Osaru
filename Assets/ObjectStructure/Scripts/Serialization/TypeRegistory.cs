@@ -10,10 +10,15 @@ namespace ObjectStructure.Serialization
     /// <summary>
     /// not thread safe. use thread local
     /// </summary>
-    public class TypeRegistory: ITypeRegistory
+    public class TypeRegistory
     {
+        public TypeRegistory()
+        {
+            m_serializerMap.Add(typeof(Object), new BoxingSerializer(this));
+        }
+
         #region Serialize
-        Dictionary<Type, ITypeInitializer> m_serializerMap = new Dictionary<Type, ITypeInitializer>()
+        Dictionary<Type, ISerializerBase> m_serializerMap = new Dictionary<Type, ISerializerBase>()
         {
             {typeof(Boolean), new LambdaSerializer<Boolean>((x, f)=> f.Value(x)) },
             {typeof(SByte), new LambdaSerializer<SByte>((x, f)=> f.Value(x)) },
@@ -29,9 +34,9 @@ namespace ObjectStructure.Serialization
             {typeof(string), new LambdaSerializer<String>((x, f)=> f.Value(x)) },
         };
 
-        public ITypeInitializer GetSerializer(Type t)
+        public ISerializerBase GetSerializer(Type t)
         {
-            ITypeInitializer serializer;
+            ISerializerBase serializer;
             if (m_serializerMap.TryGetValue(t, out serializer))
             {
                 return serializer;
@@ -54,19 +59,39 @@ namespace ObjectStructure.Serialization
             return (ISerializer<T>)serializer;
         }
 
-        ITypeInitializer CreateSerializer(Type t)
+        ISerializerBase CreateSerializer(Type t)
         {
             if (t.IsEnum)
             {
                 // enum
                 Type constructedType = typeof(EnumStringSerializer<>).MakeGenericType(t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
             }
+            else if (typeof(IList<Byte>).IsAssignableFrom(t))
+            {
+                // raw
+                Type constructedType = typeof(RawSerializer<>).MakeGenericType(t);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+            }
+            /*
+            else if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IDictionary<,>))
+            {
+                // IDictionary<T>
+                Type constructedType = typeof(GenericMapSerializer<,>).MakeGenericType(t.GetGenericArguments());
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
+            }
+            else if (typeof(IDictionary).IsAssignableFrom(t))
+            {
+                // dictionary
+                Type constructedType = typeof(MapSerializer<>).MakeGenericType(t);
+                return (ISerializer)Activator.CreateInstance(constructedType, null);
+            }
+            */
             else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]
                 Type constructedType = typeof(TypedArraySerializer<>).MakeGenericType(t.GetElementType());
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
             }
             else if (t.GetInterfaces().Any(x =>
             x.IsGenericType &&
@@ -74,19 +99,25 @@ namespace ObjectStructure.Serialization
             {
                 // where U: IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
             }
             else if(t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
+            }
+            else if(!t.IsClass)
+            {
+                // object
+                Type constructedType = typeof(StructReflectionSerializer<>).MakeGenericType(t);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
             }
             else
             {
-                // object
-                Type constructedType = typeof(ReflectionSerializer<>).MakeGenericType(t);
-                return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
+                // with nullcheck
+                Type constructedType = typeof(ClassReflectionSerializer<>).MakeGenericType(t);
+                return (ISerializerBase)Activator.CreateInstance(constructedType, null);
             }
         }
         #endregion
@@ -160,13 +191,13 @@ namespace ObjectStructure.Serialization
             else if (t.IsClass)
             {
                 // class
-                var constructedType = typeof(ReflectionClassDeserializer<>).MakeGenericType(t);
+                var constructedType = typeof(ClassReflectionDeserializer<>).MakeGenericType(t);
                 return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
             else
             {
                 // struct
-                Type constructedType = typeof(ReflectionStructDeserializer<>).MakeGenericType(t);
+                Type constructedType = typeof(StructReflectionDeserializer<>).MakeGenericType(t);
                 return (ITypeInitializer)Activator.CreateInstance(constructedType, null);
             }
         }
@@ -176,6 +207,19 @@ namespace ObjectStructure.Serialization
         {
             m_serializerMap.Add(typeof(T), serializer);
             m_deserializerMap.Add(typeof(T), deserializer);
+        }
+
+        public void SerializeBoxing(object o, IFormatter f)
+        {
+            if (o == null)
+            {
+                f.Null();
+                return;
+            }
+
+            var s = GetSerializer(o.GetType());
+            s.Setup(this);
+            s.SerializeBoxing(o, f);
         }
     }
 }

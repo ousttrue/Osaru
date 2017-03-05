@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace ObjectStructure.MessagePack
 {
-    public struct MsgPackValue
+    public struct MsgPackValue: IParser<MsgPackValue>
     {
         public BytesSegment Bytes { get; private set; }
 
@@ -118,6 +119,30 @@ namespace ObjectStructure.MessagePack
                     case MsgPackType.EXT32: return (ExtType)Bytes[5];
                     default: return ExtType.UNKNOWN;
                 }
+            }
+        }
+
+        public IEnumerable<MsgPackValue> ArrayItems
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public IEnumerable<KeyValuePair<string, MsgPackValue>> ObjectItems
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public JsonValueType ValueType
+        {
+            get
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -848,6 +873,61 @@ namespace ObjectStructure.MessagePack
             {
                 return GetValue().ToString();
             }
+        }
+
+        public string GetString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte GetByte()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ushort GetUInt16()
+        {
+            throw new NotImplementedException();
+        }
+
+        public uint GetUInt32()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong GetUInt64()
+        {
+            throw new NotImplementedException();
+        }
+
+        public sbyte GetSByte()
+        {
+            throw new NotImplementedException();
+        }
+
+        public short GetInt16()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetInt32()
+        {
+            throw new NotImplementedException();
+        }
+
+        public long GetInt64()
+        {
+            throw new NotImplementedException();
+        }
+
+        public float GetSingle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public double GetDouble()
+        {
+            throw new NotImplementedException();
         }
     }
 }

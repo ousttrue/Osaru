@@ -7,12 +7,12 @@ using System.Text;
 
 namespace ObjectStructure.Serialization.Serializers
 {
-    public class ReflectionSerializer<T> : ISerializer<T>
+    public class StructReflectionSerializer<T> : ISerializer<T>
     {
         delegate void SerializeFunc(T value, IFormatter f);
         SerializeFunc[] m_serializers;
 
-        public void Setup(ITypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
             var genericFieldMethod = GetType().GetMethod("CreateFieldSerializer", BindingFlags.Static | BindingFlags.NonPublic);
             var genericPropertyMethod = GetType().GetMethod("CreatePropertySerializer", BindingFlags.Static | BindingFlags.NonPublic);
@@ -24,10 +24,18 @@ namespace ObjectStructure.Serialization.Serializers
                 ;
         }
 
+        /*
+                .Where(pi =>
+                        {
+            var nsAttrs = pi.GetCustomAttributes(typeof(NonSerializedAttribute), false);
+            return nsAttrs.Length == 0;
+        })
+        */
+
         #region Field
         IEnumerable<SerializeFunc> FieldsSerializers(
             MethodInfo genericMethod
-            , ITypeRegistory r)
+            , TypeRegistory r)
         {
             return typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
@@ -41,7 +49,7 @@ namespace ObjectStructure.Serialization.Serializers
         }
 
         static SerializeFunc CreateFieldSerializer<U>(
-            ITypeRegistory r
+            TypeRegistory r
             , FieldInfo x)
         {
             var serializer = (ISerializer<U>)r.GetSerializer<U>();
@@ -56,7 +64,7 @@ namespace ObjectStructure.Serialization.Serializers
         #region Property
         static IEnumerable<SerializeFunc> PropertiesSerializers(
             MethodInfo genericMethod
-            , ITypeRegistory r)
+            , TypeRegistory r)
         {
 
             return typeof(T).GetProperties(System.Reflection.BindingFlags.Public
@@ -72,7 +80,7 @@ namespace ObjectStructure.Serialization.Serializers
         }
 
         static SerializeFunc CreatePropertySerializer<U>(
-            ITypeRegistory r
+            TypeRegistory r
             , PropertyInfo x)
         {
             var serializer = (ISerializer<U>)r.GetSerializer<U>();
@@ -84,7 +92,7 @@ namespace ObjectStructure.Serialization.Serializers
         }
         #endregion
 
-        public void Serialize(T t, IFormatter f)
+        public override void Serialize(T t, IFormatter f)
         {
             f.OpenMap(m_serializers.Count());
             foreach (var serializer in m_serializers)
@@ -92,6 +100,20 @@ namespace ObjectStructure.Serialization.Serializers
                 serializer(t, f);
             }
             f.CloseMap();
+        }
+    }
+
+    public class ClassReflectionSerializer<T> : StructReflectionSerializer<T>
+    {
+        public override void Serialize(T t, IFormatter f)
+        {
+            if (typeof(T).IsClass && t == null)
+            {
+                f.Null();
+                return;
+            }
+
+            base.Serialize(t, f);
         }
     }
 }

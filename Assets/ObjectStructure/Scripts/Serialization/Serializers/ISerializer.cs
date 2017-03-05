@@ -1,7 +1,20 @@
-﻿namespace ObjectStructure.Serialization.Serializers
+﻿using System;
+
+namespace ObjectStructure.Serialization.Serializers
 {
-    public interface ISerializer<T> : ITypeInitializer
+    public interface ISerializerBase : ITypeInitializer
     {
-        void Serialize(T t, IFormatter f);
+        void SerializeBoxing(object o, IFormatter f);
+    }
+    public abstract class ISerializer<T> : ISerializerBase
+    {
+        public void SerializeBoxing(object o, IFormatter f)
+        {
+            Serialize((T)o, f);
+        }
+
+        public abstract void Setup(TypeRegistory r);
+
+        public abstract void Serialize(T t, IFormatter f);
     }
 }

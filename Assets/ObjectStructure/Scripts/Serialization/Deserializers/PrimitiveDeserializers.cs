@@ -6,7 +6,7 @@ namespace ObjectStructure.Serialization.Deserializers
     #region Byte, UInt16, 32, 64
     public class ByteDeserializer : IDeserializer<Byte>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -18,7 +18,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class UInt16Deserializer : IDeserializer<UInt16>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -30,7 +30,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class UInt32Deserializer : IDeserializer<UInt32>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -42,7 +42,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class UInt64Deserializer : IDeserializer<UInt64>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -57,7 +57,7 @@ namespace ObjectStructure.Serialization.Deserializers
     #region SByte, Int16, 32, 64
     public class SByteDeserializer : IDeserializer<SByte>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -69,7 +69,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class Int16Deserializer : IDeserializer<Int16>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -81,7 +81,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class Int32Deserializer : IDeserializer<Int32>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -93,7 +93,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class Int64Deserializer : IDeserializer<Int64>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -108,7 +108,7 @@ namespace ObjectStructure.Serialization.Deserializers
     #region Single, Double
     public class SingleDeserializer : IDeserializer<Single>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -120,7 +120,7 @@ namespace ObjectStructure.Serialization.Deserializers
     }
     public class DoubleDeserializer : IDeserializer<Double>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 
@@ -134,7 +134,7 @@ namespace ObjectStructure.Serialization.Deserializers
 
     public class StringDeserializer : IDeserializer<String>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 

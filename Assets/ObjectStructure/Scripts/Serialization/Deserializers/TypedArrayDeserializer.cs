@@ -7,7 +7,7 @@ namespace ObjectStructure.Serialization.Deserializers
     {
         IDeserializer<T> m_elementDeserializer;
 
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
             m_elementDeserializer = r.GetDeserializer<T>();
         }

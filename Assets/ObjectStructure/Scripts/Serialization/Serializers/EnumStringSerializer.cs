@@ -7,12 +7,12 @@ namespace ObjectStructure.Serialization.Serializers
     {
         ISerializer<string> m_stringSerializer;
 
-        public void Setup(ITypeRegistory r)
+        public override void Setup(TypeRegistory r)
         {
             m_stringSerializer = (ISerializer<string>)r.GetSerializer<String>();
         }
 
-        public void Serialize(T t, IFormatter f)
+        public override void Serialize(T t, IFormatter f)
         {
             m_stringSerializer.Serialize(t.ToString(), f);
         }

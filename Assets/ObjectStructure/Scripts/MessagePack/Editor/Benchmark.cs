@@ -6,7 +6,9 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 using ObjectStructure.Serialization.Serializers;
-
+using ObjectStructure;
+using ObjectStructure.Json;
+using ObjectStructure.MessagePack;
 
 /// <summary>
 /// from https://github.com/neuecc/ZeroFormatter/blob/master/sandbox/PerformanceComparison/Program.cs
@@ -90,53 +92,6 @@ public class Benchmark
         }
     }
 
-    static T SerializeMsgPack<T>(T original)
-    {
-        T copy = default(T);
-        byte[] bytes = null;
-
-        // Note:We should check MessagePackSerializer.Get<T>() on every iteration
-        // But currenly MsgPack-Cli has bug of get serializer
-        // https://github.com/msgpack/msgpack-cli/issues/191
-        // so, get serializer at first.
-        // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
-
-        //var serializer = MessagePackSerializer.Get<T>();
-
-        using (new Measure("Serialize"))
-        {
-            for (int i = 0; i < Iteration; i++)
-            {
-                bytes = ObjectStructure.MessagePack.Serializer.Serialize(original);
-            }
-        }
-
-        using (new Measure("Deserialize"))
-        {
-            for (int i = 0; i < Iteration; i++)
-            {
-                copy = ObjectStructure.MessagePack.Deserializer.Deserialize<T>(bytes);
-            }
-        }
-
-        Assert.AreEqual(original, copy);
-
-        using (new Measure("ReSerialize"))
-        {
-            for (int i = 0; i < Iteration; i++)
-            {
-                bytes = ObjectStructure.MessagePack.Serializer.Serialize(copy);
-            }
-        }
-
-        if (!dryRun)
-        {
-            //Console.WriteLine(string.Format("{0,15}   {1}", "Binary Size", ToHumanReadableSize(bytes.Length)));
-        }
-
-        return copy;
-    }
-
     public struct Vector3
     {
         public float x;
@@ -196,14 +151,6 @@ public class Benchmark
         {
             return string.Format("[{0}, {1}, {2}]", x, y, z);
         }
-    }
-
-    [SetUp]
-    public void Setup()
-    {
-        ObjectStructure.MessagePack.Serializer.Clear();
-        ObjectStructure.MessagePack.Deserializer.Clear();
-        ObjectStructure.MessagePack.Experiment.Register();
     }
 
     [Test]
@@ -276,6 +223,23 @@ public class Benchmark
         UnityEngine.Debug.LogFormat("[Benchmark]{0}", sw.Elapsed);
     }
 
+    static T SerializeMsgPack<T>(T value)
+    {
+        var formatter = new MessagePackFormatter();
+        Func<Byte[], MsgPackValue> parser = x => MsgPackValue.Parse(x);
+
+        return Serialize(formatter, parser, value);
+    }
+
+    static T SerializeJson<T>(T value)
+    {
+        var s = new StringBuilderStream(new StringBuilder());
+        var formatter = new JsonFormatter(s);
+        Func<string, JsonParser> parser = x => JsonParser.Parse(x);
+
+        return Serialize(formatter, parser, value);
+    }
+
     [Test]
     public void JsonBenchmarkTest()
     {
@@ -346,10 +310,13 @@ public class Benchmark
         UnityEngine.Debug.LogFormat("[Json]{0}", sw.Elapsed);
     }
 
-    static T SerializeJson<T>(T original)
+    static T Serialize<Formatter, Parser, T, DST>(Formatter f
+        , Func<DST, Parser> parser, T original)
+        where Formatter: IFormatter
+        where Parser: IParser<Parser>
     {
         T copy = default(T);
-        string json = null;
+        var packed = default(DST);
 
         // Note:We should check MessagePackSerializer.Get<T>() on every iteration
         // But currenly MsgPack-Cli has bug of get serializer
@@ -365,7 +332,9 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                json = serializer.SerializeToJson(original);
+                f.Clear();
+                serializer.Serialize(original, f);
+                packed = (DST)f.Result();
             }
         }
 
@@ -374,7 +343,7 @@ public class Benchmark
             for (int i = 0; i < Iteration; i++)
             {
                 //copy = ObjectStructure.MessagePack.Deserializer.Deserialize<T>(bytes);
-                deserializer.Deserialize(ObjectStructure.Json.JsonParser.Parse(json), ref copy);
+                deserializer.Deserialize(parser(packed), ref copy);
             }
         }
 
@@ -384,7 +353,9 @@ public class Benchmark
         {
             for (int i = 0; i < Iteration; i++)
             {
-                json = serializer.SerializeToJson(copy);
+                f.Clear();
+                serializer.Serialize(copy, f);
+                packed = (DST)f.Result();
             }
         }
 

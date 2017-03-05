@@ -5,7 +5,7 @@ namespace ObjectStructure.Serialization.Deserializers
 {
     public class EnumStringDeserializer<T> : IDeserializer<T>
     {
-        public void Setup(ITypeRegistory r)
+        public void Setup(TypeRegistory r)
         {
         }
 

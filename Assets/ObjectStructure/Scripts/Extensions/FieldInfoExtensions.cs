@@ -27,6 +27,7 @@ namespace ObjectStructure.MessagePack
             };
         }
 
+        /*
         public delegate void FieldSerializeFunc<T>(MsgPackWriter writer, T target);
         public static FieldSerializeFunc<T> CreateFieldSerializeFunc<T>(this FieldInfo fi)
         {
@@ -47,5 +48,6 @@ namespace ObjectStructure.MessagePack
             var action = lambda.Compile();
             return new FieldSerializeFunc<T>(action);
         }
+        */
     }
 }

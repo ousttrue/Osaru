@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace ObjectStructure.MessagePack.Serializers
 {
+    /*
     public class MapSerializer<T> : SerializerBase<T>
         where T : IDictionary
     {
@@ -23,4 +24,5 @@ namespace ObjectStructure.MessagePack.Serializers
             }
         }
     }
+    */
 }

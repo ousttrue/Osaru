@@ -246,9 +246,10 @@ namespace ObjectStructureTest
         {
             var s = new StringBuilderStream(new StringBuilder());
             var formatter = new JsonFormatter(s);
-            Func<string, JsonParser> parser = x => JsonParser.Parse(x);
-
-            return Serialize(m_r, formatter, parser, value);
+            return Serialize(m_r
+                , formatter
+                , x =>JsonParser.Parse(x)
+                , value);
         }
 
         [Test]
@@ -321,10 +322,9 @@ namespace ObjectStructureTest
             UnityEngine.Debug.LogFormat("[Json]{0}", sw.Elapsed);
         }
 
-        static T Serialize<Formatter, Parser, T, DST>(TypeRegistory r
-            , Formatter f
+        static T Serialize<Parser, T, DST>(TypeRegistory r
+            , IFormatter<DST> f
             , Func<DST, Parser> parser, T original)
-            where Formatter : IFormatter
             where Parser : IParser<Parser>
         {
             T copy = default(T);
@@ -343,9 +343,9 @@ namespace ObjectStructureTest
             {
                 for (int i = 0; i < Iteration; i++)
                 {
-                    f.Clear();
+                    f.Reset();
                     serializer.Serialize(original, f);
-                    packed = (DST)f.Result();
+                    packed = f.GetStore().Buffer();
                 }
             }
 
@@ -364,9 +364,9 @@ namespace ObjectStructureTest
             {
                 for (int i = 0; i < Iteration; i++)
                 {
-                    f.Clear();
+                    f.Reset();
                     serializer.Serialize(copy, f);
-                    packed = (DST)f.Result();
+                    packed = f.GetStore().Buffer();
                 }
             }
 

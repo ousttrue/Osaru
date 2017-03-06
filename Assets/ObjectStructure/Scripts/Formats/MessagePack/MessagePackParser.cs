@@ -891,7 +891,12 @@ namespace ObjectStructure.MessagePack
         public void GetBytes(IFormatter f)
         {
             var body = GetBody();
-            f.Raw(body, body.Count);
+            f.Bytes(body, body.Count);
+        }
+
+        public void Dump(IFormatter f)
+        {
+            f.Dump(Bytes.ToArray());
         }
     }
 }

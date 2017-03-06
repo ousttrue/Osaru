@@ -12,7 +12,7 @@ namespace ObjectStructure.Serialization.Serializers
 
         public override void NonNullSerialize(Byte[] t, IFormatter f)
         {
-            f.Raw(t, t.Length);
+            f.Bytes(t, t.Length);
         }
     }
 }

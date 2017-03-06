@@ -12,14 +12,14 @@ namespace ObjectStructureTest
         {
             var json = new JsonFormatter();
             MessagePackParser.Parse(messagePack).Convert(json);
-            return (string)json.Result();
+            return json.GetStore().Buffer();
         }
 
         static byte[] ConvertToMessagePack(string json)
         {
             var msgPack = new MessagePackFormatter();
             JsonParser.Parse(json).Convert(msgPack);
-            return (byte[])msgPack.Result();
+            return msgPack.GetStore().Buffer();
         }
 
         static byte[] FormatToMessagePack<T>(T value)

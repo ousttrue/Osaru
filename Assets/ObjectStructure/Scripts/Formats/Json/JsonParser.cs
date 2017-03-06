@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Text;
 
 /// <summary>
 /// reference: http://www.json.org/index.html
@@ -28,6 +28,13 @@ namespace ObjectStructure.Json
         Boolean,
 
         Close, // internal use
+    }
+
+    public enum ParseMode
+    {
+        None,
+        Recursive,
+        ToEnd,
     }
 
     public struct JsonParser: IParser<JsonParser>
@@ -160,7 +167,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        JsonParser(StringSegment segment, bool recursive)
+        JsonParser(StringSegment segment, ParseMode mode)
         {
             switch (segment[0])
             {
@@ -200,9 +207,18 @@ namespace ObjectStructure.Json
                     m_segment = segment;
                     IsParsedToEnd = false;
                     // parse child objects ?
-                    if (recursive)
+                    switch(mode)
                     {
-                        ParseToEnd();
+                        case ParseMode.None:
+                            break;
+
+                        case ParseMode.Recursive:                   
+                            ParseToEnd();
+                            break;
+
+                        case ParseMode.ToEnd:
+                            IsParsedToEnd = true;
+                            break;
                     }
                     break;
 
@@ -213,12 +229,12 @@ namespace ObjectStructure.Json
             }
         }
 
-        public static JsonParser Parse(string json, bool recursive=false)
+        public static JsonParser Parse(string json, ParseMode mode=ParseMode.None)
         {
-            return Parse(new StringSegment(json), recursive);
+            return Parse(new StringSegment(json), mode);
         }
 
-        public static JsonParser Parse(StringSegment json, bool recursive)
+        public static JsonParser Parse(StringSegment json, ParseMode mode=ParseMode.None)
         {
             // search non whitespace
             int pos;
@@ -226,7 +242,7 @@ namespace ObjectStructure.Json
             {
                 throw new JsonParseException("[" + json.ToString() + "] is only whitespace");
             }
-            return new JsonParser(json.Skip(pos), recursive);
+            return new JsonParser(json.Skip(pos), mode);
         }
 
         #region PrimitiveType
@@ -392,7 +408,7 @@ namespace ObjectStructure.Json
                     {
                         // end
                         if (useCloseNode) {
-                            yield return new JsonParser(current, false);
+                            yield return new JsonParser(current, ParseMode.Recursive);
                         }
                         break;
                     }
@@ -424,7 +440,7 @@ namespace ObjectStructure.Json
                 }
 
                 // key
-                var key = Parse(current, true);
+                var key = Parse(current, ParseMode.Recursive);
                 if (JsonValueType==JsonValueType.Object && key.JsonValueType != JsonValueType.String)
                 {
                     throw new JsonParseException("no string key is not allowed: " + key.Segment);
@@ -453,7 +469,7 @@ namespace ObjectStructure.Json
                     }
 
                     // value
-                    var value = Parse(current, true);
+                    var value = Parse(current, ParseMode.Recursive);
                     current = current.Skip(value.Segment.Count);
                     yield return value;
                 }
@@ -473,6 +489,11 @@ namespace ObjectStructure.Json
         public void GetBytes(IFormatter f)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dump(IFormatter f)
+        {
+            f.Dump(Segment.ToString());
         }
         #endregion
     }

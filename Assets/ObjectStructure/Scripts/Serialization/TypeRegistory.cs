@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using ObjectStructure.Serialization.Serializers;
 using ObjectStructure.Serialization.Deserializers;
-
+using System.Reflection;
 
 namespace ObjectStructure.Serialization
 {
@@ -86,7 +86,7 @@ namespace ObjectStructure.Serialization
             {
                 // T[]
                 Type constructedType = typeof(TypedArraySerializer<>).MakeGenericType(t.GetElementType());
-                return (ISerializer)Activator.CreateInstance(constructedType, null);
+                return (ISerializer)Activator.CreateInstance(constructedType);
             }
             else if (t.GetInterfaces().Any(x =>
             x.IsGenericType &&
@@ -102,7 +102,21 @@ namespace ObjectStructure.Serialization
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
-            else if(!t.IsClass)
+
+            // search custom serializer
+            {
+                var mi = t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic).FirstOrDefault(
+                    x => x.GetCustomAttributes(true).Any(y => y is SerializerAttribute));
+                if (mi != null)
+                {
+                    // Lambda
+                    Type constructedType = typeof(LambdaSerializer<>).MakeGenericType(t);
+                    var create = constructedType.GetMethod("Create", BindingFlags.Static | BindingFlags.Public);
+                    return (ISerializer)create.Invoke(null, new object[] { mi });
+                }
+            }
+
+            if (!t.IsClass)
             {
                 // object
                 Type constructedType = typeof(StructReflectionSerializer<>).MakeGenericType(t);

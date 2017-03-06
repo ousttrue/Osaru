@@ -9,7 +9,7 @@ namespace ObjectStructure.Json
         public JsonFormatException(string msg) : base(msg) { }
     }
 
-    public class JsonFormatter : IFormatter
+    public class JsonFormatter : IFormatter<String>
     {
         IWriteStream m_w;
 
@@ -44,14 +44,19 @@ namespace ObjectStructure.Json
             m_stack.Push(new Context(Current.NONE));
         }
 
+        public IStore<String> GetStore()
+        {
+            return m_w;
+        }
+
         public void Clear()
         {
-            m_w.Clear();
+            //m_w.Clear();
             m_stack.Clear();
             m_stack.Push(new Context(Current.NONE));
         }
 
-        public object Result()
+        public string Buffer()
         {
             return m_w.Buffer();
         }
@@ -201,11 +206,17 @@ namespace ObjectStructure.Json
             m_w.Write(x.ToString());
         }
 
-        public void Raw(IEnumerable<byte> raw, int count)
+        public void Bytes(IEnumerable<byte> raw, int count)
         {
             throw new NotImplementedException();
             
             // ToDo: Base64 encoding
+        }
+
+        public void Dump(object o)
+        {
+            CommaCheck();
+            m_w.Write((String)o);
         }
     }
 }

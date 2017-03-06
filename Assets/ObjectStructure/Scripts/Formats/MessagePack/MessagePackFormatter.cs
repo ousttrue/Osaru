@@ -4,25 +4,40 @@ using System.IO;
 
 namespace ObjectStructure.MessagePack
 {
-    public class MessagePackFormatter : IFormatter
+    public class MessagePackFormatter : IFormatter<Byte[]>
     {
-        MemoryStream m_s;
+        public class ByteStore: IStore<Byte[]>
+        {
+            MemoryStream m_s=new MemoryStream();
+            public Stream Stream
+            {
+                get { return m_s; }
+            }
+            public byte[] Buffer()
+            {
+                return m_s.ToArray();
+            }
+            public void Clear()
+            {
+                m_s.SetLength(0);
+            }
+        }
+        ByteStore m_s;
         MsgPackWriter m_w;
 
         public MessagePackFormatter()
         {
-            m_s = new MemoryStream();
-            m_w = new MsgPackWriter(m_s);
+            m_s = new ByteStore();
+            m_w = new MsgPackWriter(m_s.Stream);
+        }
+
+        public IStore<Byte[]> GetStore()
+        {
+            return m_s;
         }
 
         public void Clear()
         {
-            m_s.SetLength(0);
-        }
-
-        public object Result()
-        {
-            return m_s.ToArray();
         }
 
         public void Null()
@@ -115,9 +130,14 @@ namespace ObjectStructure.MessagePack
             m_w.MsgPack(value);
         }
 
-        public void Raw(IEnumerable<byte> raw, int count)
+        public void Bytes(IEnumerable<byte> raw, int count)
         {
             m_w.MsgPack(raw, count);
+        }
+
+        public void Dump(object o)
+        {
+            m_w.WriteBytes((Byte[])o);
         }
     }
 }

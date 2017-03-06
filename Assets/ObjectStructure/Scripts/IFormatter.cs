@@ -5,9 +5,6 @@ namespace ObjectStructure
 {
     public interface IFormatter
     {
-        void Clear();
-        object Result();
-
         void BeginList(int n);
         void EndList();
         void BeginMap(int n);
@@ -33,6 +30,33 @@ namespace ObjectStructure
         void Value(Single value);
         void Value(Double value);
 
-        void Raw(IEnumerable<Byte> raw, int count);
+        void Bytes(IEnumerable<Byte> raw, int count);
+
+        /// <summary>
+        /// add already formatted
+        /// </summary>
+        /// <param name="t"></param>
+        void Dump(object formatted);
+    }
+
+    public interface IFormatter<T> : IFormatter
+    {
+        void Clear();
+        IStore<T> GetStore();
+    }
+
+    public interface IStore<T>
+    {
+        void Clear();
+        T Buffer();
+    }
+
+    public static class IStoreFormatterExtensions
+    {
+        public static void Reset<T>(this IFormatter<T> f)
+        {
+            f.Clear();
+            f.GetStore().Clear();
+        }
     }
 }

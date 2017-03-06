@@ -1,10 +1,8 @@
 ﻿namespace ObjectStructure
 {
-    public interface IWriteStream
+    public interface IWriteStream: IStore<string>
     {
-        void Clear();
         void Write(string src);
         void Write(char c);
-        string Buffer();
     }
 }

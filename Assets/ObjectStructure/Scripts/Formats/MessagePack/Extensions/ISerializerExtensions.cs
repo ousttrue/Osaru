@@ -10,7 +10,7 @@ namespace ObjectStructure.MessagePack
         {
             var f = new MessagePackFormatter();
             s.Serialize(o, f);
-            return (byte[])f.Result();
+            return f.GetStore().Buffer();
         }
     }
 }

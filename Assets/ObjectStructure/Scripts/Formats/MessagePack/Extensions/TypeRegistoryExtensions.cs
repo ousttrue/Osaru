@@ -26,7 +26,7 @@ namespace ObjectStructure.MessagePack
             r.GetSerializer<T1>().Serialize(value1, f);
             f.EndMap();
 
-            return (Byte[])f.Result();
+            return f.GetStore().Buffer();
         }
 
         public static void Deserialize<T>(this TypeRegistory r, MessagePackParser parser, ref T outValue)

@@ -176,7 +176,7 @@ namespace ObjectStructureTest.Json
 
             {
                 var json = "{\"key\":\"value\"}";
-                var node = JsonParser.Parse(json, true);
+                var node = JsonParser.Parse(json, ParseMode.ToEnd);
                 Assert.AreEqual(0, node.Start);
                 Assert.AreEqual(json.Length, node.End);
                 Assert.AreEqual(JsonValueType.Object, node.JsonValueType);
@@ -192,7 +192,7 @@ namespace ObjectStructureTest.Json
 
             {
                 var json = "{\"key\":\"value\"}";
-                var node = JsonParser.Parse(json, true);
+                var node = JsonParser.Parse(json, ParseMode.ToEnd);
                 Assert.AreEqual(0, node.Start);
                 Assert.AreEqual(json.Length, node.End);
                 Assert.AreEqual(JsonValueType.Object, node.JsonValueType);
@@ -303,7 +303,7 @@ namespace ObjectStructureTest.Json
         public void ParseTest()
         {
             var json = "{";
-            Assert.Catch(typeof(JsonParseException), () => JsonParser.Parse(json, true));
+            Assert.Catch(typeof(JsonParseException), () => JsonParser.Parse(json, ParseMode.Recursive));
         }
     }
 }

@@ -43,19 +43,10 @@ Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
 ## RPC
 
 ```cs
-var d = new RPCDispatcher();
-
-var r = new TypeRegistory();
-d.AddMethod("Add", r.RPCMethod((int a, int b)=>a+b));
-
-var json = "{\"jsonrpc\":\"2.0\", \"method\":\"Add\", \"params\":[1, 2], \"id\":1}";
-
-var request = JsonRPC20.Request(JsonParser.Parse(json));
-
-var f = new JsonFormatter();
-d.Dispatch(request, f);
-
-Assert.AreEqual("3", f.Result());
+var service = new JsonRCP20Server();
+var request = "{\"jsonrpc\":\"2.0\",\"method\":\"Add\",\"params\":[1,2],\"id\":1}";
+var response = service.Process(request);
+Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 ```
 
 # ToDO

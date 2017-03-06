@@ -44,14 +44,6 @@ namespace ObjectStructure.RPC
             where T : IParser<T>;
     }
 
-    public static class RPCMethod
-    {
-        public static RPCMethod<A0, A1, R> Create<A0, A1, R>(TypeRegistory r, Func<A0, A1, R> p)
-        {
-            return new RPCMethod<A0, A1, R>(r, new RPCMethod<A0, A1, R>.Method(p));
-        }
-    }
-
     public class RPCMethod<A0, A1, R>: IRPCMethod
     {
         IDeserializerBase<A0> m_d0;
@@ -82,21 +74,11 @@ namespace ObjectStructure.RPC
 
     public class RPCDispatcher
     {
-        TypeRegistory m_r;
         Dictionary<string, IRPCMethod> m_map = new Dictionary<string, IRPCMethod>();
 
-        public RPCDispatcher(TypeRegistory r=null)
+        public void AddMethod(string name, IRPCMethod method)
         {
-            m_r = r;
-            if(m_r==null)
-            {
-                m_r = new TypeRegistory();
-            }
-        }
-
-        public void AddMethod<A0, A1, R>(string name, Func<A0, A1, R> p)
-        {
-            m_map.Add(name, RPCMethod.Create(m_r, p));
+            m_map.Add(name, method);
         }
 
         public void Dispatch<T>(RPCRequest<T> request, IFormatter f)

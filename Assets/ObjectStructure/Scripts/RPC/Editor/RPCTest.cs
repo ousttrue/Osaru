@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using ObjectStructure.Json;
 using ObjectStructure.RPC;
+using ObjectStructure.Serialization;
 
 namespace ObjectStructureTest.RPC
 {
@@ -11,7 +12,8 @@ namespace ObjectStructureTest.RPC
         {
             var d = new RPCDispatcher();
 
-            d.AddMethod("Add", (int a, int b)=>a+b);
+            var r = new TypeRegistory();
+            d.AddMethod("Add", r.RPCMethod((int a, int b)=>a+b));
 
             var json = "{\"jsonrpc\":\"2.0\", \"method\":\"Add\", \"params\":[1, 2], \"id\":1}";
 

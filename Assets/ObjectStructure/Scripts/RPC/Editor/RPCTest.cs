@@ -2,6 +2,7 @@
 using ObjectStructure.Json;
 using ObjectStructure.RPC;
 using ObjectStructure.Serialization;
+using System;
 
 namespace ObjectStructureTest.RPC
 {
@@ -20,9 +21,24 @@ namespace ObjectStructureTest.RPC
             var request = JsonRPC20.Request(JsonParser.Parse(json));
 
             var f = new JsonFormatter();
-            d.Dispatch(request, f);
 
-            Assert.AreEqual("3", f.Result());
+            var response = new RPCResponse<JsonParser>();
+            response.Id = request.Id;
+            try
+            {
+                d.Dispatch(request, f);
+                response.IsSuccess = true;
+                response.Result = f.Result();
+            }
+            catch(Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Result = ex;
+            }
+
+            var responseJson = r.SerializeToJson(response);
+            var responseParsed = JsonParser.Parse(responseJson);
+            Assert.AreEqual(3, responseParsed["result"].GetInt32());
         }
     }
 }

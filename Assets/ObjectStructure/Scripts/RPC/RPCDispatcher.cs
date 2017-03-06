@@ -14,6 +14,14 @@ namespace ObjectStructure.RPC
         public int Id;
     }
 
+    public struct RPCResponse<T>
+        where T : IParser<T>
+    {
+        public bool IsSuccess;
+        public object Result;
+        public int Id;
+    }
+
     public class JsonRPC20Exception : Exception
     {
         public JsonRPC20Exception(string message) : base(message)

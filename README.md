@@ -2,18 +2,22 @@
 .Net3.5(Unity) Serialization library.
 
 ```
-+----------------+          +-----------+
-|IDeserializer<T>| ->  T -> |ISerializer|
-+----------------+          +-----------+
-  A                           |
-  |                           V
-+-------+    convert        +----------+
-|IParser| ----------------> |IFormatter|
-+-------+                   +----------+
- A     A                      |    |
- |     |                      |    V
- |  JSON(string)              V  JSON(string)
-MessagePack(byte[])         MessagePack(byte[])
+                     +----------+
+                     |RPC method|
+                     +----------+
+                       A     |
++----------------+     |     V    +-----------+
+|IDeserializer<T>| ->  T     U -> |ISerializer|
++----------------+                +-----------+
+  A                                 |
+  |                                 V
++-------+    convert              +----------+
+|IParser| ----------------------> |IFormatter|
++-------+                         +----------+
+ A     A                            |    |
+ |     |                            |    V
+ |  JSON(string)                    V  JSON(string)
+MessagePack(byte[])               MessagePack(byte[])
 ```
 
 # Features
@@ -55,7 +59,9 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [ ] user class serializer
 * [ ] json formatter test
 * [x] json and messagepack converter
-* [ ] RPC
+* [x] json-rpc-2.0
+* [ ] messagepack-rpc
 * [ ] code generator for RPC client
 * [ ] json base64 string for binary support
+* [ ] json byte[] backend not string
 

@@ -1,7 +1,8 @@
-﻿using System;
-using NUnit.Framework;
-using System.Text;
+﻿using NUnit.Framework;
 using ObjectStructure;
+using System;
+using System.Text;
+
 
 namespace ObjectStructureTest
 {

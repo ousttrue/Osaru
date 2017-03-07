@@ -15,7 +15,7 @@ namespace ObjectStructureTest.RPC
             public JsonRCP20Server()
             {
                 m_dispatcher.AddMethod("Add"
-                    , m_registory.RPCMethod((int a, int b) => a + b));
+                    , m_registory.RPCFunc((int a, int b) => a + b));
             }
 
             public string Process(string json)

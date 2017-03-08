@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ObjectStructure.Json;
+using System;
 
 
 namespace ObjectStructure.RPC
@@ -24,6 +25,26 @@ namespace ObjectStructure.RPC
                 Params = parser["params"],
                 Id = parser["id"].GetInt32(),
             };
+        }
+
+        public static RPCResponse<JsonParser> Process(this RPCDispatcher dispatcher, string src)
+        {
+            var json = JsonParser.Parse(src);
+            var f = new JsonFormatter();
+            var request = JsonRPC20.Request(json);
+
+            var response = new RPCResponse<JsonParser>();
+            response.Id = request.Id;
+            try
+            {
+                dispatcher.Dispatch(request, f);
+                response.Result = JsonParser.Parse(f.GetStore().Buffer(), ParseMode.ToEnd);
+            }
+            catch (Exception ex)
+            {
+                response.Error = ex;
+            }
+            return response;
         }
     }
 }

@@ -62,7 +62,7 @@ namespace ObjectStructure.Serialization
 
         ISerializer CreateSerializer(Type t)
         {
-            if (t.IsEnum)
+            if (t.IsEnum())
             {
                 // enum
                 Type constructedType = typeof(EnumStringSerializer<>).MakeGenericType(t);
@@ -89,14 +89,14 @@ namespace ObjectStructure.Serialization
                 return (ISerializer)Activator.CreateInstance(constructedType);
             }
             else if (t.GetInterfaces().Any(x =>
-            x.IsGenericType &&
+            x.IsGenericType() &&
             x.GetGenericTypeDefinition() == typeof(IList<>)))
             {
                 // where U: IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
-            else if(t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
+            else if(t.IsInterface() && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
@@ -116,7 +116,7 @@ namespace ObjectStructure.Serialization
                 }
             }
 
-            if (!t.IsClass)
+            if (!t.IsClass())
             {
                 // object
                 Type constructedType = typeof(StructReflectionSerializer<>).MakeGenericType(t);
@@ -173,7 +173,7 @@ namespace ObjectStructure.Serialization
 
         IDeserializer CreateDeserializer(Type t)
         {
-            if (t.IsEnum)
+            if (t.IsEnum())
             {
                 // enum
                 var constructedType = typeof(EnumStringDeserializer<>).MakeGenericType(t);
@@ -186,20 +186,20 @@ namespace ObjectStructure.Serialization
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
             else if (t.GetInterfaces().Any(x =>
-            x.IsGenericType &&
+            x.IsGenericType() &&
             x.GetGenericTypeDefinition() == typeof(IList<>)))
             {
                 // IList<T>
                 var constructedType = typeof(GenericListDeserializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
-            else if (t.IsInterface && t.GetGenericTypeDefinition() == typeof(IList<>))
+            else if (t.IsInterface() && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 var constructedType = typeof(GenericListDeserializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
-            else if (t.IsClass)
+            else if (t.IsClass())
             {
                 // class
                 var constructedType = typeof(ClassReflectionDeserializer<>).MakeGenericType(t);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 
@@ -9,7 +10,7 @@ namespace ObjectStructure.Json
         #region Quote
         public static void Escape(String s, IWriteStream w)
         {
-            var it = s.GetEnumerator();
+            var it = s.ToCharArray().Cast<char>().GetEnumerator();
             while(it.MoveNext())
             {
                 switch(it.Current)
@@ -137,10 +138,6 @@ namespace ObjectStructure.Json
             var sb = new StringBuilder();
             Unquote(src, new StringBuilderStream(sb));
             var str = sb.ToString();
-            if (str.Length < 32)
-            {
-                str = String.Intern(str);
-            }
             return str;
         }
         #endregion

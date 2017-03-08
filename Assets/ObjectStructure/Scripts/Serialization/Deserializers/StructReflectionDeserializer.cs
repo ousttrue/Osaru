@@ -75,7 +75,7 @@ namespace ObjectStructure.Serialization.Deserializers
         {
             var fieldDeserializers = typeof(T).GetFields(BindingFlags.Public
                 | BindingFlags.Instance)
-                .Where(x => Attribute.IsDefined(x.FieldType, typeof(SerializableAttribute)))
+                .Where(x => x.FieldType.AttributeIsDefined<SerializableAttribute>())
                 .Select(x =>
                 {
                     return new
@@ -87,7 +87,7 @@ namespace ObjectStructure.Serialization.Deserializers
 
             var propertyDeserializers = typeof(T).GetProperties(BindingFlags.Public
                 | BindingFlags.Instance)
-                .Where(x => Attribute.IsDefined(x.PropertyType, typeof(SerializableAttribute)))
+                .Where(x => x.PropertyType.AttributeIsDefined<SerializableAttribute>())
                 .Where(x => x.CanRead && x.CanWrite && x.GetIndexParameters().Length == 0)
                 .Select(x =>
                 {
@@ -101,7 +101,9 @@ namespace ObjectStructure.Serialization.Deserializers
             m_deserializers = 
                 fieldDeserializers
                 .Concat(propertyDeserializers)
-                .ToDictionary(x => String.Intern(x.Name), x => x.Deserializer);
+                .ToDictionary(
+                    x => x.Name
+                    , x => x.Deserializer);
         }
 
         public void Deserialize<PARSER>(PARSER json, ref T outValue)

@@ -14,7 +14,7 @@ namespace ObjectStructure.MessagePack
                 {
                     return (T)o;
                 }
-                else if (typeof(T).IsEnum)
+                else if (typeof(T).IsEnum())
                 {
                     return (T)Convert.ChangeType(o, Enum.GetUnderlyingType(typeof(T)));
                 }

@@ -339,7 +339,7 @@ namespace ObjectStructure.MessagePack
         {
             var t = list.GetType();
             var et = t.GetElementType();
-            if (et.IsClass)
+            if (et.IsClass())
             {
                 return false;
             }

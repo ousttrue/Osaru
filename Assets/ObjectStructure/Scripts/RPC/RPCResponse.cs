@@ -24,7 +24,12 @@ namespace ObjectStructure.RPC
             }
             else
             {
-                throw new NotImplementedException();
+                f.BeginMap(3);
+                f.Key("jsonrpc"); f.Value("2.0");
+                f.Key("error"); f.Value(res.Error.Message);
+                f.Key("id"); f.Value(res.Id);
+                f.EndMap();
+                //throw res.Error;
             }
         }
     }

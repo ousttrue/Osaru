@@ -14,16 +14,19 @@
 +-------+    convert              +----------+
 |IParser| ----------------------> |IFormatter|
 +-------+                         +----------+
- A     A                            |    |
- |     |                            |    V
- |  JSON(string)                    V  JSON(string)
-MessagePack(byte[])               MessagePack(byte[])
+  A                                 |
+  |           +-----------+         |
+  +-----------|JSON       |<--------+
+              |MessagePack|
+              +-----------+
+            serialized byte[]
 ```
 
 # Features
 * separate parser and deserializer
 * inplace serialization
 * inplace deserialization
+* UWP compatible
 
 # Formats
 
@@ -56,6 +59,8 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 # ToDO
 * [x] integrate [MsgPack library](https://github.com/ousttrue/NMessagePack)
 * [x] reorganize messagepack library
+* [ ] fix UWP UnitTest
+* [ ] RPCFormatter
 * [ ] user class serializer
 * [ ] json formatter test
 * [x] json and messagepack converter

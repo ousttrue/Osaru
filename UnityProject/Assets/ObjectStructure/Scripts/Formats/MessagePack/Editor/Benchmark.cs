@@ -13,6 +13,16 @@ using ObjectStructure.Serialization;
 
 namespace ObjectStructureTest
 {
+#if !UNITY_EDITOR
+    static class Console
+    {
+        public static void WriteLine(string fmt="", params object[] args)
+        {
+
+        }
+    }
+#endif
+
     /// <summary>
     /// from https://github.com/neuecc/ZeroFormatter/blob/master/sandbox/PerformanceComparison/Program.cs
     /// </summary>
@@ -26,7 +36,11 @@ namespace ObjectStructureTest
             m_r = new TypeRegistory();
         }
 
+#if UNITY_EDITOR
         string HtmlPath = UnityEngine.Application.dataPath + "/ObjectStructure/Tests/CSharpHtml.txt";
+#else
+        string HtmlPath = "CSharpHtml.txt";
+#endif
 
         const int Iteration = 10;
         static bool dryRun = true;

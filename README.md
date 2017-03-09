@@ -59,7 +59,7 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 # ToDO
 * [x] integrate [MsgPack library](https://github.com/ousttrue/NMessagePack)
 * [x] reorganize messagepack library
-* [ ] fix UWP UnitTest
+* [x] fix UWP UnitTest
 * [ ] RPCFormatter
 * [ ] user class serializer
 * [ ] json formatter test

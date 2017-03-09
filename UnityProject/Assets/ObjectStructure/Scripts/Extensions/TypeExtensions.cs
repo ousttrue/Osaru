@@ -69,11 +69,13 @@ namespace ObjectStructure
                 // enum
                 return true;
             }
+            /*
             if (!t.IsClass())
             {
                 // struct
                 return true;
             }
+            */
 
             // class without serializable...
             return false;
@@ -118,7 +120,6 @@ namespace ObjectStructure
                 return true;
             }
             var ti = t.GetTypeInfo();
-            var cs = ti.GetCustomAttributes();
             return t.GetTypeInfo().GetCustomAttribute<T>() != null;
         }
 #else

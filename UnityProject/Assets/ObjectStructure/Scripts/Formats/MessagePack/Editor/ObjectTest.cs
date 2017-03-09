@@ -2,6 +2,8 @@
 using NUnit.Framework;
 using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
+using System;
+using System.Runtime.Serialization;
 
 namespace ObjectStructureTest.MessagePack
 {
@@ -9,10 +11,13 @@ namespace ObjectStructureTest.MessagePack
     public class ObjectTest
     {
         TypeRegistory m_r;
+
+        [Serializable, DataContract]
         class Nest
         {
             public string Name { get; set; }
         }
+
         class Sample
         {
             public string Name { get; set; }

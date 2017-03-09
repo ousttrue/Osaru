@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 #if NETFX_CORE
 using System.Reflection;
+using System.Runtime.Serialization;
 #endif
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WSA
 using UnityEngine;
@@ -38,21 +39,31 @@ namespace ObjectStructure
 
         public static bool IsSerializable(this Type t)
         {
+#if true
             if (m_serializableTypes.Contains(t))
             {
                 // NETFX_CORE has no SerializableAttribute
                 return true;
             }
+#endif
             if (typeof(IEnumerable).IsAssignableFrom(t))
             {
                 // collection
                 return true;
             }
+#if NETFX_CORE
+            if (t.AttributeIsDefined<DataContractAttribute>())
+            {
+                // serializable and primitive
+                return true;
+            }
+#else
             if (t.AttributeIsDefined<SerializableAttribute>())
             {
                 // serializable and primitive
                 return true;
             }
+#endif
             if (t.IsEnum())
             {
                 // enum
@@ -106,6 +117,8 @@ namespace ObjectStructure
             {
                 return true;
             }
+            var ti = t.GetTypeInfo();
+            var cs = ti.GetCustomAttributes();
             return t.GetTypeInfo().GetCustomAttribute<T>() != null;
         }
 #else

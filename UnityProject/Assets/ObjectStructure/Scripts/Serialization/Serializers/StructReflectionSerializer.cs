@@ -51,7 +51,7 @@ namespace ObjectStructure.Serialization.Serializers
         {
             return typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
-                .Where(x => x.FieldType.AttributeIsDefined<SerializableAttribute>())
+                .Where(x => x.FieldType.IsSerializable())
                 .Select(x =>
                 {
                     var method = genericMethod.MakeGenericMethod(x.FieldType);
@@ -88,7 +88,7 @@ namespace ObjectStructure.Serialization.Serializers
             return typeof(T).GetProperties(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
                 .Where(x => x.CanRead && x.CanWrite && x.GetIndexParameters().Length==0)
-                .Where(x => x.PropertyType.AttributeIsDefined<SerializableAttribute>())
+                .Where(x => x.PropertyType.IsSerializable())
                 .Select(x =>
                 {
                     var method = genericMethod.MakeGenericMethod(x.PropertyType);

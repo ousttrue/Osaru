@@ -72,7 +72,7 @@ namespace ObjectStructure.Serialization.Deserializers
         {
             var fieldDeserializers = typeof(T).GetFields(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
-                .Where(x => x.FieldType.AttributeIsDefined<SerializableAttribute>())
+                .Where(x => x.FieldType.IsSerializable())
                 .Select(x =>
                 {
                     return new
@@ -83,8 +83,8 @@ namespace ObjectStructure.Serialization.Deserializers
                 });
             var propertyDeserializers = typeof(T).GetProperties(System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.Instance)
-                .Where(x => x.PropertyType.AttributeIsDefined<SerializableAttribute>())
                 .Where(x => x.CanRead && x.CanWrite && x.GetIndexParameters().Length == 0)
+                .Where(x => x.PropertyType.IsSerializable())
                 .Select(x =>
                 {
                     return new

@@ -5,19 +5,50 @@ using System.Linq;
 #if NETFX_CORE
 using System.Reflection;
 #endif
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WSA
+using UnityEngine;
+#endif
+
 
 namespace ObjectStructure
 {
     public static class TypeExtensions
     {
+        static HashSet<Type> m_serializableTypes = new HashSet<Type>
+        {
+            typeof(Byte),
+            typeof(UInt16),
+            typeof(UInt32),
+            typeof(UInt64),
+            typeof(SByte),
+            typeof(Int16),
+            typeof(Int32),
+            typeof(Int64),
+            typeof(Single),
+            typeof(Double),
+            typeof(String),
+            typeof(Boolean),
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WSA
+            typeof(Quaternion),
+            typeof(Vector4),
+            typeof(Vector3),
+            typeof(Vector2),
+#endif
+        };
+
         public static bool IsSerializable(this Type t)
         {
+            if (m_serializableTypes.Contains(t))
+            {
+                // NETFX_CORE has no SerializableAttribute
+                return true;
+            }
             if (typeof(IEnumerable).IsAssignableFrom(t))
             {
                 // collection
                 return true;
             }
-            if (t.GetCustomAttributes(typeof(SerializableAttribute), true).Any())
+            if (t.AttributeIsDefined<SerializableAttribute>())
             {
                 // serializable and primitive
                 return true;

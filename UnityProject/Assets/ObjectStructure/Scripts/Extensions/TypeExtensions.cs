@@ -82,9 +82,25 @@ namespace ObjectStructure
         }
 
 #if NETFX_CORE
-        public static bool IsAssignableFrom(this Type t, Type type)
+        /// <summary>
+        /// lhs = rhs が可能か
+        /// </summary>
+        /// <param name="lhs"></param>
+        /// <param name="rhs"></param>
+        /// <returns></returns>
+        public static bool IsAssignableFrom(this Type lhs, Type rhs)
         {
-            return t.GetTypeInfo().IsSubclassOf(type);
+            var lhsi = lhs.GetTypeInfo();
+            var rhsi = rhs.GetTypeInfo();
+            if (rhsi.IsSubclassOf(lhs))
+            {
+                return true;
+            }
+            if (rhsi.ImplementedInterfaces.Contains(lhs))
+            {
+                return true;
+            }
+            return false;
         }
 
         public static IEnumerable<Attribute> GetCustomAttributes(this Type t)

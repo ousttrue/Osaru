@@ -12,10 +12,10 @@ namespace ObjectStructure.RPC
             m_map.Add(name, method);
         }
 
-        public void Dispatch<T>(RPCRequest<T> request, IRPCFormatter f)
+        public void Dispatch<T>(IRPCContext<T> f)
             where T: IParser<T>
         {
-            m_map[request.Method].Call(request.Params, f);
+            m_map[f.Request.Method].Call(f);
         }
     }
 }

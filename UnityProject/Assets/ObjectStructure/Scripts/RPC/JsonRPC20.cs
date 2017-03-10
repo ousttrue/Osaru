@@ -13,38 +13,71 @@ namespace ObjectStructure.RPC
     }
 
 
-    public class JsonRPC20Formatter : IRPCFormatter
+    public class JsonRPC20Context : IRPCContext<JsonParser>
     {
         JsonFormatter m_f;
-        RPCResponse<JsonParser> m_response;
-        public RPCResponse<JsonParser> Response
+
+        RPCRequest<JsonParser> m_request;
+        public RPCRequest<JsonParser> Request
         {
-            get { return m_response; }
+            get { return m_request; }
         }
 
-        public JsonRPC20Formatter(RPCRequest<JsonParser> request)
+        public string Result
         {
+            get
+            {
+                return m_f.GetStore().Buffer();
+            }
+        }
+
+        public JsonRPC20Context(string src)
+        {
+            var json = JsonParser.Parse(src);
+            m_request = JsonRPC20.Request(json);
             m_f = new JsonFormatter();
-            m_response.Id = request.Id;
+        }
+
+        public JsonRPC20Context(RPCRequest<JsonParser> request)
+        {
+            m_request = request;
+            m_f = new JsonFormatter();
         }
 
         public void Error(Exception ex)
         {
-            m_response.Error = ex;
+            m_f.BeginMap(3);
+            m_f.Key("jsonrpc"); m_f.Value("2.0");
+            m_f.Key("error"); m_f.Value(ex.Message);
+            m_f.Key("id"); m_f.Value(Request.Id);
+            m_f.EndMap();
+        }
+
+        void BeginSuccess()
+        {
+            m_f.BeginMap(3);
+            m_f.Key("jsonrpc"); m_f.Value("2.0");
+            m_f.Key("result");
+        }
+
+        void End()
+        {
+            m_f.Key("id"); m_f.Value(Request.Id);
+            m_f.EndMap();
         }
 
         public void Success()
         {
+            BeginSuccess();
             m_f.Null();
-            m_response.Result = JsonParser.Parse(m_f.GetStore().Buffer()
-                , ParseMode.ToEnd);
+            End();
         }
 
         public void Success<R>(R result, SerializerBase<R> s)
         {
+            BeginSuccess();
             s.Serialize(result, m_f);
-            m_response.Result = JsonParser.Parse(m_f.GetStore().Buffer()
-                , ParseMode.ToEnd);
+            End();
         }
     }
 
@@ -65,13 +98,12 @@ namespace ObjectStructure.RPC
             };
         }
 
-        public static RPCResponse<JsonParser> Process(this RPCDispatcher dispatcher, string src)
+        public static string DispatchJsonRPC20(this RPCDispatcher dispatcher,
+            string requestJson)
         {
-            var json = JsonParser.Parse(src);
-            var request = JsonRPC20.Request(json);
-            var formatter = new JsonRPC20Formatter(request);
-            dispatcher.Dispatch(request, formatter);
-            return formatter.Response;
+            var context = new JsonRPC20Context(requestJson);
+            dispatcher.Dispatch(context);
+            return context.Result;
         }
     }
 }

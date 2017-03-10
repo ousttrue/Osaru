@@ -6,8 +6,11 @@ using System;
 
 namespace ObjectStructure.RPC
 {
-    public interface IRPCFormatter
+    public interface IRPCContext<T>
+        where T: IParser<T>
     {
+        RPCRequest<T> Request { get; }
+        //RPCResponse<T> Response { get; }
         void Success();
         void Success<R>(R result, SerializerBase<R> s);
         void Error(Exception ex);
@@ -15,7 +18,7 @@ namespace ObjectStructure.RPC
 
     public interface IRPCMethod
     {
-        void Call<T>(T request, IRPCFormatter f)
+        void Call<T>(IRPCContext<T> f)
             where T : IParser<T>;
     }
 
@@ -31,13 +34,13 @@ namespace ObjectStructure.RPC
             m_d0 = r.GetDeserializer<A0>();
         }
 
-        public void Call<T>(T param, IRPCFormatter f)
+        public void Call<T>(IRPCContext<T> f)
             where T : IParser<T>
         {
             try
             {
                 var a0 = default(A0);
-                m_d0.Deserialize(param[0], ref a0);
+                m_d0.Deserialize(f.Request.Params[0], ref a0);
 
                 m_method(a0);
                 f.Success();
@@ -63,16 +66,16 @@ namespace ObjectStructure.RPC
             m_d1 = r.GetDeserializer<A1>();
         }
 
-        public void Call<T>(T param, IRPCFormatter f)
+        public void Call<T>(IRPCContext<T> f)
             where T : IParser<T>
         {
             try
             {
                 var a0 = default(A0);
-                m_d0.Deserialize(param[0], ref a0);
+                m_d0.Deserialize(f.Request.Params[0], ref a0);
 
                 var a1 = default(A1);
-                m_d1.Deserialize(param[1], ref a1);
+                m_d1.Deserialize(f.Request.Params[1], ref a1);
 
                 m_method(a0, a1);
                 f.Success();
@@ -96,7 +99,7 @@ namespace ObjectStructure.RPC
             m_s=r.GetSerializer<R>();
         }
 
-        public void Call<T>(T param, IRPCFormatter f)
+        public void Call<T>(IRPCContext<T> f)
             where T : IParser<T>
         {
             try
@@ -124,13 +127,13 @@ namespace ObjectStructure.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(T param, IRPCFormatter f)
+        public void Call<T>(IRPCContext<T> f)
             where T : IParser<T>
         {
             try
             {
                 var a0 = default(A0);
-                m_d0.Deserialize(param[0], ref a0);
+                m_d0.Deserialize(f.Request.Params[0], ref a0);
 
                 f.Success(m_method(a0), m_s);
             }
@@ -157,16 +160,16 @@ namespace ObjectStructure.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(T param, IRPCFormatter f)
+        public void Call<T>(IRPCContext<T> f)
             where T : IParser<T>
         {
             try
             {
                 var a0 = default(A0);
-                m_d0.Deserialize(param[0], ref a0);
+                m_d0.Deserialize(f.Request.Params[0], ref a0);
 
                 var a1 = default(A1);
-                m_d1.Deserialize(param[1], ref a1);
+                m_d1.Deserialize(f.Request.Params[1], ref a1);
 
                 f.Success(m_method(a0, a1), m_s);
             }

@@ -251,7 +251,7 @@ namespace ObjectStructureTest
         T SerializeMsgPack<T>(T value)
         {
             var formatter = new MessagePackFormatter();
-            Func<Byte[], MessagePackParser> parser = x => MessagePackParser.Parse(x);
+            Func<BytesSegment, MessagePackParser> parser = x => MessagePackParser.Parse(x);
 
             return Serialize(m_r, formatter, parser, value);
         }
@@ -336,13 +336,13 @@ namespace ObjectStructureTest
             UnityEngine.Debug.LogFormat("[Json]{0}", sw.Elapsed);
         }
 
-        static T Serialize<Parser, T, DST>(TypeRegistory r
-            , IFormatter<DST> f
-            , Func<DST, Parser> parser, T original)
+        static T Serialize<Parser, T>(TypeRegistory r
+            , IFormatter f
+            , Func<BytesSegment, Parser> parser, T original)
             where Parser : IParser<Parser>
         {
             T copy = default(T);
-            var packed = default(DST);
+            var packed = default(BytesSegment);
 
             // Note:We should check MessagePackSerializer.Get<T>() on every iteration
             // But currenly MsgPack-Cli has bug of get serializer
@@ -357,9 +357,9 @@ namespace ObjectStructureTest
             {
                 for (int i = 0; i < Iteration; i++)
                 {
-                    f.Reset();
+                    f.Clear();
                     serializer.Serialize(original, f);
-                    packed = f.GetStore().Buffer();
+                    packed = f.GetStore().Bytes;
                 }
             }
 
@@ -378,9 +378,9 @@ namespace ObjectStructureTest
             {
                 for (int i = 0; i < Iteration; i++)
                 {
-                    f.Reset();
+                    f.Clear();
                     serializer.Serialize(copy, f);
-                    packed = f.GetStore().Buffer();
+                    packed = f.GetStore().Bytes;
                 }
             }
 

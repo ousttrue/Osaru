@@ -9,9 +9,9 @@ namespace ObjectStructure.Json
         public JsonFormatException(string msg) : base(msg) { }
     }
 
-    public class JsonFormatter : IFormatter<String>
+    public class JsonFormatter : IFormatter
     {
-        IWriteStream m_w;
+        IStore m_w;
 
         enum Current
         { 
@@ -38,27 +38,22 @@ namespace ObjectStructure.Json
             :this(new StringBuilderStream(new StringBuilder()))
         {}
 
-        public JsonFormatter(IWriteStream w)
+        public JsonFormatter(IStore w)
         {
             m_w = w;
             m_stack.Push(new Context(Current.NONE));
         }
 
-        public IStore<String> GetStore()
+        public IStore GetStore()
         {
             return m_w;
         }
 
         public void Clear()
         {
-            //m_w.Clear();
+            m_w.Clear();
             m_stack.Clear();
             m_stack.Push(new Context(Current.NONE));
-        }
-
-        public string Buffer()
-        {
-            return m_w.Buffer();
         }
 
         void CommaCheck(bool isKey=false)

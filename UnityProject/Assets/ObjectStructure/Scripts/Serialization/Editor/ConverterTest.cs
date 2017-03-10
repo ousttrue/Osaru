@@ -8,21 +8,21 @@ namespace ObjectStructureTest
 {
     public class ConverterTest
     {
-        static string ConvertToJson(byte[] messagePack)
+        static BytesSegment ConvertToJson(BytesSegment messagePack)
         {
             var json = new JsonFormatter();
             MessagePackParser.Parse(messagePack).Convert(json);
-            return json.GetStore().Buffer();
+            return json.GetStore().Bytes;
         }
 
-        static byte[] ConvertToMessagePack(string json)
+        static BytesSegment ConvertToMessagePack(string json)
         {
             var msgPack = new MessagePackFormatter();
             JsonParser.Parse(json).Convert(msgPack);
-            return msgPack.GetStore().Buffer();
+            return msgPack.GetStore().Bytes;
         }
 
-        static byte[] FormatToMessagePack<T>(T value)
+        static BytesSegment FormatToMessagePack<T>(T value)
         {
             var typeRegistory = new TypeRegistory();
             var s=typeRegistory.GetSerializer<T>();

@@ -37,26 +37,19 @@ namespace ObjectStructure
         /// </summary>
         /// <param name="t"></param>
         void Dump(object formatted);
-    }
 
-    public interface IFormatter<T> : IFormatter
-    {
         void Clear();
-        IStore<T> GetStore();
+        IStore GetStore();
     }
 
-    public interface IStore<T>
-    {
-        void Clear();
-        T Buffer();
-    }
-
+    /*
     public static class IStoreFormatterExtensions
     {
-        public static void Reset<T>(this IFormatter<T> f)
+        public static void Reset<T>(this IFormatter f)
         {
             f.Clear();
             f.GetStore().Clear();
         }
     }
+    */
 }

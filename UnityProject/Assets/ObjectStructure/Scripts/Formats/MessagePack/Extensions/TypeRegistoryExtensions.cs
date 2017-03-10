@@ -6,13 +6,13 @@ namespace ObjectStructure.MessagePack
 {
     public static class TypeRegistoryExtensions
     {
-        public static Byte[] SerializeToMessagePack<T>(this TypeRegistory r, T value)
+        public static BytesSegment SerializeToMessagePack<T>(this TypeRegistory r, T value)
         {
             var s = r.GetSerializer<T>();
             return s.SerializeToMessagePack(value);
         }
 
-        public static Byte[] SerializeToMessagePackMap<K0, T0, K1, T1>(this TypeRegistory r
+        public static BytesSegment SerializeToMessagePackMap<K0, T0, K1, T1>(this TypeRegistory r
             , K0 key0, T0 value0
             , K1 key1, T1 value1
             )
@@ -26,7 +26,7 @@ namespace ObjectStructure.MessagePack
             r.GetSerializer<T1>().Serialize(value1, f);
             f.EndMap();
 
-            return f.GetStore().Buffer();
+            return f.GetStore().Bytes;
         }
 
         public static void Deserialize<T>(this TypeRegistory r, MessagePackParser parser, ref T outValue)

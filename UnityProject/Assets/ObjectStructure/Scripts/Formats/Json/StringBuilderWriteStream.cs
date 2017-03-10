@@ -5,13 +5,23 @@ using System.Text;
 
 namespace ObjectStructure
 {
-    public class StringBuilderStream: IWriteStream
+    public class StringBuilderStream: IStore
     {
         StringBuilder m_sb;
 
         public StringBuilderStream(StringBuilder sb)
         {
             m_sb = sb;
+        }
+
+        public BytesSegment Bytes
+        {
+            get
+            {
+                return new BytesSegment(
+                    Encoding.UTF8.GetBytes(Buffer())
+                    );
+            }
         }
 
         public string Buffer()

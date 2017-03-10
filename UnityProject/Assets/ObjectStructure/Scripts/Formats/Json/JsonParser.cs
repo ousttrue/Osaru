@@ -229,6 +229,12 @@ namespace ObjectStructure.Json
             }
         }
 
+        public static JsonParser Parse(BytesSegment bytes, ParseMode mode = ParseMode.None)
+        {
+            var json = Encoding.UTF8.GetString(bytes.Array, bytes.Offset, bytes.Count);
+            return Parse(new StringSegment(json), mode);
+        }
+
         public static JsonParser Parse(string json, ParseMode mode=ParseMode.None)
         {
             return Parse(new StringSegment(json), mode);

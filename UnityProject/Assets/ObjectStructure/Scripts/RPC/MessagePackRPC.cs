@@ -23,11 +23,11 @@ namespace ObjectStructure.RPC
             get { return m_request; }
         }
 
-        public byte[] Result
+        public BytesSegment Result
         {
             get
             {
-                return m_f.GetStore().Buffer();
+                return m_f.GetStore().Bytes;
             }
         }
 
@@ -101,21 +101,14 @@ namespace ObjectStructure.RPC
             };
         }
 
-        public static byte[] DispatchMessagePackRPC(this RPCDispatcher dispatcher,
+        public static BytesSegment DispatchMessagePackRPC(this RPCDispatcher dispatcher,
             byte[] src)
         {
-            {
-                var mp = MessagePackParser.Parse(src);
-                var f = new Json.JsonFormatter();
-                mp.Convert(f);
-                var json = f.GetStore().Buffer();
-                int a = 0;
-            }
             var context = new MessagePackRPCContext(src);
             dispatcher.Dispatch(context);
             return context.Result;
         }
-        public static byte[] DispatchMessagePackRPC(this RPCDispatcher dispatcher,
+        public static BytesSegment DispatchMessagePackRPC(this RPCDispatcher dispatcher,
             RPCRequest<MessagePackParser> request)
         {
             var context = new MessagePackRPCContext(request);

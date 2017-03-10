@@ -4,11 +4,20 @@ using System.IO;
 
 namespace ObjectStructure.MessagePack
 {
-    public class MessagePackFormatter : IFormatter<Byte[]>
+    public class MessagePackFormatter : IFormatter
     {
-        public class ByteStore: IStore<Byte[]>
+        public class ByteStore: IStore
         {
             MemoryStream m_s=new MemoryStream();
+
+            public BytesSegment Bytes
+            {
+                get
+                {
+                    return new BytesSegment(Buffer());
+                }
+            }
+
             public Stream Stream
             {
                 get { return m_s; }
@@ -21,6 +30,16 @@ namespace ObjectStructure.MessagePack
             {
                 m_s.SetLength(0);
             }
+
+            public void Write(char c)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Write(string src)
+            {
+                throw new NotImplementedException();
+            }
         }
         ByteStore m_s;
         MsgPackWriter m_w;
@@ -31,13 +50,14 @@ namespace ObjectStructure.MessagePack
             m_w = new MsgPackWriter(m_s.Stream);
         }
 
-        public IStore<Byte[]> GetStore()
+        public IStore GetStore()
         {
             return m_s;
         }
 
         public void Clear()
         {
+            m_s.Clear();
         }
 
         public void Null()

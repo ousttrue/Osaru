@@ -8,7 +8,7 @@ namespace ObjectStructure.Json
     public static class JsonString
     {
         #region Quote
-        public static void Escape(String s, IWriteStream w)
+        public static void Escape(String s, IStore w)
         {
             var it = s.ToCharArray().Cast<char>().GetEnumerator();
             while(it.MoveNext())
@@ -57,7 +57,7 @@ namespace ObjectStructure.Json
             return sb.ToString();
         }
 
-        public static void Quote(String s, IWriteStream w)
+        public static void Quote(String s, IStore w)
         {
             w.Write('"');
             Escape(s, w);
@@ -72,7 +72,7 @@ namespace ObjectStructure.Json
         #endregion
 
         #region Unquote
-        public static void Unescape(string src, IWriteStream w)
+        public static void Unescape(string src, IStore w)
         {
             int i = 0;
             int length = src.Length - 1;
@@ -129,7 +129,7 @@ namespace ObjectStructure.Json
             return sb.ToString();
         }
 
-        public static void Unquote(string src, IWriteStream w)
+        public static void Unquote(string src, IStore w)
         {
             Unescape(src.Substring(1, src.Length - 2), w);
         }

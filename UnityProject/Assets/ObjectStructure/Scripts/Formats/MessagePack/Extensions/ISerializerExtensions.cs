@@ -6,11 +6,11 @@ namespace ObjectStructure.MessagePack
 {
     public static class ISerializerExtensions
     {
-        public static byte[] SerializeToMessagePack<T>(this SerializerBase<T> s, T o)
+        public static BytesSegment SerializeToMessagePack<T>(this SerializerBase<T> s, T o)
         {
             var f = new MessagePackFormatter();
             s.Serialize(o, f);
-            return f.GetStore().Buffer();
+            return f.GetStore().Bytes;
         }
     }
 }

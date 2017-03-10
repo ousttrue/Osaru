@@ -23,11 +23,11 @@ namespace ObjectStructure.RPC
             get { return m_request; }
         }
 
-        public string Result
+        public BytesSegment Result
         {
             get
             {
-                return m_f.GetStore().Buffer();
+                return m_f.GetStore().Bytes;
             }
         }
 
@@ -98,7 +98,7 @@ namespace ObjectStructure.RPC
             };
         }
 
-        public static string DispatchJsonRPC20(this RPCDispatcher dispatcher,
+        public static BytesSegment DispatchJsonRPC20(this RPCDispatcher dispatcher,
             string requestJson)
         {
             var context = new JsonRPC20Context(requestJson);

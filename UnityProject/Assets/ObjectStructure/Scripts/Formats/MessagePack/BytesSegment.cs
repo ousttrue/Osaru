@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 
 namespace ObjectStructure
@@ -253,6 +254,11 @@ namespace ObjectStructure
                 Buffer.BlockCopy(Array, Offset, result, 0, Count);
             }
         }
+        #endregion
+
+        public string GetString()
+        {
+            return Encoding.UTF8.GetString(Array, Offset, Count);
+        }
     }
-    #endregion
 }

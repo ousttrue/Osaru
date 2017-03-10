@@ -1,4 +1,5 @@
 ﻿using ObjectStructure.Json;
+using ObjectStructure.Serialization.Serializers;
 using System;
 
 
@@ -10,6 +11,43 @@ namespace ObjectStructure.RPC
         {
         }
     }
+
+
+    public class JsonRPC20Formatter : IRPCFormatter
+    {
+        JsonFormatter m_f;
+        RPCResponse<JsonParser> m_response;
+        public RPCResponse<JsonParser> Response
+        {
+            get { return m_response; }
+        }
+
+        public JsonRPC20Formatter(RPCRequest<JsonParser> request)
+        {
+            m_f = new JsonFormatter();
+            m_response.Id = request.Id;
+        }
+
+        public void Error(Exception ex)
+        {
+            m_response.Error = ex;
+        }
+
+        public void Success()
+        {
+            m_f.Null();
+            m_response.Result = JsonParser.Parse(m_f.GetStore().Buffer()
+                , ParseMode.ToEnd);
+        }
+
+        public void Success<R>(R result, SerializerBase<R> s)
+        {
+            s.Serialize(result, m_f);
+            m_response.Result = JsonParser.Parse(m_f.GetStore().Buffer()
+                , ParseMode.ToEnd);
+        }
+    }
+
 
     public static class JsonRPC20
     {
@@ -30,21 +68,10 @@ namespace ObjectStructure.RPC
         public static RPCResponse<JsonParser> Process(this RPCDispatcher dispatcher, string src)
         {
             var json = JsonParser.Parse(src);
-            var f = new JsonFormatter();
             var request = JsonRPC20.Request(json);
-
-            var response = new RPCResponse<JsonParser>();
-            response.Id = request.Id;
-            try
-            {
-                dispatcher.Dispatch(request, f);
-                response.Result = JsonParser.Parse(f.GetStore().Buffer(), ParseMode.ToEnd);
-            }
-            catch (Exception ex)
-            {
-                response.Error = ex;
-            }
-            return response;
+            var formatter = new JsonRPC20Formatter(request);
+            dispatcher.Dispatch(request, formatter);
+            return formatter.Response;
         }
     }
 }

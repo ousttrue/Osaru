@@ -1,13 +1,21 @@
 ﻿using ObjectStructure.Serialization;
 using ObjectStructure.Serialization.Deserializers;
 using ObjectStructure.Serialization.Serializers;
+using System;
 
 
-namespace ObjectStructure
+namespace ObjectStructure.RPC
 {
+    public interface IRPCFormatter
+    {
+        void Success();
+        void Success<R>(R result, SerializerBase<R> s);
+        void Error(Exception ex);
+    }
+
     public interface IRPCMethod
     {
-        void Call<T>(T request, IFormatter f)
+        void Call<T>(T request, IRPCFormatter f)
             where T : IParser<T>;
     }
 
@@ -23,14 +31,21 @@ namespace ObjectStructure
             m_d0 = r.GetDeserializer<A0>();
         }
 
-        public void Call<T>(T param, IFormatter f)
+        public void Call<T>(T param, IRPCFormatter f)
             where T : IParser<T>
         {
-            var a0 = default(A0);
-            m_d0.Deserialize(param[0], ref a0);
+            try
+            {
+                var a0 = default(A0);
+                m_d0.Deserialize(param[0], ref a0);
 
-            m_method(a0);
-            f.Null();
+                m_method(a0);
+                f.Success();
+            }
+            catch (Exception ex)
+            {
+                f.Error(ex);
+            }
         }
     }
 
@@ -48,36 +63,50 @@ namespace ObjectStructure
             m_d1 = r.GetDeserializer<A1>();
         }
 
-        public void Call<T>(T param, IFormatter f)
+        public void Call<T>(T param, IRPCFormatter f)
             where T : IParser<T>
         {
-            var a0 = default(A0);
-            m_d0.Deserialize(param[0], ref a0);
+            try
+            {
+                var a0 = default(A0);
+                m_d0.Deserialize(param[0], ref a0);
 
-            var a1 = default(A1);
-            m_d1.Deserialize(param[1], ref a1);
+                var a1 = default(A1);
+                m_d1.Deserialize(param[1], ref a1);
 
-            m_method(a0, a1);
-            f.Null();
+                m_method(a0, a1);
+                f.Success();
+            }
+            catch (Exception ex)
+            {
+                f.Error(ex);
+            }
         }
     }
 
     // Func<R>
     public class RPCFunc<R> : IRPCMethod
     {
-        SerializerBase<R> m_s;
         public delegate R Method();
         Method m_method;
+        SerializerBase<R> m_s;
         public RPCFunc(TypeRegistory r, Method method)
         {
             m_method = method;
-            m_s = r.GetSerializer<R>();
+            m_s=r.GetSerializer<R>();
         }
 
-        public void Call<T>(T param, IFormatter f)
+        public void Call<T>(T param, IRPCFormatter f)
             where T : IParser<T>
         {
-            m_s.Serialize(m_method(), f);
+            try
+            {
+                f.Success(m_method(), m_s);
+            }
+            catch(Exception ex)
+            {
+                f.Error(ex);
+            }
         }
     }
 
@@ -85,9 +114,9 @@ namespace ObjectStructure
     public class RPCFunc<A0, R> : IRPCMethod
     {
         IDeserializerBase<A0> m_d0;
-        SerializerBase<R> m_s;
         public delegate R Method(A0 a0);
         Method m_method;
+        SerializerBase<R> m_s;
         public RPCFunc(TypeRegistory r, Method method)
         {
             m_method = method;
@@ -95,13 +124,20 @@ namespace ObjectStructure
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(T param, IFormatter f)
+        public void Call<T>(T param, IRPCFormatter f)
             where T : IParser<T>
         {
-            var a0 = default(A0);
-            m_d0.Deserialize(param[0], ref a0);
+            try
+            {
+                var a0 = default(A0);
+                m_d0.Deserialize(param[0], ref a0);
 
-            m_s.Serialize(m_method(a0), f);
+                f.Success(m_method(a0), m_s);
+            }
+            catch (Exception ex)
+            {
+                f.Error(ex);
+            }
         }
     }
 
@@ -110,9 +146,9 @@ namespace ObjectStructure
     {
         IDeserializerBase<A0> m_d0;
         IDeserializerBase<A1> m_d1;
-        SerializerBase<R> m_s;
         public delegate R Method(A0 a0, A1 a1);
         Method m_method;
+        SerializerBase<R> m_s;
         public RPCFunc(TypeRegistory r, Method method)
         {
             m_method = method;
@@ -121,16 +157,23 @@ namespace ObjectStructure
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(T param, IFormatter f)
+        public void Call<T>(T param, IRPCFormatter f)
             where T : IParser<T>
         {
-            var a0 = default(A0);
-            m_d0.Deserialize(param[0], ref a0);
+            try
+            {
+                var a0 = default(A0);
+                m_d0.Deserialize(param[0], ref a0);
 
-            var a1 = default(A1);
-            m_d1.Deserialize(param[1], ref a1);
+                var a1 = default(A1);
+                m_d1.Deserialize(param[1], ref a1);
 
-            m_s.Serialize(m_method(a0, a1), f);
+                f.Success(m_method(a0, a1), m_s);
+            }
+            catch (Exception ex)
+            {
+                f.Error(ex);
+            }
         }
     }
 }

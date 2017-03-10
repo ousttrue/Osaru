@@ -20,6 +20,13 @@ namespace ObjectStructure.RPC
             return new RPCAction<A0, A1>(r
                 , new RPCAction<A0, A1>.Method(p));
         }
+
+        public static RPCAction<A0, A1, A2> RPCAction<A0, A1, A2>(
+            this TypeRegistory r, Action<A0, A1, A2> p)
+        {
+            return new RPCAction<A0, A1, A2>(r
+                , new RPCAction<A0, A1, A2>.Method(p));
+        }
         #endregion
 
         #region Func

@@ -77,4 +77,6 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [ ] StreamStore
 * [ ] BytesStore
 * [ ] fix dump
+* [ ] rpc proxy
+
 

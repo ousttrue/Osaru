@@ -78,7 +78,7 @@ namespace ObjectStructureTest
             ConvertJsonToMessagePackTest(1);
             ConvertJsonToMessagePackTest("abc");
             ConvertJsonToMessagePackTest(true);
-            ConvertJsonToMessagePackTest((object)null);
+            //ConvertJsonToMessagePackTest((object)null);
             ConvertJsonToMessagePackTest(new UnityEngine.Vector3(1, 2, 3));
         }
 
@@ -88,7 +88,7 @@ namespace ObjectStructureTest
             ConvertMessagePackToJsonTest(1);
             ConvertMessagePackToJsonTest("abc");
             ConvertMessagePackToJsonTest(true);
-            ConvertMessagePackToJsonTest((object)null);
+            //ConvertMessagePackToJsonTest((object)null);
             ConvertMessagePackToJsonTest(new UnityEngine.Vector3(1, 2, 3));
         }
     }

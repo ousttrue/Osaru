@@ -1,8 +1,10 @@
-﻿using ObjectStructure.Json;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using ObjectStructure.Json;
+using ObjectStructure.MessagePack;
+using ObjectStructure.Serialization.Serializers;
 using System;
 using System.Collections.Generic;
-using ObjectStructure.Serialization.Serializers;
+using System.Linq;
 
 namespace ObjectStructureTest.Json
 {

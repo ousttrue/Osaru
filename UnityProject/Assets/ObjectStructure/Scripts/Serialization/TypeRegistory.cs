@@ -173,6 +173,11 @@ namespace ObjectStructure.Serialization
 
         IDeserializer CreateDeserializer(Type t)
         {
+            if (t == typeof(object))
+            {
+                throw new ArgumentException("no deserializer for object");
+            }
+
             if (t.IsEnum())
             {
                 // enum

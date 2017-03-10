@@ -27,18 +27,16 @@ namespace ObjectStructureTest.MessagePack
                 var bytes = ms.ToArray();
                 Assert.AreEqual(new Byte[] { 0xC0 }, bytes);
 
-                Object j = null;
-                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
-                Assert.AreEqual(null, j);
+                var parsed=MessagePackParser.Parse(bytes);
+                Assert.True(parsed.IsNull);
             }
 
             {
                 var bytes = m_r.SerializeToMessagePack((object)null);
                 Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes);
 
-                Object j = null;
-                m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
-                Assert.AreEqual(null, j);
+                var parsed = MessagePackParser.Parse(bytes);
+                Assert.True(parsed.IsNull);
             }
         }
 

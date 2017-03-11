@@ -2,7 +2,7 @@
 {
     public static class IDeserializerExtensions
     {
-        public static object Deserialize<PARSER, T>(this IDeserializerBase<T> d, PARSER json)
+        public static T Deserialize<PARSER, T>(this IDeserializerBase<T> d, PARSER json)
             where PARSER : IParser<PARSER>
         {
             var value = default(T);

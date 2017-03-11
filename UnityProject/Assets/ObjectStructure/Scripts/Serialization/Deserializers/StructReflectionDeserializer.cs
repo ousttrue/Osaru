@@ -20,6 +20,7 @@ namespace ObjectStructure.Serialization.Deserializers
         public void Deserialize<PARSER>(PARSER json, ref T memberOwner)
             where PARSER: IParser<PARSER>
         {
+#if true
             // boxing
             var boxed = (object)memberOwner;
             foreach(var kv in json.ObjectItems)
@@ -32,6 +33,16 @@ namespace ObjectStructure.Serialization.Deserializers
             }
             // unboxing
             memberOwner = (T)boxed;
+#else
+            foreach (var kv in json.ObjectItems)
+            {
+                IMemberDeserializer<T> d;
+                if (m_deserializers.TryGetValue(kv.Key, out d))
+                {
+                    d.Deserialize(kv.Value, ref memberOwner);
+                }
+            }
+#endif
         }
     }
 }

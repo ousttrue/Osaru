@@ -7,14 +7,18 @@ namespace ObjectStructure.Serialization.Deserializers
     public static class MemberInfoExtensions
     {
         #region Field
-        static MemberDeserializer<T, U> CreateFromFieldInfo<T, U>(FieldInfo fi
+        static IMemberDeserializer<T> CreateFromFieldInfo<T, U>(FieldInfo fi
             , TypeRegistory r)
         {
+#if true
             return new MemberDeserializer<T, U>(fi.Name
                 , r.GetDeserializer<U>()
                 , (ref T t, U u) => fi.SetValue(t, u)
                 , (object o, U u) => fi.SetValue(o, u)
                 );
+#else
+            return new FieldMemberDeserializer<T, U>(fi, r.GetDeserializer<U>());
+#endif
         }
         public static IMemberDeserializer<T> CreateMemberDeserializer<T>(
             this FieldInfo fi, TypeRegistory r)
@@ -24,9 +28,9 @@ namespace ObjectStructure.Serialization.Deserializers
             var method = genericMethod.MakeGenericMethod(typeof(T), fi.FieldType);
             return (IMemberDeserializer<T>)method.Invoke(null, new object[] { fi, r });
         }
-        #endregion
+#endregion
 
-        #region Property
+#region Property
         delegate void PropertySetter<T, U>(ref T t, U u);
         static PropertySetter<T, U> CreatePropertySetter<T, U>(PropertyInfo pi)
         {
@@ -56,6 +60,6 @@ namespace ObjectStructure.Serialization.Deserializers
             var method = genericMethod.MakeGenericMethod(typeof(T), pi.PropertyType);
             return (IMemberDeserializer<T>)method.Invoke(null, new object[] { pi, r });
         }
-        #endregion
+#endregion
     }
 }

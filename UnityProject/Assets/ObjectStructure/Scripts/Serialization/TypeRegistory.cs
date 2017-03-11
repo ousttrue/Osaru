@@ -219,6 +219,31 @@ namespace ObjectStructure.Serialization
         }
         #endregion
 
+        #region MemberDeserializer
+        public IEnumerable<IMemberDeserializer<T>> GetMemberDeserializers<T>()
+        {
+            foreach(var fi in 
+            typeof(T).GetFields(System.Reflection.BindingFlags.Public
+                            | System.Reflection.BindingFlags.Instance))
+            {
+                if (fi.FieldType.IsSerializable())
+                {
+                    yield return fi.CreateMemberDeserializer<T>(this);
+                }
+            }
+            foreach (var pi in
+            typeof(T).GetProperties(System.Reflection.BindingFlags.Public
+                | System.Reflection.BindingFlags.Instance))
+            {
+                if (pi.CanRead && pi.CanWrite && pi.GetIndexParameters().Length == 0
+                    && pi.PropertyType.IsSerializable())
+                {
+                    yield return pi.CreateMemberDeserializer<T>(this);
+                }
+            }
+        }
+        #endregion
+
         public void AddType<T>(SerializerBase<T> serializer, IDeserializerBase<T> deserializer)
         {
             m_serializerMap.Add(typeof(T), serializer);

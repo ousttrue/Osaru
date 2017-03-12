@@ -7,6 +7,25 @@ using System.Reflection;
 
 namespace ObjectStructure.Serialization
 {
+    public struct TypeSerialization
+    {
+        public Type Type;
+        public ISerializer Serializer;
+        public IDeserializer Deserializer;
+
+        public static TypeSerialization Create<T>(
+            SerializerBase<T> serializer
+            , IDeserializerBase<T> deserializer)
+        {
+            return new TypeSerialization
+            {
+                Type=typeof(T),
+                Serializer=serializer,
+                Deserializer=deserializer
+            };
+        }
+    }
+
     /// <summary>
     /// not thread safe. use thread local
     /// </summary>
@@ -14,34 +33,43 @@ namespace ObjectStructure.Serialization
     {
         public TypeRegistory()
         {
+            foreach(var s in EmbededSerializations.Serializations)
+            {
+                AddSerialization(s);
+            }
             m_serializerMap.Add(typeof(Object), new BoxingSerializer(this));
+        }
+        public void SerializeBoxing(object o, IFormatter f)
+        {
+            if (o == null)
+            {
+                f.Null();
+                return;
+            }
+
+            var s = GetSerializer(o.GetType());
+            s.Setup(this);
+            s.SerializeBoxing(o, f);
         }
 
         #region Serialize
-        Dictionary<Type, ISerializer> m_serializerMap = new Dictionary<Type, ISerializer>()
+        Dictionary<Type, ISerializer> m_serializerMap
+            = new Dictionary<Type, ISerializer>();
+        public SerializerBase<T> GetSerializer<T>(bool orCreate = true)
         {
-            {typeof(Boolean), new LambdaSerializer<Boolean>((x, f)=> f.Value(x)) },
-            {typeof(SByte), new LambdaSerializer<SByte>((x, f)=> f.Value(x)) },
-            {typeof(Int16), new LambdaSerializer<Int16>((x, f)=> f.Value(x)) },
-            {typeof(Int32), new LambdaSerializer<Int32>((x, f)=> f.Value(x)) },
-            {typeof(Int64), new LambdaSerializer<Int64>((x, f)=> f.Value(x)) },
-            {typeof(Byte), new LambdaSerializer<Byte>((x, f)=>  f.Value(x)) },
-            {typeof(UInt16), new LambdaSerializer<UInt16>((x, f)=>  f.Value(x)) },
-            {typeof(UInt32), new LambdaSerializer<UInt32>((x, f)=>  f.Value(x)) },
-            {typeof(UInt64), new LambdaSerializer<UInt64>((x, f)=>  f.Value(x)) },
-            {typeof(Single), new LambdaSerializer<Single>((x, f)=>  f.Value(x)) },
-            {typeof(Double), new LambdaSerializer<Double>((x, f)=>  f.Value(x)) },
-            {typeof(String), new LambdaSerializer<String>((x, f)=> f.Value(x)) },
-            {typeof(Byte[]), new RawSerializer() },
-        };
+            var t = typeof(T);
+            var serializer = GetSerializer(t, orCreate);
+            return (SerializerBase<T>)serializer;
+        }
 
-        public ISerializer GetSerializer(Type t)
+        public ISerializer GetSerializer(Type t, bool orCreate = true)
         {
             ISerializer serializer;
             if (m_serializerMap.TryGetValue(t, out serializer))
             {
                 return serializer;
             }
+            if (!orCreate) return null;
 
             serializer = CreateSerializer(t);
             if (serializer != null)
@@ -51,13 +79,6 @@ namespace ObjectStructure.Serialization
             }
 
             return serializer;
-        }
-
-        public SerializerBase<T> GetSerializer<T>()
-        {
-            var t = typeof(T);
-            var serializer= GetSerializer(t);
-            return (SerializerBase<T>)serializer;
         }
 
         ISerializer CreateSerializer(Type t)
@@ -96,7 +117,7 @@ namespace ObjectStructure.Serialization
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
-            else if(t.IsInterface() && t.GetGenericTypeDefinition() == typeof(IList<>))
+            else if (t.IsInterface() && t.GetGenericTypeDefinition() == typeof(IList<>))
             {
                 // IList<T>
                 Type constructedType = typeof(GenericListSerializer<,>).MakeGenericType(t.GetGenericArguments().First(), t);
@@ -132,35 +153,21 @@ namespace ObjectStructure.Serialization
         #endregion
 
         #region Deserialize
-        Dictionary<Type, IDeserializer> m_deserializerMap = new Dictionary<Type, IDeserializer>
+        Dictionary<Type, IDeserializer> m_deserializerMap
+            = new Dictionary<Type, IDeserializer>();
+        public IDeserializerBase<T> GetDeserializer<T>(bool orCreate = true)
         {
-            {typeof(Boolean), new BooleanDeserializer() },
-            {typeof(SByte), new SByteDeserializer() },
-            {typeof(Int16), new Int16Deserializer() },
-            {typeof(Int32), new Int32Deserializer() },
-            {typeof(Int64), new Int64Deserializer() },
-            {typeof(Byte),  new ByteDeserializer() },
-            {typeof(UInt16), new UInt16Deserializer() },
-            {typeof(UInt32), new UInt32Deserializer() },
-            {typeof(UInt64), new UInt64Deserializer() },
-            {typeof(Single), new SingleDeserializer() },
-            {typeof(Double), new DoubleDeserializer() },
-            {typeof(String), new StringDeserializer() },
-            {typeof(Byte[]), new RawDeserializer() },
-        };
-
-        public IDeserializerBase<T> GetDeserializer<T>()
-        {
-            return (IDeserializerBase<T>)GetDeserializer(typeof(T));
+            return (IDeserializerBase<T>)GetDeserializer(typeof(T), orCreate);
         }
 
-        public IDeserializer GetDeserializer(Type t)
+        public IDeserializer GetDeserializer(Type t, bool orCreate = true)
         {
             IDeserializer deserializer;
             if (m_deserializerMap.TryGetValue(t, out deserializer))
             {
                 return deserializer;
             }
+            if (!orCreate) return null;
 
             deserializer = CreateDeserializer(t);
             if (deserializer != null)
@@ -222,7 +229,7 @@ namespace ObjectStructure.Serialization
         #region MemberDeserializer
         public IEnumerable<IMemberDeserializer<T>> GetMemberDeserializers<T>()
         {
-            foreach(var fi in 
+            foreach (var fi in
             typeof(T).GetFields(System.Reflection.BindingFlags.Public
                             | System.Reflection.BindingFlags.Instance))
             {
@@ -244,23 +251,10 @@ namespace ObjectStructure.Serialization
         }
         #endregion
 
-        public void AddType<T>(SerializerBase<T> serializer, IDeserializerBase<T> deserializer)
+        public void AddSerialization(TypeSerialization serialization)
         {
-            m_serializerMap.Add(typeof(T), serializer);
-            m_deserializerMap.Add(typeof(T), deserializer);
-        }
-
-        public void SerializeBoxing(object o, IFormatter f)
-        {
-            if (o == null)
-            {
-                f.Null();
-                return;
-            }
-
-            var s = GetSerializer(o.GetType());
-            s.Setup(this);
-            s.SerializeBoxing(o, f);
+            m_serializerMap.Add(serialization.Type, serialization.Serializer);
+            m_deserializerMap.Add(serialization.Type, serialization.Deserializer);
         }
     }
 }

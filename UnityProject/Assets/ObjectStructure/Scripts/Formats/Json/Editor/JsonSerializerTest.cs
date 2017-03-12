@@ -65,7 +65,7 @@ namespace ObjectStructureTest.Json
         {
             var typeRegistory = new ObjectStructure.Serialization.TypeRegistory();
             var v = new UnityEngine.Vector3(1, 2, 3);
-            typeRegistory.TypeTest(v, "{\"x\":1,\"y\":2,\"z\":3}");
+            typeRegistory.TypeTest(v, "[1,2,3]");
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ObjectStructure.Serialization
 {
-    public static class EmbededSerializations
+    public static class EmbededTypeSerializations
     {
         public static IEnumerable<TypeSerialization> Serializations
         {

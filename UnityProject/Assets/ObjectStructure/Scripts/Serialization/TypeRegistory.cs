@@ -33,10 +33,16 @@ namespace ObjectStructure.Serialization
     {
         public TypeRegistory()
         {
-            foreach(var s in EmbededSerializations.Serializations)
+            foreach(var s in EmbededTypeSerializations.Serializations)
             {
                 AddSerialization(s);
             }
+#if UNITY_EDITOR
+            foreach(var s in UnityTypeSerializations.Serializations)
+            {
+                AddSerialization(s);
+            }
+#endif
             m_serializerMap.Add(typeof(Object), new BoxingSerializer(this));
         }
         public void SerializeBoxing(object o, IFormatter f)
@@ -233,7 +239,8 @@ namespace ObjectStructure.Serialization
             typeof(T).GetFields(System.Reflection.BindingFlags.Public
                             | System.Reflection.BindingFlags.Instance))
             {
-                if (fi.FieldType.IsSerializable())
+                if (m_deserializerMap.ContainsKey(fi.FieldType)
+                    || fi.FieldType.IsSerializable())
                 {
                     yield return fi.CreateMemberDeserializer<T>(this);
                 }
@@ -243,7 +250,9 @@ namespace ObjectStructure.Serialization
                 | System.Reflection.BindingFlags.Instance))
             {
                 if (pi.CanRead && pi.CanWrite && pi.GetIndexParameters().Length == 0
-                    && pi.PropertyType.IsSerializable())
+                    &&
+                    (pi.PropertyType.IsSerializable()
+                    || pi.PropertyType.IsSerializable()))
                 {
                     yield return pi.CreateMemberDeserializer<T>(this);
                 }
@@ -255,6 +264,9 @@ namespace ObjectStructure.Serialization
         {
             m_serializerMap.Add(serialization.Type, serialization.Serializer);
             m_deserializerMap.Add(serialization.Type, serialization.Deserializer);
+
+            serialization.Serializer.Setup(this);
+            serialization.Deserializer.Setup(this);
         }
     }
 }

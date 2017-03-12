@@ -177,19 +177,22 @@ namespace ObjectStructure.Serialization
         #region MembserSerializer
         public IEnumerable<IMemberSerializer<T>> GetMemberSerializers<T>()
         {
-            foreach(var fi in typeof(T).GetFields(System.Reflection.BindingFlags.Public
-                | System.Reflection.BindingFlags.Instance))
+            foreach (var fi in typeof(T).GetFields(BindingFlags.Public
+                | BindingFlags.Instance))
             {
-                if (fi.FieldType.IsSerializable())
+                if (m_serializerMap.ContainsKey(fi.FieldType)
+                    || fi.FieldType.IsSerializable())
                 {
                     yield return fi.CreateMemberSerializer<T>(this);
                 }
             }
-            foreach(var pi in typeof(T).GetProperties(BindingFlags.Public
+            foreach (var pi in typeof(T).GetProperties(BindingFlags.Public
                 | BindingFlags.Instance))
             {
-                if(pi.CanRead && pi.CanWrite && pi.GetIndexParameters().Length == 0
-                    && pi.PropertyType.IsSerializable())
+                if ((pi.CanRead && pi.CanWrite && pi.GetIndexParameters().Length == 0)
+                    &&
+                    (m_serializerMap.ContainsKey(pi.PropertyType)
+                    || pi.PropertyType.IsSerializable()))
                 {
                     yield return pi.CreateMemberSerializer<T>(this);
                 }
@@ -252,8 +255,8 @@ namespace ObjectStructure.Serialization
         public IEnumerable<IMemberDeserializer<T>> GetMemberDeserializers<T>()
         {
             foreach (var fi in
-            typeof(T).GetFields(System.Reflection.BindingFlags.Public
-                            | System.Reflection.BindingFlags.Instance))
+            typeof(T).GetFields(BindingFlags.Public
+                            | BindingFlags.Instance))
             {
                 if (m_deserializerMap.ContainsKey(fi.FieldType)
                     || fi.FieldType.IsSerializable())
@@ -262,8 +265,8 @@ namespace ObjectStructure.Serialization
                 }
             }
             foreach (var pi in
-            typeof(T).GetProperties(System.Reflection.BindingFlags.Public
-                | System.Reflection.BindingFlags.Instance))
+            typeof(T).GetProperties(BindingFlags.Public
+                | BindingFlags.Instance))
             {
                 if (pi.CanRead && pi.CanWrite && pi.GetIndexParameters().Length == 0
                     &&

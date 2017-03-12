@@ -53,7 +53,7 @@ namespace ObjectStructure.Serialization
             {
                 AddSerialization(s);
             }
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA || UNITY_STANDALONE
             foreach(var s in UnityTypeSerializations.Serializations)
             {
                 AddSerialization(s);

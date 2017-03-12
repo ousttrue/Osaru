@@ -10,6 +10,7 @@ using ObjectStructure;
 using ObjectStructure.Json;
 using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
+using UnityEngine;
 
 namespace ObjectStructureTest
 {
@@ -117,7 +118,7 @@ namespace ObjectStructureTest
             }
         }
 
-        public struct Vector3
+        public struct Single3
         {
             public float x;
 
@@ -125,7 +126,7 @@ namespace ObjectStructureTest
 
             public float z;
 
-            public Vector3(float x, float y, float z)
+            public Single3(float x, float y, float z)
             {
                 this.x = x;
                 this.y = y;
@@ -134,9 +135,9 @@ namespace ObjectStructureTest
 
             public override bool Equals(object obj)
             {
-                if (obj is Vector3)
+                if (obj is Single3)
                 {
-                    return this.Equals((Vector3)obj);
+                    return this.Equals((Single3)obj);
                 }
                 return false;
             }
@@ -163,7 +164,7 @@ namespace ObjectStructureTest
                 }
             }
 
-            public bool Equals(Vector3 p)
+            public bool Equals(Single3 p)
             {
                 const float EPSILON = 1e-5f;
                 if (!NearlyEqual(x, p.x, EPSILON)) return false;
@@ -177,6 +178,7 @@ namespace ObjectStructureTest
                 return string.Format("[{0}, {1}, {2}]", x, y, z);
             }
         }
+
 
         [Test]
         public void MessagePackBenchmarkTest()
@@ -193,8 +195,8 @@ namespace ObjectStructureTest
             IList<Person> l = Enumerable.Range(1000, 1000).Select(x => new Person { Age = x, FirstName = "Windows", LastName = "Server", Sex = Sex.Female }).ToArray();
 
             var integer = 1;
-            var v3 = new Vector3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f };
-            IList<Vector3> v3List = Enumerable.Range(1, 100).Select(_ => new Vector3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f }).ToArray();
+            var v3 = new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f };
+            IList<Single3> v3List = Enumerable.Range(1, 100).Select(_ => new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f }).ToArray();
             var largeString = File.ReadAllText(HtmlPath);
 
             Console.WriteLine("Warming-up"); Console.WriteLine();
@@ -281,8 +283,8 @@ namespace ObjectStructureTest
             IList<Person> l = Enumerable.Range(1000, 1000).Select(x => new Person { Age = x, FirstName = "Windows", LastName = "Server", Sex = Sex.Female }).ToArray();
 
             var integer = 1;
-            var v3 = new Vector3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f };
-            IList<Vector3> v3List = Enumerable.Range(1, 100).Select(_ => new Vector3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f }).ToArray();
+            var v3 = new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f };
+            IList<Single3> v3List = Enumerable.Range(1, 100).Select(_ => new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f }).ToArray();
             var largeString = File.ReadAllText(HtmlPath);
 
             Console.WriteLine("Warming-up"); Console.WriteLine();

@@ -3,6 +3,7 @@ using System;
 using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
 
+#if false
 
 [Serializable]
 struct Vector3
@@ -52,7 +53,6 @@ class UserType
 #endif
 }
 
-#if false
 [TestFixture]
 public class UserTypeTest
 {

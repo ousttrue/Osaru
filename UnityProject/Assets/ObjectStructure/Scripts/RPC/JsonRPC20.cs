@@ -23,7 +23,7 @@ namespace ObjectStructure.RPC
             get { return m_request; }
         }
 
-        public BytesSegment Result
+        public ArraySegment<Byte> Result
         {
             get
             {
@@ -98,7 +98,7 @@ namespace ObjectStructure.RPC
             };
         }
 
-        public static BytesSegment DispatchJsonRPC20(this RPCDispatcher dispatcher,
+        public static ArraySegment<Byte> DispatchJsonRPC20(this RPCDispatcher dispatcher,
             string requestJson)
         {
             var context = new JsonRPC20Context(requestJson);

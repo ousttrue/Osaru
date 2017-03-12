@@ -33,7 +33,7 @@ namespace ObjectStructureTest.MessagePack
 
             {
                 var bytes = m_r.SerializeToMessagePack((object)null);
-                Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes);
+                Assert.AreEqual(new Byte[] { (byte)MsgPackType.NIL }, bytes.ToEnumerable());
 
                 var parsed = MessagePackParser.Parse(bytes);
                 Assert.True(parsed.IsNull);
@@ -44,7 +44,7 @@ namespace ObjectStructureTest.MessagePack
         public void True()
         {
             var bytes = m_r.SerializeToMessagePack(true);
-            Assert.AreEqual(new Byte[] { 0xC3 }, bytes);
+            Assert.AreEqual(new Byte[] { 0xC3 }, bytes.ToEnumerable());
 
             var value = MessagePackParser.Parse(bytes);
             var j = value.GetValue<Boolean>();
@@ -55,7 +55,7 @@ namespace ObjectStructureTest.MessagePack
         public void False()
         {
             var bytes = m_r.SerializeToMessagePack(false);
-            Assert.AreEqual(new Byte[] { 0xC2 }, bytes);
+            Assert.AreEqual(new Byte[] { 0xC2 }, bytes.ToEnumerable());
 
             var value = MessagePackParser.Parse(bytes);
             var j = value.GetValue<Boolean>();

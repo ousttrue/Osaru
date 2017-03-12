@@ -14,11 +14,11 @@ namespace ObjectStructure
             m_sb = sb;
         }
 
-        public BytesSegment Bytes
+        public ArraySegment<Byte> Bytes
         {
             get
             {
-                return new BytesSegment(
+                return new ArraySegment<Byte>(
                     Encoding.UTF8.GetBytes(Buffer())
                     );
             }
@@ -33,6 +33,12 @@ namespace ObjectStructure
         {
             m_sb.Length = 0;
         }
+
+        public void Write(ArraySegment<byte> bytes)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Write(IEnumerable<char> src)
         {
             foreach(var c in src)

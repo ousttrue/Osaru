@@ -1,10 +1,14 @@
-﻿namespace ObjectStructure
+﻿using System;
+
+
+namespace ObjectStructure
 {
     public interface IStore
     {
         void Clear();
-        BytesSegment Bytes { get; }
+        ArraySegment<Byte> Bytes { get; }
 
+        void Write(ArraySegment<Byte> bytes);
         void Write(string src);
         void Write(char c);
     }

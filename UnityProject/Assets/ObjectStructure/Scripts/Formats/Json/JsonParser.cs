@@ -229,7 +229,7 @@ namespace ObjectStructure.Json
             }
         }
 
-        public static JsonParser Parse(BytesSegment bytes, ParseMode mode = ParseMode.None)
+        public static JsonParser Parse(ArraySegment<Byte> bytes, ParseMode mode = ParseMode.None)
         {
             var json = Encoding.UTF8.GetString(bytes.Array, bytes.Offset, bytes.Count);
             return Parse(new StringSegment(json), mode);
@@ -499,7 +499,7 @@ namespace ObjectStructure.Json
 
         public void Dump(IFormatter f)
         {
-            f.Dump(Segment.ToString());
+            throw new NotImplementedException();
         }
         #endregion
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,11 +11,11 @@ namespace ObjectStructure.MessagePack
         {
             MemoryStream m_s=new MemoryStream();
 
-            public BytesSegment Bytes
+            public ArraySegment<Byte> Bytes
             {
                 get
                 {
-                    return new BytesSegment(Buffer());
+                    return new ArraySegment<Byte>(Buffer());
                 }
             }
 
@@ -29,6 +30,11 @@ namespace ObjectStructure.MessagePack
             public void Clear()
             {
                 m_s.SetLength(0);
+            }
+
+            public void Write(ArraySegment<Byte> bytes)
+            {
+                m_s.Write(bytes.Array, bytes.Offset, bytes.Count);
             }
 
             public void Write(char c)
@@ -150,14 +156,18 @@ namespace ObjectStructure.MessagePack
             m_w.MsgPack(value);
         }
 
+        public void Bytes(ArraySegment<Byte> bytes)
+        {
+            m_w.MsgPack(bytes.Array.Skip(bytes.Offset), bytes.Count);
+        }
         public void Bytes(IEnumerable<byte> raw, int count)
         {
             m_w.MsgPack(raw, count);
         }
 
-        public void Dump(object o)
+        public void Dump(ArraySegment<Byte> bytes)
         {
-            m_w.WriteBytes((Byte[])o);
+            m_w.WriteBytes(bytes.ToEnumerable());
         }
     }
 }

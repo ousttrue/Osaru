@@ -4,6 +4,7 @@ using ObjectStructure.Serialization;
 using System;
 using System.Linq;
 
+
 namespace ObjectStructureTest.MessagePack
 {
     [TestFixture]
@@ -30,7 +31,7 @@ namespace ObjectStructureTest.MessagePack
 
             var value = MessagePackParser.Parse(bytes);
             var body = value.GetBody();
-            Assert.AreEqual(float_be, body.ToArray());
+            Assert.AreEqual(float_be, body.ToEnumerable().ToArray());
 
             Assert.AreEqual(i, value.GetValue());
         }
@@ -47,7 +48,7 @@ namespace ObjectStructureTest.MessagePack
 
             var value = MessagePackParser.Parse(bytes);
             var body = value.GetBody();
-            Assert.AreEqual(double_be, body.ToArray());
+            Assert.AreEqual(double_be, body.ToEnumerable().ToArray());
 
             Assert.AreEqual(i, value.GetValue());
         }

@@ -2,6 +2,8 @@
 using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
 using System;
+using System.Linq;
+
 
 namespace ObjectStructureTest.MessagePack
 {
@@ -22,7 +24,7 @@ namespace ObjectStructureTest.MessagePack
             for (Byte i = 0; i < 128; ++i)
             {
                 var bytes = m_r.SerializeToMessagePack(i);
-                Assert.AreEqual(new Byte[] { i }, bytes);
+                Assert.AreEqual(new Byte[] { i }, bytes.ToEnumerable());
 
                 var j = default(Byte);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -52,7 +54,7 @@ namespace ObjectStructureTest.MessagePack
                 var bytes = m_r.SerializeToMessagePack(i);
                 Assert.AreEqual(new Byte[]{
                         0xcc, 0x93,
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(Byte);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -69,7 +71,7 @@ namespace ObjectStructureTest.MessagePack
                 var bytes = m_r.SerializeToMessagePack(i);
                 Assert.AreEqual(new Byte[]{
                         0xcc, 0x93,
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(UInt16);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -86,7 +88,7 @@ namespace ObjectStructureTest.MessagePack
                 var bytes = m_r.SerializeToMessagePack(i);
                 Assert.AreEqual(new Byte[]{
                         0xcd, 0x01, 0x13
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(UInt16);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -103,7 +105,7 @@ namespace ObjectStructureTest.MessagePack
                 var bytes = m_r.SerializeToMessagePack(i);
                 Assert.AreEqual(new Byte[]{
                         0xce, 0x00, 0x01, 0x00, 0x13
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(UInt32);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -121,7 +123,7 @@ namespace ObjectStructureTest.MessagePack
                 var bytes = m_r.SerializeToMessagePack(i);
                 Assert.AreEqual(new Byte[]{
                         0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x13
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(UInt64);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -139,7 +141,7 @@ namespace ObjectStructureTest.MessagePack
 
                 Assert.AreEqual(new Byte[]{
                         0xd0, 0xc0,
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(SByte);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -157,7 +159,7 @@ namespace ObjectStructureTest.MessagePack
 
                 Assert.AreEqual(new Byte[]{
                         0xd1, 0xFF, 0x6a
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(Int16);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -175,7 +177,7 @@ namespace ObjectStructureTest.MessagePack
 
                 Assert.AreEqual(new Byte[]{
                         0xd2, 0xff, 0xff, 0x77, 0x48
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(Int32);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
@@ -193,7 +195,7 @@ namespace ObjectStructureTest.MessagePack
 
                 Assert.AreEqual(new Byte[]{
                         0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xfe
-                        }, bytes);
+                        }, bytes.ToEnumerable());
 
                 var j = default(Int64);
                 m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);

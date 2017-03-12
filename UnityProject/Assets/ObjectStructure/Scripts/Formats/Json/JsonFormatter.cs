@@ -201,6 +201,12 @@ namespace ObjectStructure.Json
             m_w.Write(x.ToString());
         }
 
+        public void Bytes(ArraySegment<Byte> bytes)
+        {
+            throw new NotImplementedException();
+
+            // ToDo: Base64 encoding
+        }
         public void Bytes(IEnumerable<byte> raw, int count)
         {
             throw new NotImplementedException();
@@ -208,10 +214,10 @@ namespace ObjectStructure.Json
             // ToDo: Base64 encoding
         }
 
-        public void Dump(object o)
+        public void Dump(ArraySegment<Byte> formated)
         {
             CommaCheck();
-            m_w.Write((String)o);
+            m_w.Write(formated);
         }
     }
 }

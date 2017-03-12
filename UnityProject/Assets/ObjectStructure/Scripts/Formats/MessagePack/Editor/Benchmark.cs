@@ -288,7 +288,7 @@ namespace ObjectStructureTest
         T SerializeMsgPack<T>(T value)
         {
             var formatter = new MessagePackFormatter();
-            Func<BytesSegment, MessagePackParser> parser = x => MessagePackParser.Parse(x);
+            Func<ArraySegment<Byte>, MessagePackParser> parser = x => MessagePackParser.Parse(x);
 
             return Serialize(m_r, formatter, parser, value);
         }
@@ -375,11 +375,11 @@ namespace ObjectStructureTest
 
         static T Serialize<Parser, T>(TypeRegistory r
             , IFormatter f
-            , Func<BytesSegment, Parser> parser, T original)
+            , Func<ArraySegment<Byte>, Parser> parser, T original)
             where Parser : IParser<Parser>
         {
             T copy = default(T);
-            var packed = default(BytesSegment);
+            var packed = default(ArraySegment<Byte>);
 
             // Note:We should check MessagePackSerializer.Get<T>() on every iteration
             // But currenly MsgPack-Cli has bug of get serializer

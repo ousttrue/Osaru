@@ -23,7 +23,7 @@ namespace ObjectStructure.RPC
             get { return m_request; }
         }
 
-        public BytesSegment Result
+        public ArraySegment<Byte> Result
         {
             get
             {
@@ -101,14 +101,14 @@ namespace ObjectStructure.RPC
             };
         }
 
-        public static BytesSegment DispatchMessagePackRPC(this RPCDispatcher dispatcher,
+        public static ArraySegment<Byte> DispatchMessagePackRPC(this RPCDispatcher dispatcher,
             byte[] src)
         {
             var context = new MessagePackRPCContext(src);
             dispatcher.Dispatch(context);
             return context.Result;
         }
-        public static BytesSegment DispatchMessagePackRPC(this RPCDispatcher dispatcher,
+        public static ArraySegment<Byte> DispatchMessagePackRPC(this RPCDispatcher dispatcher,
             RPCRequest<MessagePackParser> request)
         {
             var context = new MessagePackRPCContext(request);

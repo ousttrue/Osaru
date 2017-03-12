@@ -30,13 +30,14 @@ namespace ObjectStructure
         void Value(Single value);
         void Value(Double value);
 
+        void Bytes(ArraySegment<Byte> bytes);
         void Bytes(IEnumerable<Byte> raw, int count);
 
         /// <summary>
         /// add already formatted
         /// </summary>
         /// <param name="t"></param>
-        void Dump(object formatted);
+        void Dump(ArraySegment<Byte> formatted);
 
         void Clear();
         IStore GetStore();

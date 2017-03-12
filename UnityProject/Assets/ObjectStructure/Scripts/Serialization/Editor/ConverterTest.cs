@@ -3,26 +3,28 @@ using ObjectStructure.Json;
 using ObjectStructure;
 using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
+using System;
+
 
 namespace ObjectStructureTest
 {
     public class ConverterTest
     {
-        static BytesSegment ConvertToJson(BytesSegment messagePack)
+        static ArraySegment<Byte> ConvertToJson(ArraySegment<Byte> messagePack)
         {
             var json = new JsonFormatter();
             MessagePackParser.Parse(messagePack).Convert(json);
             return json.GetStore().Bytes;
         }
 
-        static BytesSegment ConvertToMessagePack(string json)
+        static ArraySegment<Byte> ConvertToMessagePack(string json)
         {
             var msgPack = new MessagePackFormatter();
             JsonParser.Parse(json).Convert(msgPack);
             return msgPack.GetStore().Bytes;
         }
 
-        static BytesSegment FormatToMessagePack<T>(T value)
+        static ArraySegment<Byte> FormatToMessagePack<T>(T value)
         {
             var typeRegistory = new TypeRegistory();
             var s=typeRegistory.GetSerializer<T>();

@@ -29,7 +29,7 @@ namespace ObjectStructureTest.MessagePack
                 (Byte)MsgPackType.POSITIVE_FIXNUM_0x01,
                 (Byte)MsgPackType.FALSE,
                 (Byte)MsgPackType.NIL
-            }, bytes);
+            }, bytes.ToEnumerable());
 
             var parsed = MessagePackParser.Parse(bytes);
 

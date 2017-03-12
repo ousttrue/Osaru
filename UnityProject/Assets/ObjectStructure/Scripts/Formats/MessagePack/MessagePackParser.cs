@@ -8,11 +8,11 @@ namespace ObjectStructure.MessagePack
 {
     public struct MessagePackParser: IParser<MessagePackParser>
     {
-        public BytesSegment Bytes { get; private set; }
+        public ArraySegment<Byte> Bytes { get; private set; }
 
         public MsgPackType FormatType
         {
-            get { return (MsgPackType)Bytes[0]; }
+            get { return (MsgPackType)Bytes.Get(0); }
         }
 
         public int Count
@@ -31,14 +31,14 @@ namespace ObjectStructure.MessagePack
             {
                 switch(FormatType)
                 {
-                    case MsgPackType.FIX_EXT_1: return (ExtType)Bytes[1];
-                    case MsgPackType.FIX_EXT_2: return (ExtType)Bytes[1];
-                    case MsgPackType.FIX_EXT_4: return (ExtType)Bytes[1];
-                    case MsgPackType.FIX_EXT_8: return (ExtType)Bytes[1];
-                    case MsgPackType.FIX_EXT_16: return (ExtType)Bytes[1];
-                    case MsgPackType.EXT8: return (ExtType)Bytes[2];
-                    case MsgPackType.EXT16: return (ExtType)Bytes[3];
-                    case MsgPackType.EXT32: return (ExtType)Bytes[5];
+                    case MsgPackType.FIX_EXT_1: return (ExtType)Bytes.Get(1);
+                    case MsgPackType.FIX_EXT_2: return (ExtType)Bytes.Get(1);
+                    case MsgPackType.FIX_EXT_4: return (ExtType)Bytes.Get(1);
+                    case MsgPackType.FIX_EXT_8: return (ExtType)Bytes.Get(1);
+                    case MsgPackType.FIX_EXT_16: return (ExtType)Bytes.Get(1);
+                    case MsgPackType.EXT8: return (ExtType)Bytes.Get(2);
+                    case MsgPackType.EXT16: return (ExtType)Bytes.Get(3);
+                    case MsgPackType.EXT32: return (ExtType)Bytes.Get(5);
                     default: return ExtType.UNKNOWN;
                 }
             }
@@ -146,26 +146,26 @@ namespace ObjectStructure.MessagePack
 
         public static MessagePackParser Parse(Byte[] bytes)
         {
-            return Parse(new BytesSegment(bytes));
+            return Parse(new ArraySegment<Byte>(bytes));
         }
-        public static MessagePackParser Parse(BytesSegment bytes)
+        public static MessagePackParser Parse(ArraySegment<Byte> bytes)
         {
             var value = new MessagePackParser(bytes);
             value.Parse();
             return value;
         }
 
-        MessagePackParser(Byte[] bytes) : this(new BytesSegment(bytes))
+        MessagePackParser(Byte[] bytes) : this(new ArraySegment<Byte>(bytes))
         { }
 
-        MessagePackParser(BytesSegment bytes)
+        MessagePackParser(ArraySegment<Byte> bytes)
         {
             Bytes = bytes;
         }
 
-        BytesSegment Parse()
+        ArraySegment<Byte> Parse()
         {
-            BytesSegment current;
+            ArraySegment<Byte> current;
             if (FormatType.IsArray())
             {
                 uint count;
@@ -206,7 +206,7 @@ namespace ObjectStructure.MessagePack
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        BytesSegment GetItemCount(out UInt32 count)
+        ArraySegment<Byte> GetItemCount(out UInt32 count)
         {
             switch (FormatType)
             {
@@ -263,7 +263,7 @@ namespace ObjectStructure.MessagePack
         /// ArrayとMap以外のタイプのペイロードを得る
         /// </summary>
         /// <returns></returns>
-        public BytesSegment GetBody()
+        public ArraySegment<Byte> GetBody()
         {
             switch (FormatType)
             {
@@ -304,7 +304,7 @@ namespace ObjectStructure.MessagePack
                 case MsgPackType.STR8:
                 case MsgPackType.BIN8:
                     {
-                        var count = Bytes[1];
+                        var count = Bytes.Get(1);
                         return Bytes.Advance(1 + 1).Take(count);
                     }
 
@@ -525,7 +525,7 @@ namespace ObjectStructure.MessagePack
                     return Bytes.Advance(2).Take(16);
                 case MsgPackType.EXT8:
                     {
-                        var count = Bytes[1];
+                        var count = Bytes.Get(1);
                         return Bytes.Advance(1 + 1 + 1).Take(count);
                     }
                 case MsgPackType.EXT16:
@@ -723,11 +723,11 @@ namespace ObjectStructure.MessagePack
                 case MsgPackType.NEGATIVE_FIXNUM_0x1E: return -30;
                 case MsgPackType.NEGATIVE_FIXNUM_0x1F: return -31;
 
-                case MsgPackType.INT8: return (SByte)GetBody()[0];
+                case MsgPackType.INT8: return (SByte)GetBody().Get(0);
                 case MsgPackType.INT16: return GetBody().N2H_Int16();
                 case MsgPackType.INT32: return GetBody().N2H_Int32();
                 case MsgPackType.INT64: return GetBody().N2H_Int64();
-                case MsgPackType.UINT8: return GetBody()[0];
+                case MsgPackType.UINT8: return GetBody().Get(0);
                 case MsgPackType.UINT16: return GetBody().N2H_UInt16();
                 case MsgPackType.UINT32: return GetBody().N2H_UInt32();
                 case MsgPackType.UINT64: return GetBody().N2H_UInt64();
@@ -914,12 +914,12 @@ namespace ObjectStructure.MessagePack
         public void GetBytes(IFormatter f)
         {
             var body = GetBody();
-            f.Bytes(body, body.Count);
+            f.Bytes(body);
         }
 
         public void Dump(IFormatter f)
         {
-            f.Dump(Bytes.ToArray());
+            f.Dump(Bytes);
         }
     }
 }

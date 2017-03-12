@@ -4,7 +4,6 @@
 namespace ObjectStructure.Serialization.Serializers
 {
     public class ReflectionSerializer<T> : SerializerBase<T>
-        where T: struct
     {
         IMemberSerializer<T>[] m_serializers;
 

@@ -127,6 +127,14 @@ namespace ObjectStructure
         {
             return t.GetTypeInfo().IsInterface;
         }
+        public static IEnumerable<Type> GetInterfaces(this Type t)
+        {
+            return t.GetTypeInfo().ImplementedInterfaces;
+        }
+        public static IEnumerable<Type> GetGenericArguments(this Type t)
+        {
+            return t.GetTypeInfo().GenericTypeArguments;
+        }
 
         public static bool AttributeIsDefined<T>(this Type t)
             where T: Attribute

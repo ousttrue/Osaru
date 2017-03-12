@@ -79,14 +79,14 @@ namespace ObjectStructureTest.MessagePack
             Assert.AreEqual(src[0].Nest.Name, value[0]["Nest"]["Name"].GetValue());
         }
 
-        [Serializable]
+        [Serializable, DataContract]
         struct MeshTransport
         {
             public UnityEngine.Vector3[] Vertices;
             public int[] Indices;
         }
 
-        [Serializable]
+        [Serializable, DataContract]
         struct Transformation
         {
             public UnityEngine.Vector3 Position;
@@ -115,12 +115,12 @@ namespace ObjectStructureTest.MessagePack
                     "mesh_name"
                     , new MeshTransport
                     {
-                        Vertices=Enumerable.Range(0, 100).Select(x => UnityEngine.Vector3.forward * x).ToArray(),
+                        Vertices=Enumerable.Range(0, 100).Select(x => new UnityEngine.Vector3(0, 0, x)).ToArray(),
                         Indices=Enumerable.Range(0, 100).ToArray(),
                     }
                     , new Transformation
                     {
-                        Position=UnityEngine.Vector3.right,
+                        Position=new UnityEngine.Vector3(1, 0, 0),
                         EulerAngles=new UnityEngine.Vector3(1, 2, 3),
                     }
                 }

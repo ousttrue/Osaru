@@ -43,6 +43,9 @@ namespace ObjectStructure.Serialization
                     })
                     , new Vector3Deserializer()
                     );
+
+#if UNITY_EDITOR || UNITY_WSA || UNITY_STANDALONE
+#endif
             }
         }
     }

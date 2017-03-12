@@ -53,12 +53,10 @@ namespace ObjectStructure.Serialization
             {
                 AddSerialization(s);
             }
-#if UNITY_EDITOR || UNITY_WSA || UNITY_STANDALONE
             foreach(var s in UnityTypeSerializations.Serializations)
             {
                 AddSerialization(s);
             }
-#endif
             m_serializerMap.Add(typeof(Object), new BoxingSerializer(this));
         }
         public void SerializeBoxing(object o, IFormatter f)
@@ -159,17 +157,42 @@ namespace ObjectStructure.Serialization
                 }
             }
 
-            if (!t.IsClass())
+            //if (!t.IsClass())
             {
                 // object
-                Type constructedType = typeof(StructReflectionSerializer<>).MakeGenericType(t);
+                Type constructedType = typeof(ReflectionSerializer<>).MakeGenericType(t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
             }
+            /*
             else
             {
                 // with nullcheck
                 Type constructedType = typeof(ClassReflectionSerializer<>).MakeGenericType(t);
                 return (ISerializer)Activator.CreateInstance(constructedType, null);
+            }
+            */
+        }
+        #endregion
+
+        #region MembserSerializer
+        public IEnumerable<IMemberSerializer<T>> GetMemberSerializers<T>()
+        {
+            foreach(var fi in typeof(T).GetFields(System.Reflection.BindingFlags.Public
+                | System.Reflection.BindingFlags.Instance))
+            {
+                if (fi.FieldType.IsSerializable())
+                {
+                    yield return fi.CreateMemberSerializer<T>(this);
+                }
+            }
+            foreach(var pi in typeof(T).GetProperties(BindingFlags.Public
+                | BindingFlags.Instance))
+            {
+                if(pi.CanRead && pi.CanWrite && pi.GetIndexParameters().Length == 0
+                    && pi.PropertyType.IsSerializable())
+                {
+                    yield return pi.CreateMemberSerializer<T>(this);
+                }
             }
         }
         #endregion

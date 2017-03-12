@@ -11,6 +11,7 @@ using ObjectStructure.Json;
 using ObjectStructure.MessagePack;
 using ObjectStructure.Serialization;
 using UnityEngine;
+using ObjectStructure.Serialization.Deserializers;
 
 namespace ObjectStructureTest
 {
@@ -35,6 +36,10 @@ namespace ObjectStructureTest
         public void Setup()
         {
             m_r = new TypeRegistory();
+            m_r.AddSerialization(TypeSerialization.Create(
+                Single3.Serialize
+                , new Single3.Single3Deserializer()
+                ));
         }
 
 #if UNITY_EDITOR
@@ -177,8 +182,38 @@ namespace ObjectStructureTest
             {
                 return string.Format("[{0}, {1}, {2}]", x, y, z);
             }
-        }
 
+            [Serializer]
+            public static void Serialize(Single3 t, IFormatter f)
+            {
+                f.BeginList(3);
+                f.Value(t.x);
+                f.Value(t.y);
+                f.Value(t.z);
+                f.EndList();
+            }
+            public class Single3Deserializer : IDeserializerBase<Single3>
+            {
+                IDeserializerBase<Single> m_d;
+                public void Setup(TypeRegistory r)
+                {
+                    m_d=r.GetDeserializer<Single>();
+                }
+                public void Deserialize<PARSER>(PARSER parser, ref Single3 outValue) where PARSER : IParser<PARSER>
+                {
+                    var it = parser.ListItems.GetEnumerator();
+                    it.MoveNext(); m_d.Deserialize(it.Current, ref outValue.x);
+                    it.MoveNext(); m_d.Deserialize(it.Current, ref outValue.y);
+                    it.MoveNext(); m_d.Deserialize(it.Current, ref outValue.z);
+                }
+            }
+            [DeserializerFactory]
+            public static IDeserializerFactory CreateDeserializer()
+            {
+                return LambdaDeserializerFactory.CreateFactory(
+                    new Single3Deserializer());
+            }
+        }
 
         [Test]
         public void MessagePackBenchmarkTest()

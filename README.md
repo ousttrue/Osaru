@@ -67,7 +67,7 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] reorganize messagepack library
 * [x] fix UWP UnitTest
 * [x] RPCFormatter
-* [ ] user class serializer
+* [x] user class serialization
 * [x] json and messagepack converter
 * [x] json-rpc-2.0
 * [x] messagepack-rpc
@@ -78,5 +78,4 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [ ] BytesStore
 * [ ] fix dump
 * [ ] rpc proxy
-
 

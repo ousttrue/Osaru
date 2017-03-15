@@ -12,7 +12,7 @@ namespace Osaru.RPC
             m_map.Add(name, method);
         }
 
-        public void Dispatch<T>(IRPCContext<T> f)
+        public void Dispatch<T>(IRPCResponseContext<T> f)
             where T: IParser<T>
         {
             m_map[f.Request.Method].Call(f);

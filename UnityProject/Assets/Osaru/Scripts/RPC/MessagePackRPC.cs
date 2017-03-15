@@ -13,7 +13,7 @@ namespace Osaru.RPC
     }
 
 
-    public class MessagePackRPCContext : IRPCContext<MessagePackParser>
+    public class MessagePackRPCContext : IRPCResponseContext<MessagePackParser>
     {
         MessagePackFormatter m_f;
 

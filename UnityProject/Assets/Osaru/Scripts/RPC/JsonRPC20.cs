@@ -12,8 +12,7 @@ namespace Osaru.RPC
         }
     }
 
-
-    public class JsonRPC20Context : IRPCContext<JsonParser>
+    public class JsonRPC20ResponseContext : IRPCResponseContext<JsonParser>
     {
         JsonFormatter m_f;
 
@@ -31,14 +30,14 @@ namespace Osaru.RPC
             }
         }
 
-        public JsonRPC20Context(string src)
+        public JsonRPC20ResponseContext(string src)
         {
             var json = JsonParser.Parse(src);
             m_request = JsonRPC20.Request(json);
             m_f = new JsonFormatter();
         }
 
-        public JsonRPC20Context(RPCRequest<JsonParser> request)
+        public JsonRPC20ResponseContext(RPCRequest<JsonParser> request)
         {
             m_request = request;
             m_f = new JsonFormatter();
@@ -101,7 +100,7 @@ namespace Osaru.RPC
         public static ArraySegment<Byte> DispatchJsonRPC20(this RPCDispatcher dispatcher,
             string requestJson)
         {
-            var context = new JsonRPC20Context(requestJson);
+            var context = new JsonRPC20ResponseContext(requestJson);
             dispatcher.Dispatch(context);
             return context.Result;
         }

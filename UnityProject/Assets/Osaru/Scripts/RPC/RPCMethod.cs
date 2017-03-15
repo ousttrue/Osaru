@@ -23,7 +23,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -56,7 +56,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -93,7 +93,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -134,7 +134,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -179,7 +179,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -220,7 +220,7 @@ namespace Osaru.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -253,7 +253,7 @@ namespace Osaru.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -290,7 +290,7 @@ namespace Osaru.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -331,7 +331,7 @@ namespace Osaru.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try
@@ -376,7 +376,7 @@ namespace Osaru.RPC
             m_s = r.GetSerializer<R>();
         }
 
-        public void Call<T>(IRPCContext<T> f)
+        public void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>
         {
             try

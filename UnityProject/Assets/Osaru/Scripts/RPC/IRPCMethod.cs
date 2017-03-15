@@ -4,7 +4,7 @@ using System;
 
 namespace Osaru.RPC
 {
-    public interface IRPCContext<T>
+    public interface IRPCResponseContext<T>
         where T : IParser<T>
     {
         RPCRequest<T> Request { get; }
@@ -16,7 +16,7 @@ namespace Osaru.RPC
 
     public interface IRPCMethod
     {
-        void Call<T>(IRPCContext<T> f)
+        void Call<T>(IRPCResponseContext<T> f)
             where T : IParser<T>;
     }
 }

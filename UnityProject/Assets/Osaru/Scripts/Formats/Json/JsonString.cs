@@ -53,7 +53,7 @@ namespace Osaru.Json
         public static string Escape(String s)
         {
             var sb = new StringBuilder();
-            Escape(s, new StringBuilderStream(sb));
+            Escape(s, new StringBuilderStore(sb));
             return sb.ToString();
         }
 
@@ -66,7 +66,7 @@ namespace Osaru.Json
         public static string Quote(string s)
         {
             var sb = new StringBuilder();
-            Quote(s, new StringBuilderStream(sb));
+            Quote(s, new StringBuilderStore(sb));
             return sb.ToString();
         }
         #endregion
@@ -125,7 +125,7 @@ namespace Osaru.Json
         public static string Unescape(string src)
         {
             var sb = new StringBuilder();
-            Unescape(src, new StringBuilderStream(sb));
+            Unescape(src, new StringBuilderStore(sb));
             return sb.ToString();
         }
 
@@ -136,7 +136,7 @@ namespace Osaru.Json
         public static string Unquote(string src)
         {
             var sb = new StringBuilder();
-            Unquote(src, new StringBuilderStream(sb));
+            Unquote(src, new StringBuilderStore(sb));
             var str = sb.ToString();
             return str;
         }

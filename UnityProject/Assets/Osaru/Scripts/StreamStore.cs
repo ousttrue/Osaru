@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace Osaru
 {
@@ -89,7 +90,7 @@ namespace Osaru
 
         public void Write(string src)
         {
-            m_w.Write(src);
+            m_w.Write(Encoding.UTF8.GetBytes(src));
         }
 
         public void Write(ArraySegment<byte> bytes)

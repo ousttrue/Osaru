@@ -12,7 +12,7 @@ namespace OsaruTest
         public void StringBuilderStreamTest()
         {
             var sb = new StringBuilder();
-            var stream = new StringBuilderStream(sb);
+            var stream = new StringBuilderStore(sb);
 
             stream.Write("abc");
             Assert.AreEqual("abc", sb.ToString());

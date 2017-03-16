@@ -288,18 +288,19 @@ namespace OsaruTest
         T SerializeMsgPack<T>(T value)
         {
             var formatter = new MessagePackFormatter();
-            Func<ArraySegment<Byte>, MessagePackParser> parser = x => MessagePackParser.Parse(x);
-
-            return Serialize(m_r, formatter, parser, value);
+            return Serialize(m_r
+                , formatter
+                , MessagePackParser.Parse
+                , value);
         }
 
         T SerializeJson<T>(T value)
         {
-            var s = new StringBuilderStream(new StringBuilder());
+            var s = new StringBuilderStore(new StringBuilder());
             var formatter = new JsonFormatter(s);
             return Serialize(m_r
                 , formatter
-                , x =>JsonParser.Parse(x)
+                , x => JsonParser.Parse(x)
                 , value);
         }
 

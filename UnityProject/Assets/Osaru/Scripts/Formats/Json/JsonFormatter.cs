@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Osaru.Json
@@ -35,7 +36,8 @@ namespace Osaru.Json
         Stack<Context> m_stack = new Stack<Context>();
 
         public JsonFormatter()
-            :this(new StringBuilderStream(new StringBuilder()))
+            //:this(new StringBuilderStream(new StringBuilder()))
+            :this(new StreamStore(new MemoryStream()))
         {}
 
         public JsonFormatter(IStore w)

@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Osaru
 {
-    public class StringBuilderStream: IStore
+    public class StringBuilderStore: IStore
     {
         StringBuilder m_sb;
 
-        public StringBuilderStream(StringBuilder sb)
+        public StringBuilderStore(StringBuilder sb)
         {
             m_sb = sb;
         }

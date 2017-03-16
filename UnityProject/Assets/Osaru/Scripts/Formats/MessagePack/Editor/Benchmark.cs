@@ -296,8 +296,7 @@ namespace OsaruTest
 
         T SerializeJson<T>(T value)
         {
-            var s = new StringBuilderStore(new StringBuilder());
-            var formatter = new JsonFormatter(s);
+            var formatter = new JsonFormatter();
             return Serialize(m_r
                 , formatter
                 , x => JsonParser.Parse(x)

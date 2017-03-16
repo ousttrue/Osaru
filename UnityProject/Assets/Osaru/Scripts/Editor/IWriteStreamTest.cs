@@ -6,10 +6,10 @@ using System.Text;
 
 namespace OsaruTest
 {
-    public class IWriteStreamTest
+    public class StoreTests
     {
         [Test]
-        public void StringBuilderStreamTest()
+        public void StringBuilderStoreTest()
         {
             var sb = new StringBuilder();
             var stream = new StringBuilderStore(sb);

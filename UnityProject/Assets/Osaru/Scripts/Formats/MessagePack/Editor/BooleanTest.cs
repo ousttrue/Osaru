@@ -21,11 +21,10 @@ namespace OsaruTest.MessagePack
         public void nil()
         {
             {
-                var ms = new MemoryStream();
-                var w = new MessagePackFormatter (ms); ;
+                var w = new MessagePackFormatter (); ;
                 w.Null();
-                var bytes = ms.ToArray();
-                Assert.AreEqual(new Byte[] { 0xC0 }, bytes);
+                var bytes = w.GetStore().Bytes;
+                Assert.AreEqual(new Byte[] { 0xC0 }, bytes.ToEnumerable());
 
                 var parsed=MessagePackParser.Parse(bytes);
                 Assert.True(parsed.IsNull);

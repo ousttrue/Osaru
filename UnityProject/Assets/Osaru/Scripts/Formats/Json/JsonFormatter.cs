@@ -36,8 +36,7 @@ namespace Osaru.Json
         Stack<Context> m_stack = new Stack<Context>();
 
         public JsonFormatter()
-            //:this(new StringBuilderStream(new StringBuilder()))
-            :this(new StreamStore(new MemoryStream()))
+            :this(new BytesStore())
         {}
 
         public JsonFormatter(IStore w)

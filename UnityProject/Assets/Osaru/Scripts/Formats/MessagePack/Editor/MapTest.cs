@@ -39,8 +39,7 @@ namespace OsaruTest.MessagePack
         [Test]
         public void map16()
         {
-            var ms = new MemoryStream();
-            var w = new MessagePackFormatter (ms); ;
+            var w = new MessagePackFormatter (); ;
             int size = 18;
             w.BeginMap(size);
             for (int i = 0; i < size; ++i)
@@ -48,7 +47,7 @@ namespace OsaruTest.MessagePack
                 w.Value(i);
                 w.Value(i + 5);
             }
-            var bytes = ms.ToArray();
+            var bytes = w.GetStore().Bytes.ToEnumerable().ToArray();
 
             Assert.AreEqual(
                 new Byte[]{0xde, 0x0, 0x12, 0x0, 0x5, 0x1, 0x6, 0x2, 0x7, 0x3, 0x8, 0x4, 0x9, 0x5, 0xa, 0x6, 0xb, 0x7, 0xc, 0x8, 0xd, 0x9, 0xe, 0xa, 0xf, 0xb, 0x10, 0xc,

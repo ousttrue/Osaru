@@ -11,14 +11,18 @@ namespace Osaru.MessagePack
     {
         IStore m_store;
 
-        public MessagePackFormatter() : this(new MemoryStream())
+        public MessagePackFormatter() 
+            //: this(new MemoryStream())
         {
+            m_store = new BytesStore();
         }
 
+        /*
         public MessagePackFormatter (MemoryStream s)
         {
             m_store = new StreamStore(s);
         }
+        */
 
 #if false
         public bool MsgPack_Ext(IList list)

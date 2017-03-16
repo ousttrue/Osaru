@@ -77,9 +77,10 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [ ] json base64 string for binary support
 * [x] json byte[] backend not string
 * [x] StreamStore
-* [ ] BytesStore
+* [x] BytesStore
 * [ ] fix dump
 * [ ] rpc proxy
 * [x] endian conversion use union
 * [ ] StreamSubject
+* [ ] add Endian interface to IStore 
 

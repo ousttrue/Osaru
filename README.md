@@ -1,5 +1,5 @@
 # Osaru
-ObjectStructure And RPC Utilities
+Object Serialization And RPC Utilities
 
 .Net3.5(Unity) Serialization library.
 

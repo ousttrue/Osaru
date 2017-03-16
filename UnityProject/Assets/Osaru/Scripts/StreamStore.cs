@@ -3,12 +3,12 @@ using System.IO;
 
 namespace Osaru
 {
-    public class MemoryStreamStore: IStore
+    public class StreamStore: IStore
     {
-        MemoryStream m_s;
+        Stream m_s;
         BinaryWriter m_w;
 
-        public MemoryStreamStore(MemoryStream s)
+        public StreamStore(Stream s)
         {
             m_s = s;
             m_w = new BinaryWriter(m_s);
@@ -18,7 +18,12 @@ namespace Osaru
         {
             get
             {
-                return new ArraySegment<byte>(m_s.ToArray(), 0, (int)m_s.Position);
+                var ms = m_s as MemoryStream;
+                if (ms == null)
+                {
+                    throw new NotImplementedException();
+                }
+                return new ArraySegment<byte>(ms.GetBuffer(), 0, (int)ms.Position);
             }
         }
 

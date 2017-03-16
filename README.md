@@ -76,10 +76,10 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [ ] code generator for RPC client
 * [ ] json base64 string for binary support
 * [x] json byte[] backend not string
-* [ ] StreamStore
+* [x] StreamStore
 * [ ] BytesStore
 * [ ] fix dump
 * [ ] rpc proxy
-* [ ] endian conversion use union
+* [x] endian conversion use union
 * [ ] StreamSubject
 

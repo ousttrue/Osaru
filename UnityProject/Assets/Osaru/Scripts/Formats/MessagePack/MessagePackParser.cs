@@ -246,12 +246,12 @@ namespace Osaru.MessagePack
 
                 case MsgPackType.ARRAY16:
                 case MsgPackType.MAP16:
-                    count = Bytes.Advance(1).N2H_UInt16();
+                    count = EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(Bytes.Advance(1));
                     return Bytes.Advance(1 + 2);
 
                 case MsgPackType.ARRAY32:
                 case MsgPackType.MAP32:
-                    count = Bytes.Advance(1).N2H_UInt32();
+                    count = EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(Bytes.Advance(1));
                     return Bytes.Advance(1 + 4);
 
                 default:
@@ -311,14 +311,14 @@ namespace Osaru.MessagePack
                 case MsgPackType.STR16:
                 case MsgPackType.BIN16:
                     {
-                        var count = Bytes.Advance(1).N2H_UInt16();
+                        var count = EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(Bytes.Advance(1));
                         return Bytes.Advance(1 + 2).Take(count);
                     }
 
                 case MsgPackType.STR32:
                 case MsgPackType.BIN32:
                     {
-                        var count = Bytes.Advance(1).N2H_UInt32();
+                        var count = EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(Bytes.Advance(1));
                         return Bytes.Advance(1 + 4).Take((int)count);
                     }
 
@@ -530,12 +530,12 @@ namespace Osaru.MessagePack
                     }
                 case MsgPackType.EXT16:
                     {
-                        var count = Bytes.Advance(1).N2H_UInt16();
+                        var count = EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(Bytes.Advance(1));
                         return Bytes.Advance(1 + 2 + 1).Take(count);
                     }
                 case MsgPackType.EXT32:
                     {
-                        var count = Bytes.Advance(1).N2H_UInt32();
+                        var count = EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(Bytes.Advance(1));
                         return Bytes.Advance(1 + 4 + 1).Take((int)count);
                     }
                 default:
@@ -724,15 +724,15 @@ namespace Osaru.MessagePack
                 case MsgPackType.NEGATIVE_FIXNUM_0x1F: return -31;
 
                 case MsgPackType.INT8: return (SByte)GetBody().Get(0);
-                case MsgPackType.INT16: return GetBody().N2H_Int16();
-                case MsgPackType.INT32: return GetBody().N2H_Int32();
-                case MsgPackType.INT64: return GetBody().N2H_Int64();
+                case MsgPackType.INT16: return EndianConverter.NetworkByteWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.INT32: return EndianConverter.NetworkByteDWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.INT64: return EndianConverter.NetworkByteQWordToSignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT8: return GetBody().Get(0);
-                case MsgPackType.UINT16: return GetBody().N2H_UInt16();
-                case MsgPackType.UINT32: return GetBody().N2H_UInt32();
-                case MsgPackType.UINT64: return GetBody().N2H_UInt64();
-                case MsgPackType.FLOAT: return GetBody().N2H_Single();
-                case MsgPackType.DOUBLE: return GetBody().N2H_Double();
+                case MsgPackType.UINT16: return EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT32: return EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT64: return EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
                 case MsgPackType.FIX_STR: return "";
                 case MsgPackType.FIX_STR_0x01:

@@ -34,7 +34,57 @@ namespace Osaru
             m_sb.Length = 0;
         }
 
+        public void Write(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(ulong value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(short value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(sbyte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(float value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(int value)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Write(ArraySegment<byte> bytes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Write(ushort value)
         {
             throw new NotImplementedException();
         }

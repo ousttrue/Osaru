@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace Osaru
 {
@@ -394,5 +395,40 @@ namespace Osaru
         }
         #endregion
 #endif
+
+        public static Int16 ToNetworkByteOrder(this Int16 value)
+        {
+            return ByteUnion.WordValue.Create(value).HostToNetworkOrder().Signed;
+        }
+        public static UInt16 ToNetworkByteOrder(this UInt16 value)
+        {
+            return ByteUnion.WordValue.Create(value).HostToNetworkOrder().Unsigned;
+        }
+
+        public static Int32 ToNetworkByteOrder(this Int32 value)
+        {
+            return ByteUnion.DWordValue.Create(value).HostToNetworkOrder().Signed;
+        }
+        public static UInt32 ToNetworkByteOrder(this UInt32 value)
+        {
+            return ByteUnion.DWordValue.Create(value).HostToNetworkOrder().Unsigned;
+        }
+        public static Single ToNetworkByteOrder(this Single value)
+        {
+            return ByteUnion.DWordValue.Create(value).HostToNetworkOrder().Float;
+        }
+
+        public static Int64 ToNetworkByteOrder(this Int64 value)
+        {
+            return ByteUnion.QWordValue.Create(value).HostToNetworkOrder().Signed;
+        }
+        public static UInt64 ToNetworkByteOrder(this UInt64 value)
+        {
+            return ByteUnion.QWordValue.Create(value).HostToNetworkOrder().Unsigned;
+        }
+        public static Double ToNetworkByteOrder(this Double value)
+        {
+            return ByteUnion.QWordValue.Create(value).HostToNetworkOrder().Float;
+        }
     }
 }

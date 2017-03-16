@@ -40,13 +40,13 @@ namespace OsaruTest.MessagePack
         public void map16()
         {
             var ms = new MemoryStream();
-            var w = new MsgPackWriter(ms); ;
+            var w = new MessagePackFormatter (ms); ;
             int size = 18;
-            w.MsgPackMap(size);
+            w.BeginMap(size);
             for (int i = 0; i < size; ++i)
             {
-                w.MsgPack(i);
-                w.MsgPack(i + 5);
+                w.Value(i);
+                w.Value(i + 5);
             }
             var bytes = ms.ToArray();
 

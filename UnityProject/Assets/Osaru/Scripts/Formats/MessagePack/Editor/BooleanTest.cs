@@ -22,8 +22,8 @@ namespace OsaruTest.MessagePack
         {
             {
                 var ms = new MemoryStream();
-                var w = new MsgPackWriter(ms); ;
-                w.MsgPackNil();
+                var w = new MessagePackFormatter (ms); ;
+                w.Null();
                 var bytes = ms.ToArray();
                 Assert.AreEqual(new Byte[] { 0xC0 }, bytes);
 

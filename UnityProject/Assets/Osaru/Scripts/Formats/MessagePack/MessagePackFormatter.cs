@@ -5,6 +5,7 @@ using System.IO;
 
 namespace Osaru.MessagePack
 {
+#if false
     public class MessagePackFormatter : IFormatter
     {
         public class ByteStore: IStore
@@ -170,4 +171,5 @@ namespace Osaru.MessagePack
             m_w.WriteBytes(bytes.ToEnumerable());
         }
     }
+#endif
 }

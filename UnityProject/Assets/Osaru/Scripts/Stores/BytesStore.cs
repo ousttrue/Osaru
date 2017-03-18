@@ -22,7 +22,7 @@ namespace Osaru
             }
 
             var newSize = Math.Max(m_pos + size, m_buffer.Length * 2);
-            Console.WriteLine(newSize);
+            //Console.WriteLine(newSize);
             var old = m_buffer;
             m_buffer = new Byte[newSize];
             Array.Copy(old, m_buffer, m_pos);

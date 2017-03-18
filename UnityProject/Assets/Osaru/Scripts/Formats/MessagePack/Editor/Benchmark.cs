@@ -13,6 +13,7 @@ using Osaru.Serialization;
 using UnityEngine;
 using Osaru.Serialization.Deserializers;
 
+
 namespace OsaruTest
 {
 #if !UNITY_EDITOR
@@ -215,97 +216,119 @@ namespace OsaruTest
             }
         }
 
+        public abstract class BenchSerializerBase
+        {
+            public abstract T Serialize<T>(T t);
+
+            protected T Serialize<Parser, T>(TypeRegistory r
+                , IFormatter f
+                , Func<ArraySegment<Byte>, Parser> parser, T original)
+                where Parser : IParser<Parser>
+            {
+                T copy = default(T);
+                var packed = default(ArraySegment<Byte>);
+
+                // Note:We should check MessagePackSerializer.Get<T>() on every iteration
+                // But currenly MsgPack-Cli has bug of get serializer
+                // https://github.com/msgpack/msgpack-cli/issues/191
+                // so, get serializer at first.
+                // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
+
+                var serializer = (SerializerBase<T>)r.GetSerializer<T>();
+                var deserializer = r.GetDeserializer<T>();
+
+                using (new Measure("Serialize"))
+                {
+                    for (int i = 0; i < Iteration; i++)
+                    {
+                        f.Clear();
+                        serializer.Serialize(original, f);
+                        packed = f.GetStore().Bytes;
+                    }
+                }
+
+                using (new Measure("Deserialize"))
+                {
+                    for (int i = 0; i < Iteration; i++)
+                    {
+                        //copy = Osaru.MessagePack.Deserializer.Deserialize<T>(bytes);
+                        deserializer.Deserialize(parser(packed), ref copy);
+                    }
+                }
+
+                Assert.AreEqual(original, copy);
+
+                using (new Measure("ReSerialize"))
+                {
+                    for (int i = 0; i < Iteration; i++)
+                    {
+                        f.Clear();
+                        serializer.Serialize(copy, f);
+                        packed = f.GetStore().Bytes;
+                    }
+                }
+
+                if (!dryRun)
+                {
+                    //Console.WriteLine(string.Format("{0,15}   {1}", "Binary Size", ToHumanReadableSize(bytes.Length)));
+                }
+
+                return copy;
+            }
+        }
+
+        class MessagePackSerializer : BenchSerializerBase
+        {
+            TypeRegistory m_r;
+
+            public MessagePackSerializer(TypeRegistory r)
+            {
+                m_r = r;
+            }
+
+            public override T Serialize<T>(T value)
+            {
+                var formatter = new MessagePackFormatter();
+                return Serialize(m_r
+                    , formatter
+                    , MessagePackParser.Parse
+                    , value);
+            }
+        }
+
+        class JsonSerializer : BenchSerializerBase
+        {
+            TypeRegistory m_r;
+
+            public JsonSerializer(TypeRegistory r)
+            {
+                m_r = r;
+            }
+
+            public override T Serialize<T>(T value)
+            {
+                var formatter = new JsonFormatter();
+                return Serialize(m_r
+                    , formatter
+                    , x => JsonParser.Parse(x)
+                    , value);
+            }
+        }
+
         [Test]
         public void MessagePackBenchmarkTest()
         {
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-
-            var p = new Person
-            {
-                Age = 99999,
-                FirstName = "Windows",
-                LastName = "Server",
-                Sex = Sex.Male,
-            };
-            IList<Person> l = Enumerable.Range(1000, 1000).Select(x => new Person { Age = x, FirstName = "Windows", LastName = "Server", Sex = Sex.Female }).ToArray();
-
-            var integer = 1;
-            var v3 = new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f };
-            IList<Single3> v3List = Enumerable.Range(1, 100).Select(_ => new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f }).ToArray();
-            var largeString = File.ReadAllText(HtmlPath);
-
-            Console.WriteLine("Warming-up"); Console.WriteLine();
-            SerializeMsgPack(p);
-            SerializeMsgPack(l);
-            SerializeMsgPack(integer); SerializeMsgPack(v3); SerializeMsgPack(largeString); SerializeMsgPack(v3List);
-
-            dryRun = false;
-
-            Console.WriteLine();
-            Console.WriteLine("Small Object(int,string,string,enum) {0} Iteration", Iteration); Console.WriteLine();
-
-            var c = SerializeMsgPack(p); Console.WriteLine();
-
-            Console.WriteLine("Large Array(SmallObject[1000]) {0} Iteration", Iteration); Console.WriteLine();
-
-            var C = SerializeMsgPack(l); Console.WriteLine();
-
-            Validate("Osaru.MessagePack", p, l, c, C);
-
-            Console.WriteLine();
-            Console.WriteLine("Additional Benchmarks"); Console.WriteLine();
-
-            Console.WriteLine("Int32(1) {0} Iteration", Iteration); Console.WriteLine();
-
-            var W2 = SerializeMsgPack(integer); Console.WriteLine();
-
-            Console.WriteLine("Vector3(float, float, float) {0} Iteration", Iteration); Console.WriteLine();
-
-            var X2 = SerializeMsgPack(v3); Console.WriteLine();
-
-            Console.WriteLine("HtmlString({0}bytes) {1} Iteration"
-                , Encoding.UTF8.GetByteCount(largeString)
-                , Iteration); Console.WriteLine();
-
-            var Y2 = SerializeMsgPack(largeString); Console.WriteLine();
-
-            Console.WriteLine("Vector3[100] {0} Iteration", Iteration); Console.WriteLine();
-
-            var Z2 = SerializeMsgPack(v3List); Console.WriteLine();
-
-            Validate2("MsgPack-Cli", W2, integer);
-            Validate2("MsgPack-Cli", X2, v3);
-            Validate2("MsgPack-Cli", Y2, largeString);
-            Validate2("MsgPack-Cli", Z2, v3List);
-
-            //ストップウォッチを止める
-            sw.Stop();
-
-            //結果を表示する
-            UnityEngine.Debug.LogFormat("[Benchmark]{0}", sw.Elapsed);
-        }
-
-        T SerializeMsgPack<T>(T value)
-        {
-            var formatter = new MessagePackFormatter();
-            return Serialize(m_r
-                , formatter
-                , MessagePackParser.Parse
-                , value);
-        }
-
-        T SerializeJson<T>(T value)
-        {
-            var formatter = new JsonFormatter();
-            return Serialize(m_r
-                , formatter
-                , x => JsonParser.Parse(x)
-                , value);
+            BenchMarkTest(new MessagePackSerializer(m_r));
         }
 
         [Test]
         public void JsonBenchmarkTest()
         {
+            BenchMarkTest(new JsonSerializer(m_r));
+        }
+
+        void BenchMarkTest(BenchSerializerBase s)
+        {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
             var p = new Person
@@ -322,44 +345,44 @@ namespace OsaruTest
             IList<Single3> v3List = Enumerable.Range(1, 100).Select(_ => new Single3 { x = 12345.12345f, y = 3994.35226f, z = 325125.52426f }).ToArray();
             var largeString = File.ReadAllText(HtmlPath);
 
-            Console.WriteLine("Warming-up"); Console.WriteLine();
-            SerializeJson(p);
-            SerializeJson(l);
-            SerializeJson(integer); SerializeJson(v3); SerializeJson(largeString); SerializeJson(v3List);
+            Console.WriteLine("Warming-up"); //Console.WriteLine();
+            s.Serialize(p);
+            s.Serialize(l);
+            s.Serialize(integer); s.Serialize(v3); s.Serialize(largeString); s.Serialize(v3List);
 
             dryRun = false;
 
-            Console.WriteLine();
-            Console.WriteLine("Small Object(int,string,string,enum) {0} Iteration", Iteration); Console.WriteLine();
+            //Console.WriteLine();
+            Console.WriteLine("Small Object(int,string,string,enum) {0} Iteration", Iteration); //Console.WriteLine();
 
-            var c = SerializeJson(p); Console.WriteLine();
+            var c = s.Serialize(p); //Console.WriteLine();
 
-            Console.WriteLine("Large Array(SmallObject[1000]) {0} Iteration", Iteration); Console.WriteLine();
+            Console.WriteLine("Large Array(SmallObject[1000]) {0} Iteration", Iteration); //Console.WriteLine();
 
-            var C = SerializeJson(l); Console.WriteLine();
+            var C = s.Serialize(l); //Console.WriteLine();
 
             Validate("Osaru.MessagePack", p, l, c, C);
 
-            Console.WriteLine();
-            Console.WriteLine("Additional Benchmarks"); Console.WriteLine();
+            //Console.WriteLine();
+            Console.WriteLine("Additional Benchmarks"); //Console.WriteLine();
 
-            Console.WriteLine("Int32(1) {0} Iteration", Iteration); Console.WriteLine();
+            Console.WriteLine("Int32(1) {0} Iteration", Iteration); //Console.WriteLine();
 
-            var W2 = SerializeJson(integer); Console.WriteLine();
+            var W2 = s.Serialize(integer); //Console.WriteLine();
 
-            Console.WriteLine("Vector3(float, float, float) {0} Iteration", Iteration); Console.WriteLine();
+            Console.WriteLine("Vector3(float, float, float) {0} Iteration", Iteration); //Console.WriteLine();
 
-            var X2 = SerializeJson(v3); Console.WriteLine();
+            var X2 = s.Serialize(v3); //Console.WriteLine();
 
             Console.WriteLine("HtmlString({0}bytes) {1} Iteration"
                 , Encoding.UTF8.GetByteCount(largeString)
-                , Iteration); Console.WriteLine();
+                , Iteration); //Console.WriteLine();
 
-            var Y2 = SerializeJson(largeString); Console.WriteLine();
+            var Y2 = s.Serialize(largeString); //Console.WriteLine();
 
-            Console.WriteLine("Vector3[100] {0} Iteration", Iteration); Console.WriteLine();
+            Console.WriteLine("Vector3[100] {0} Iteration", Iteration); //Console.WriteLine();
 
-            var Z2 = SerializeJson(v3List); Console.WriteLine();
+            var Z2 = s.Serialize(v3List); //Console.WriteLine();
 
             Validate2("MsgPack-Cli", W2, integer);
             Validate2("MsgPack-Cli", X2, v3);
@@ -370,63 +393,7 @@ namespace OsaruTest
             sw.Stop();
 
             //結果を表示する
-            UnityEngine.Debug.LogFormat("[Json]{0}", sw.Elapsed);
-        }
-
-        static T Serialize<Parser, T>(TypeRegistory r
-            , IFormatter f
-            , Func<ArraySegment<Byte>, Parser> parser, T original)
-            where Parser : IParser<Parser>
-        {
-            T copy = default(T);
-            var packed = default(ArraySegment<Byte>);
-
-            // Note:We should check MessagePackSerializer.Get<T>() on every iteration
-            // But currenly MsgPack-Cli has bug of get serializer
-            // https://github.com/msgpack/msgpack-cli/issues/191
-            // so, get serializer at first.
-            // and If enum serialization options to ByUnderlyingValue, gets more fast but we check default option only.
-
-            var serializer = (SerializerBase<T>)r.GetSerializer<T>();
-            var deserializer = r.GetDeserializer<T>();
-
-            using (new Measure("Serialize"))
-            {
-                for (int i = 0; i < Iteration; i++)
-                {
-                    f.Clear();
-                    serializer.Serialize(original, f);
-                    packed = f.GetStore().Bytes;
-                }
-            }
-
-            using (new Measure("Deserialize"))
-            {
-                for (int i = 0; i < Iteration; i++)
-                {
-                    //copy = Osaru.MessagePack.Deserializer.Deserialize<T>(bytes);
-                    deserializer.Deserialize(parser(packed), ref copy);
-                }
-            }
-
-            Assert.AreEqual(original, copy);
-
-            using (new Measure("ReSerialize"))
-            {
-                for (int i = 0; i < Iteration; i++)
-                {
-                    f.Clear();
-                    serializer.Serialize(copy, f);
-                    packed = f.GetStore().Bytes;
-                }
-            }
-
-            if (!dryRun)
-            {
-                //Console.WriteLine(string.Format("{0,15}   {1}", "Binary Size", ToHumanReadableSize(bytes.Length)));
-            }
-
-            return copy;
+            UnityEngine.Debug.LogFormat("[{1}]{0}", sw.Elapsed, s.GetType().Name);
         }
     }
 }

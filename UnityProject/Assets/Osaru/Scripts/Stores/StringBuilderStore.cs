@@ -34,46 +34,6 @@ namespace Osaru
             m_sb.Length = 0;
         }
 
-        public void Write(long value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(double value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(ulong value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(short value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(sbyte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(uint value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(float value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Write(int value)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Write(ArraySegment<byte> bytes)
         {
             throw new NotImplementedException();
@@ -84,7 +44,7 @@ namespace Osaru
             throw new NotImplementedException();
         }
 
-        public void Write(ushort value)
+        public void Write(sbyte value)
         {
             throw new NotImplementedException();
         }
@@ -104,5 +64,89 @@ namespace Osaru
         {
             m_sb.Append(src);
         }
+
+        #region BigEndian
+        public void WriteBigEndian(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(float value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(ulong value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(short value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteBigEndian(ushort value)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region LittleEndian
+        public void WriteLittleEndian(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(short value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(float value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(ulong value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteLittleEndian(ushort value)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

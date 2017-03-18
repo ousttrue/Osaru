@@ -82,5 +82,5 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [ ] rpc proxy
 * [x] endian conversion use union
 * [ ] StreamSubject
-* [ ] add Endian interface to IStore 
+* [x] add Endian interface to IStore 
 

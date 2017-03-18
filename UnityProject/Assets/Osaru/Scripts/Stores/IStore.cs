@@ -9,17 +9,27 @@ namespace Osaru
         ArraySegment<Byte> Bytes { get; }
 
         void Write(Byte value);
-        void Write(UInt16 value);
-        void Write(UInt32 value);
-        void Write(UInt64 value);
-
         void Write(SByte value);
-        void Write(Int16 value);
-        void Write(Int32 value);
-        void Write(Int64 value);
 
-        void Write(Single value);
-        void Write(Double value);
+        // network
+        void WriteBigEndian(UInt16 value);
+        void WriteBigEndian(UInt32 value);
+        void WriteBigEndian(UInt64 value);
+        void WriteBigEndian(Int16 value);
+        void WriteBigEndian(Int32 value);
+        void WriteBigEndian(Int64 value);
+        void WriteBigEndian(Single value);
+        void WriteBigEndian(Double value);
+
+        // intel cpu
+        void WriteLittleEndian(UInt16 value);
+        void WriteLittleEndian(UInt32 value);
+        void WriteLittleEndian(UInt64 value);
+        void WriteLittleEndian(Int16 value);
+        void WriteLittleEndian(Int32 value);
+        void WriteLittleEndian(Int64 value);
+        void WriteLittleEndian(Single value);
+        void WriteLittleEndian(Double value);
 
         void Write(ArraySegment<Byte> bytes);
 

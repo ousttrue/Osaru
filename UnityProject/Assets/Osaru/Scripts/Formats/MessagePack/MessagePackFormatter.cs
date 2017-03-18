@@ -100,12 +100,12 @@ namespace Osaru.MessagePack
             else if (n < 0xFFFF)
             {
                 m_store.Write((Byte)MsgPackType.ARRAY16);
-                m_store.Write(((UInt16)n).ToNetworkByteOrder());
+                m_store.WriteBigEndian((UInt16)n);
             }
             else
             {
                 m_store.Write((Byte)MsgPackType.ARRAY32);
-                m_store.Write(n.ToNetworkByteOrder());
+                m_store.WriteBigEndian(n);
             }
         }
 
@@ -122,12 +122,12 @@ namespace Osaru.MessagePack
             else if (n < 0xFFFF)
             {
                 m_store.Write((Byte)MsgPackType.MAP16);
-                m_store.Write(((UInt16)n).ToNetworkByteOrder());
+                m_store.WriteBigEndian((UInt16)n);
             }
             else
             {
                 m_store.Write((Byte)MsgPackType.MAP32);
-                m_store.Write(n.ToNetworkByteOrder());
+                m_store.WriteBigEndian(n.ToNetworkByteOrder());
             }
         }
 
@@ -163,13 +163,13 @@ namespace Osaru.MessagePack
             else if (size < 0xFFFF)
             {
                 m_store.Write((Byte)MsgPackType.STR16);
-                m_store.Write(((UInt16)size).ToNetworkByteOrder());
+                m_store.WriteBigEndian((UInt16)size);
                 m_store.Write(bytes);
             }
             else
             {
                 m_store.Write((Byte)MsgPackType.STR32);
-                m_store.Write(size.ToNetworkByteOrder());
+                m_store.WriteBigEndian(size);
                 m_store.Write(bytes);
             }
         }
@@ -229,7 +229,7 @@ namespace Osaru.MessagePack
                 else
                 {
                     m_store.Write((Byte)MsgPackType.INT16);
-                    m_store.Write(n.ToNetworkByteOrder());
+                    m_store.WriteBigEndian(n);
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace Osaru.MessagePack
                 else
                 {
                     m_store.Write((Byte)MsgPackType.INT32);
-                    m_store.Write(n.ToNetworkByteOrder());
+                    m_store.WriteBigEndian(n);
                 }
             }
         }
@@ -311,7 +311,7 @@ namespace Osaru.MessagePack
                 else
                 {
                     m_store.Write((Byte)MsgPackType.INT64);
-                    m_store.Write(n.ToNetworkByteOrder());
+                    m_store.WriteBigEndian(n);
                 }
             }
         }
@@ -339,7 +339,7 @@ namespace Osaru.MessagePack
             else
             {
                 m_store.Write((Byte)MsgPackType.UINT16);
-                m_store.Write(n.ToNetworkByteOrder());
+                m_store.WriteBigEndian(n);
             }
         }
 
@@ -356,7 +356,7 @@ namespace Osaru.MessagePack
             else
             {
                 m_store.Write((Byte)MsgPackType.UINT32);
-                m_store.Write(n.ToNetworkByteOrder());
+                m_store.WriteBigEndian(n);
             }
         }
 
@@ -377,20 +377,20 @@ namespace Osaru.MessagePack
             else
             {
                 m_store.Write((Byte)MsgPackType.UINT64);
-                m_store.Write(n.ToNetworkByteOrder());
+                m_store.WriteBigEndian(n);
             }
         }
 
         public void Value(float value)
         {
             m_store.Write((Byte)MsgPackType.FLOAT);
-            m_store.Write(value.ToNetworkByteOrder());
+            m_store.WriteBigEndian(value);
         }
 
         public void Value(double value)
         {
             m_store.Write((Byte)MsgPackType.DOUBLE);
-            m_store.Write(value.ToNetworkByteOrder());
+            m_store.WriteBigEndian(value);
         }
 
         public void Bytes(ArraySegment<byte> bytes)
@@ -404,13 +404,13 @@ namespace Osaru.MessagePack
             else if (bytes.Count < 0xFFFF)
             {
                 m_store.Write((Byte)MsgPackType.BIN16);
-                m_store.Write(((UInt16)bytes.Count).ToNetworkByteOrder());
+                m_store.WriteBigEndian((UInt16)bytes.Count);
                 m_store.Write(bytes);
             }
             else
             {
                 m_store.Write((Byte)MsgPackType.BIN32);
-                m_store.Write(bytes.Count.ToNetworkByteOrder());
+                m_store.WriteBigEndian(bytes.Count);
                 m_store.Write(bytes);
             }
         }

@@ -43,12 +43,6 @@ namespace Osaru
             m_pos = 0;
         }
 
-        public void Write(sbyte value)
-        {
-            Require(Marshal.SizeOf(value));
-            m_buffer[m_pos++] = (Byte)value;
-        }
-
         char[] m_c = new char[1];
         public void Write(char c)
         {
@@ -87,36 +81,10 @@ namespace Osaru
             m_pos += bytes.Count;
         }
 
-        public void Write(short value)
+        public void Write(sbyte value)
         {
             Require(Marshal.SizeOf(value));
-            var u = ByteUnion.WordValue.Create(value);
-            m_buffer[m_pos++] = u.Byte0;
-            m_buffer[m_pos++] = u.Byte1;
-        }
-
-        public void Write(int value)
-        {
-            Require(Marshal.SizeOf(value));
-            var u = ByteUnion.DWordValue.Create(value);
-            m_buffer[m_pos++] = u.Byte0;
-            m_buffer[m_pos++] = u.Byte1;
-            m_buffer[m_pos++] = u.Byte2;
-            m_buffer[m_pos++] = u.Byte3;
-        }
-
-        public void Write(long value)
-        {
-            Require(Marshal.SizeOf(value));
-            var u = ByteUnion.QWordValue.Create(value);
-            m_buffer[m_pos++] = u.Byte0;
-            m_buffer[m_pos++] = u.Byte1;
-            m_buffer[m_pos++] = u.Byte2;
-            m_buffer[m_pos++] = u.Byte3;
-            m_buffer[m_pos++] = u.Byte4;
-            m_buffer[m_pos++] = u.Byte5;
-            m_buffer[m_pos++] = u.Byte6;
-            m_buffer[m_pos++] = u.Byte7;
+            m_buffer[m_pos++] = (Byte)value;
         }
 
         public void Write(byte value)
@@ -125,7 +93,8 @@ namespace Osaru
             m_buffer[m_pos++] = value;
         }
 
-        public void Write(ushort value)
+        #region LittleEndian
+        public void WriteLittleEndian(short value)
         {
             Require(Marshal.SizeOf(value));
             var u = ByteUnion.WordValue.Create(value);
@@ -133,7 +102,7 @@ namespace Osaru
             m_buffer[m_pos++] = u.Byte1;
         }
 
-        public void Write(uint value)
+        public void WriteLittleEndian(int value)
         {
             Require(Marshal.SizeOf(value));
             var u = ByteUnion.DWordValue.Create(value);
@@ -143,7 +112,7 @@ namespace Osaru
             m_buffer[m_pos++] = u.Byte3;
         }
 
-        public void Write(ulong value)
+        public void WriteLittleEndian(long value)
         {
             Require(Marshal.SizeOf(value));
             var u = ByteUnion.QWordValue.Create(value);
@@ -157,7 +126,15 @@ namespace Osaru
             m_buffer[m_pos++] = u.Byte7;
         }
 
-        public void Write(float value)
+        public void WriteLittleEndian(ushort value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.WordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte0;
+            m_buffer[m_pos++] = u.Byte1;
+        }
+
+        public void WriteLittleEndian(uint value)
         {
             Require(Marshal.SizeOf(value));
             var u = ByteUnion.DWordValue.Create(value);
@@ -167,7 +144,7 @@ namespace Osaru
             m_buffer[m_pos++] = u.Byte3;
         }
 
-        public void Write(double value)
+        public void WriteLittleEndian(ulong value)
         {
             Require(Marshal.SizeOf(value));
             var u = ByteUnion.QWordValue.Create(value);
@@ -180,5 +157,120 @@ namespace Osaru
             m_buffer[m_pos++] = u.Byte6;
             m_buffer[m_pos++] = u.Byte7;
         }
+
+        public void WriteLittleEndian(float value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.DWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte0;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte3;
+        }
+
+        public void WriteLittleEndian(double value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.QWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte0;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte4;
+            m_buffer[m_pos++] = u.Byte5;
+            m_buffer[m_pos++] = u.Byte6;
+            m_buffer[m_pos++] = u.Byte7;
+        }
+        #endregion
+
+        #region BigEndian
+        public void WriteBigEndian(short value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.WordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(int value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.DWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(long value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.QWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte7;
+            m_buffer[m_pos++] = u.Byte6;
+            m_buffer[m_pos++] = u.Byte5;
+            m_buffer[m_pos++] = u.Byte4;
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(ushort value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.WordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(uint value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.DWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(ulong value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.QWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte7;
+            m_buffer[m_pos++] = u.Byte6;
+            m_buffer[m_pos++] = u.Byte5;
+            m_buffer[m_pos++] = u.Byte4;
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(float value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.DWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+
+        public void WriteBigEndian(double value)
+        {
+            Require(Marshal.SizeOf(value));
+            var u = ByteUnion.QWordValue.Create(value);
+            m_buffer[m_pos++] = u.Byte7;
+            m_buffer[m_pos++] = u.Byte6;
+            m_buffer[m_pos++] = u.Byte5;
+            m_buffer[m_pos++] = u.Byte4;
+            m_buffer[m_pos++] = u.Byte3;
+            m_buffer[m_pos++] = u.Byte2;
+            m_buffer[m_pos++] = u.Byte1;
+            m_buffer[m_pos++] = u.Byte0;
+        }
+        #endregion
     }
 }

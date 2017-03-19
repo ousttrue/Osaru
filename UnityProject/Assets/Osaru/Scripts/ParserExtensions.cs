@@ -56,7 +56,7 @@ namespace Osaru
                     f.Value(parser.GetString());
                     break;
                 case ParserValueType.Bytes:
-                    parser.GetBytes(f);
+                    f.Bytes(parser.GetBytes());
                     break;
 
                 default:

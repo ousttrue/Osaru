@@ -899,17 +899,9 @@ namespace Osaru.MessagePack
             return GetValue<Double>();
         }
 
-        public int GetBytesSize()
+        public ArraySegment<Byte> GetBytes()
         {
-            var body = GetBody();
-            return body.Count;
-        }
-
-        public void GetBytes(byte[] bytes)
-        {
-            var body = GetBody();
-            Buffer.BlockCopy(body.Array, body.Offset
-                , bytes, 0, body.Count);
+            return GetBody();
         }
 
         public void GetBytes(IFormatter f)

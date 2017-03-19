@@ -48,10 +48,8 @@ namespace Osaru
         IEnumerable<KeyValuePair<String, T>> ObjectItems { get; }
         T this[string key] { get; }
 
-        int GetBytesSize();
-        void GetBytes(Byte[] bytes);
+        ArraySegment<Byte> GetBytes();
 
-        void GetBytes(IFormatter f);
         void Dump(IFormatter f);
     }
 }

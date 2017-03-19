@@ -12,13 +12,14 @@ namespace Osaru.Serialization.Deserializers
         public void Deserialize<PARSER>(PARSER parser, ref Byte[] outValue)
             where PARSER: IParser<PARSER>
         {
-            var bytesSize = parser.GetBytesSize();
-            if (outValue==null || outValue.Length!=bytesSize)
+            var bytes = parser.GetBytes();
+            if (outValue==null || outValue.Length!=bytes.Count)
             {
-                outValue = new Byte[bytesSize];
+                outValue = new Byte[bytes.Count];
             }
 
-            parser.GetBytes(outValue);            
+            Buffer.BlockCopy(bytes.Array, bytes.Offset
+                , outValue, 0, bytes.Count);
         }
     }
 
@@ -32,16 +33,13 @@ namespace Osaru.Serialization.Deserializers
         public void Deserialize<PARSER>(PARSER parser, ref T outValue) 
             where PARSER : IParser<PARSER>
         {
-            var bytesSize = parser.GetBytesSize();
-            var bytes = new Byte[bytesSize];
-            parser.GetBytes(bytes);
-
             if (outValue == null)
             {
                 outValue = Activator.CreateInstance<T>();
             }
+
             outValue.Clear();
-            foreach(var b in bytes)
+            foreach(var b in parser.GetBytes().ToEnumerable())
             {
                 outValue.Add(b);
             }

@@ -481,30 +481,23 @@ namespace Osaru.Json
                 }
             }
         }
+        #endregion
 
-        public int GetBytesSize()
+        public ArraySegment<Byte> GetBytes()
         {
             var str = GetString();
             var decoded = Convert.FromBase64String(str);
-            return decoded.Length;
-        }
-
-        public void GetBytes(byte[] bytes)
-        {
-            var str = GetString();
-            var decoded=Convert.FromBase64String(str);
-            Buffer.BlockCopy(decoded, 0
-                , bytes, 0, decoded.Length);
+            return new ArraySegment<byte>(decoded); 
         }
 
         public void GetBytes(IFormatter f)
         {
+            throw new NotImplementedException();
         }
 
         public void Dump(IFormatter f)
         {
             throw new NotImplementedException();
         }
-        #endregion
     }
 }

@@ -908,7 +908,8 @@ namespace Osaru.MessagePack
         public void GetBytes(byte[] bytes)
         {
             var body = GetBody();
-            Array.Copy(body.Array, body.Offset, bytes, 0, body.Count);
+            Buffer.BlockCopy(body.Array, body.Offset
+                , bytes, 0, body.Count);
         }
 
         public void GetBytes(IFormatter f)

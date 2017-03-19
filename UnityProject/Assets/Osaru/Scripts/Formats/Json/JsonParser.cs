@@ -484,17 +484,21 @@ namespace Osaru.Json
 
         public int GetBytesSize()
         {
-            throw new NotImplementedException();
+            var str = GetString();
+            var decoded = Convert.FromBase64String(str);
+            return decoded.Length;
         }
 
         public void GetBytes(byte[] bytes)
         {
-            throw new NotImplementedException();
+            var str = GetString();
+            var decoded=Convert.FromBase64String(str);
+            Buffer.BlockCopy(decoded, 0
+                , bytes, 0, decoded.Length);
         }
 
         public void GetBytes(IFormatter f)
         {
-            throw new NotImplementedException();
         }
 
         public void Dump(IFormatter f)

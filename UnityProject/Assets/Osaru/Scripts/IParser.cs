@@ -50,8 +50,8 @@ namespace Osaru
 
         int GetBytesSize();
         void GetBytes(Byte[] bytes);
-        void GetBytes(IFormatter f);
 
+        void GetBytes(IFormatter f);
         void Dump(IFormatter f);
     }
 }

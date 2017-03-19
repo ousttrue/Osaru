@@ -15,6 +15,15 @@ namespace Osaru.Serialization.Deserializers
                 var constructedType = typeof(EnumStringDeserializer<>).MakeGenericType(t);
                 return (IDeserializer)Activator.CreateInstance(constructedType, null);
             }
+            else if (t.GetInterfaces().Any(x =>
+            x.IsGenericType()
+            && x.GetGenericTypeDefinition() == typeof(IList<>)
+            && x.GetGenericArguments().SequenceEqual(new Type[] { typeof(Byte) })))
+            {
+                // IList<Byte>
+                var constructedType = typeof(GenericRawDeserializer<>).MakeGenericType(t);
+                return (IDeserializer)Activator.CreateInstance(constructedType, null);
+            }
             else if (t.IsArray && t.GetElementType() != null)
             {
                 // T[]

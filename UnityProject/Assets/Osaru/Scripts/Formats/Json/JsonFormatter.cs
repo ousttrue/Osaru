@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+
 
 namespace Osaru.Json
 {
@@ -15,10 +15,10 @@ namespace Osaru.Json
         IStore m_w;
 
         enum Current
-        { 
+        {
             NONE,
             ARRAY,
-            OBJECT           
+            OBJECT
         }
 
         struct Context
@@ -36,8 +36,8 @@ namespace Osaru.Json
         Stack<Context> m_stack = new Stack<Context>();
 
         public JsonFormatter()
-            :this(new BytesStore())
-        {}
+            : this(new BytesStore())
+        { }
 
         public JsonFormatter(IStore w)
         {
@@ -57,7 +57,7 @@ namespace Osaru.Json
             m_stack.Push(new Context(Current.NONE));
         }
 
-        void CommaCheck(bool isKey=false)
+        void CommaCheck(bool isKey = false)
         {
             var top = m_stack.Pop();
             switch (top.Current)
@@ -79,7 +79,7 @@ namespace Osaru.Json
 
                 case Current.OBJECT:
                     {
-                        if(top.Count%2==0)
+                        if (top.Count % 2 == 0)
                         {
                             if (!isKey) throw new JsonFormatException("key exptected");
                             if (top.Count != 0)
@@ -202,17 +202,17 @@ namespace Osaru.Json
             m_w.Write(x.ToString());
         }
 
-        public void Bytes(ArraySegment<Byte> bytes)
+        public void Bytes(ArraySegment<Byte> x)
         {
-            throw new NotImplementedException();
-
-            // ToDo: Base64 encoding
+            CommaCheck();
+            m_w.Write('"');
+            m_w.Write(Convert.ToBase64String(x.Array, x.Offset, x.Count));
+            m_w.Write('"');
         }
+
         public void Bytes(IEnumerable<byte> raw, int count)
         {
-            throw new NotImplementedException();
-            
-            // ToDo: Base64 encoding
+            Bytes(new ArraySegment<byte>(raw.Take(count).ToArray()));
         }
 
         public void Dump(ArraySegment<Byte> formated)

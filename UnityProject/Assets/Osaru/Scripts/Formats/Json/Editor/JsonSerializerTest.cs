@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using Osaru.Json;
-using Osaru.MessagePack;
 using Osaru.Serialization.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
 
 namespace OsaruTest.Json
 {
@@ -66,6 +66,48 @@ namespace OsaruTest.Json
             var typeRegistory = new Osaru.Serialization.TypeRegistory();
             var v = new UnityEngine.Vector3(1, 2, 3);
             typeRegistory.TypeTest(v, "[1,2,3]");
+        }
+
+        [Serializable]
+        struct Base64Struct
+        {
+            public byte[] Bytes;
+            public List<Byte> ListBytes;
+
+            public override bool Equals(System.Object obj)
+            {
+                // If parameter is null return false.
+                if (obj == null)
+                {
+                    return false;
+                }
+
+                // If parameter cannot be cast to Point return false.
+                var p = (Base64Struct)obj;
+
+                // Return true if the fields match:
+                return Equals(p);
+            }
+
+            public bool Equals(Base64Struct p)
+            {
+                // Return true if the fields match:
+                return Bytes.SequenceEqual(p.Bytes)
+                    && ListBytes.SequenceEqual(p.ListBytes)
+                    ;
+            }
+        }
+
+        [Test]
+        public void Base64Test()
+        {
+            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var v = new Base64Struct
+            {
+                Bytes=new Byte[] { (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)'E', (byte)'F', (byte)'G' },
+                ListBytes = new List<Byte> { (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)'E', (byte)'F', (byte)'G' },
+            };
+            typeRegistory.TypeTest(v, "{\"Bytes\":\"QUJDREVGRw==\",\"ListBytes\":\"QUJDREVGRw==\"}");
         }
     }
 }

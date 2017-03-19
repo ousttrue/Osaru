@@ -74,7 +74,7 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] json-rpc-2.0
 * [x] messagepack-rpc
 * [ ] code generator for RPC client
-* [ ] json base64 string for binary support
+* [x] json base64 string for binary support
 * [x] json byte[] backend not string
 * [x] StreamStore
 * [x] BytesStore
@@ -83,4 +83,5 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] endian conversion use union
 * [ ] StreamSubject
 * [x] add Endian interface to IStore 
+* [ ] commonalize tests for json and messagepack
 

@@ -6,6 +6,11 @@ using System.Text;
 
 namespace Osaru.MessagePack
 {
+    public class MessagePackValueException: ArgumentException
+    {
+        public MessagePackValueException(string msg) : base(msg) { }
+    }
+
     public struct MessagePackParser: IParser<MessagePackParser>
     {
         public ArraySegment<Byte> Bytes { get; private set; }
@@ -895,7 +900,7 @@ namespace Osaru.MessagePack
             {
                 case MsgPackType.FLOAT: return EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
                 case MsgPackType.DOUBLE: return (Single)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
-                default: throw new Exception("is not floating: " + Bytes);
+                default: throw new MessagePackValueException("is not floating: " + Bytes);
             }
         }
 
@@ -905,19 +910,13 @@ namespace Osaru.MessagePack
             {
                 case MsgPackType.FLOAT: return EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
                 case MsgPackType.DOUBLE: return EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
-                default: throw new Exception("is not floating: " + Bytes);
+                default: throw new MessagePackValueException("is not floating: " + Bytes);
             }
         }
 
         public ArraySegment<Byte> GetBytes()
         {
             return GetBody();
-        }
-
-        public void GetBytes(IFormatter f)
-        {
-            var body = GetBody();
-            f.Bytes(body);
         }
 
         public void Dump(IFormatter f)

@@ -7,16 +7,16 @@ Object Serialization And RPC Utilities
                      +----------+
                      |RPC method|
                      +----------+
-                       A     |
-+----------------+     |     V    +--------------+
+                       ^     |
++----------------+     |     v    +--------------+
 |IDeserializer<T>| ->  T     U -> |ISerializer<U>|
 +----------------+                +--------------+
-  A                                 |
-  |                                 V
+  ^                                 |
+  |                                 v
 +-------+    convert              +----------+
 |IParser| ----------------------> |IFormatter|
 +-------+                         +----------+
-  A                               |IStore    | --> Stream
+  ^                               |IStore    | --> Stream
   |           +-----------+       +--------- +
   +-----------|JSON       |<--------+
               |MessagePack|         Byte[]
@@ -25,9 +25,10 @@ Object Serialization And RPC Utilities
 ```
 
 # Features
-* separate parser and deserializer
+* separate deserializer and parser
+* separate serializer and formatter
 * inplace serialization
-* inplace deserialization
+* inplace deserialization(but struct field setter use boxing)
 * UWP compatible
 
 # Formats
@@ -78,7 +79,7 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] json byte[] backend not string
 * [x] StreamStore
 * [x] BytesStore
-* [ ] fix dump
+* [ ] fix IParser.Dump
 * [ ] rpc proxy
 * [x] endian conversion use union
 * [ ] StreamSubject

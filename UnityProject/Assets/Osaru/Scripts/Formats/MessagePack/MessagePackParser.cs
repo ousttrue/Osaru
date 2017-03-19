@@ -11,7 +11,7 @@ namespace Osaru.MessagePack
         public MessagePackValueException(string msg) : base(msg) { }
     }
 
-    public struct MessagePackParser: IParser<MessagePackParser>
+    public partial struct MessagePackParser: IParser<MessagePackParser>
     {
         public ArraySegment<Byte> Bytes { get; private set; }
 
@@ -793,33 +793,6 @@ namespace Osaru.MessagePack
             }
         }
 
-        public static T ConvertTo<T>(object o)
-        {
-            try
-            {
-                if (typeof(T).IsAssignableFrom(o.GetType()))
-                {
-                    return (T)o;
-                }
-                else if (typeof(T).IsEnum())
-                {
-                    return (T)Convert.ChangeType(o, Enum.GetUnderlyingType(typeof(T)));
-                }
-                else
-                {
-                    return (T)Convert.ChangeType(o, typeof(T));
-                }
-            }
-            catch (Exception ex)
-            {
-                return (T)o;
-            }
-        }
-        public T GetValue<T>()
-        {
-            return ConvertTo<T>(GetValue());
-        }
-
         public override string ToString()
         {
             if (FormatType.IsArray())
@@ -902,48 +875,6 @@ namespace Osaru.MessagePack
                 default: throw new MessagePackValueException("is not string type: "+Bytes);
             }
         }
-
-        #region Integer
-        public byte GetByte()
-        {
-            return GetValue<Byte>();
-        }
-
-        public ushort GetUInt16()
-        {
-            return GetValue<UInt16>();
-        }
-
-        public uint GetUInt32()
-        {
-            return GetValue<UInt32>();
-        }
-
-        public ulong GetUInt64()
-        {
-            return GetValue<UInt64>();
-        }
-
-        public sbyte GetSByte()
-        {
-            return GetValue<SByte>();
-        }
-
-        public short GetInt16()
-        {
-            return GetValue<Int16>();
-        }
-
-        public int GetInt32()
-        {
-            return GetValue<Int32>();
-        }
-
-        public long GetInt64()
-        {
-            return GetValue<Int64>();
-        }
-        #endregion
 
         public float GetSingle()
         {

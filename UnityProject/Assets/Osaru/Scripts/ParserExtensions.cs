@@ -43,15 +43,19 @@ namespace Osaru
                 case ParserValueType.Boolean:
                     f.Value(parser.GetBoolean());
                     break;
+
                 case ParserValueType.Integer:
                     f.Value(parser.GetInt64());
                     break;
+
                 case ParserValueType.Float:
                     f.Value(parser.GetSingle());
                     break;
+
                 case ParserValueType.Double:
                     f.Value(parser.GetDouble());
                     break;
+
                 case ParserValueType.String:
                     f.Value(parser.GetString());
                     break;

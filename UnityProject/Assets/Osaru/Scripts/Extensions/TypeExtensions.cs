@@ -170,5 +170,30 @@ namespace Osaru
             return Attribute.IsDefined(t, typeof(T));
         }
 #endif
+
+        /*
+        public static T ConvertTo<T>(object o)
+        {
+            try
+            {
+                if (typeof(T).IsAssignableFrom(o.GetType()))
+                {
+                    return (T)o;
+                }
+                else if (typeof(T).IsEnum())
+                {
+                    return (T)Convert.ChangeType(o, Enum.GetUnderlyingType(typeof(T)));
+                }
+                else
+                {
+                    return (T)Convert.ChangeType(o, typeof(T));
+                }
+            }
+            catch (Exception ex)
+            {
+                return (T)o;
+            }
+        }
+        */
     }
 }

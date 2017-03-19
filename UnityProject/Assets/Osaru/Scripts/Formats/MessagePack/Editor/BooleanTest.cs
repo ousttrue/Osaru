@@ -46,7 +46,7 @@ namespace OsaruTest.MessagePack
             Assert.AreEqual(new Byte[] { 0xC3 }, bytes.ToEnumerable());
 
             var value = MessagePackParser.Parse(bytes);
-            var j = value.GetValue<Boolean>();
+            var j = value.GetBoolean();
             Assert.AreEqual(true, j);
         }
 
@@ -57,7 +57,7 @@ namespace OsaruTest.MessagePack
             Assert.AreEqual(new Byte[] { 0xC2 }, bytes.ToEnumerable());
 
             var value = MessagePackParser.Parse(bytes);
-            var j = value.GetValue<Boolean>();
+            var j = value.GetBoolean();
             Assert.AreEqual(false, j);
         }
     }

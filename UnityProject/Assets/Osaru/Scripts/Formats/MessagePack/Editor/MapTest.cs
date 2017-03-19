@@ -57,7 +57,7 @@ namespace OsaruTest.MessagePack
 
             var value = MessagePackParser.Parse(bytes);
 
-            Assert.AreEqual(size, value.ObjectItems.Count());
+            Assert.AreEqual(15, value.GetValueByIntKey(10).GetInt32());
         }
     }
 }

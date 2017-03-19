@@ -846,14 +846,64 @@ namespace Osaru.MessagePack
 
         public bool GetBoolean()
         {
-            return GetValue<Boolean>();
+            switch (FormatType)
+            {
+                case MsgPackType.TRUE: return true;
+                case MsgPackType.FALSE: return false;
+                default: throw new MessagePackValueException("is not boolean: " + Bytes);
+            }
         }
 
         public string GetString()
         {
-            return GetValue<String>();
+            switch (FormatType)
+            {
+                case MsgPackType.FIX_STR: return "";
+                case MsgPackType.FIX_STR_0x01:
+                case MsgPackType.FIX_STR_0x02:
+                case MsgPackType.FIX_STR_0x03:
+                case MsgPackType.FIX_STR_0x04:
+                case MsgPackType.FIX_STR_0x05:
+                case MsgPackType.FIX_STR_0x06:
+                case MsgPackType.FIX_STR_0x07:
+                case MsgPackType.FIX_STR_0x08:
+                case MsgPackType.FIX_STR_0x09:
+                case MsgPackType.FIX_STR_0x0A:
+                case MsgPackType.FIX_STR_0x0B:
+                case MsgPackType.FIX_STR_0x0C:
+                case MsgPackType.FIX_STR_0x0D:
+                case MsgPackType.FIX_STR_0x0E:
+                case MsgPackType.FIX_STR_0x0F:
+                case MsgPackType.FIX_STR_0x10:
+                case MsgPackType.FIX_STR_0x11:
+                case MsgPackType.FIX_STR_0x12:
+                case MsgPackType.FIX_STR_0x13:
+                case MsgPackType.FIX_STR_0x14:
+                case MsgPackType.FIX_STR_0x15:
+                case MsgPackType.FIX_STR_0x16:
+                case MsgPackType.FIX_STR_0x17:
+                case MsgPackType.FIX_STR_0x18:
+                case MsgPackType.FIX_STR_0x19:
+                case MsgPackType.FIX_STR_0x1A:
+                case MsgPackType.FIX_STR_0x1B:
+                case MsgPackType.FIX_STR_0x1C:
+                case MsgPackType.FIX_STR_0x1D:
+                case MsgPackType.FIX_STR_0x1E:
+                case MsgPackType.FIX_STR_0x1F:
+                case MsgPackType.STR8:
+                case MsgPackType.STR16:
+                case MsgPackType.STR32:
+                    {
+                        var body = GetBody();
+                        var str = Encoding.UTF8.GetString(body.Array, body.Offset, body.Count);
+                        return str;
+                    }
+
+                default: throw new MessagePackValueException("is not string type: "+Bytes);
+            }
         }
 
+        #region Integer
         public byte GetByte()
         {
             return GetValue<Byte>();
@@ -893,6 +943,7 @@ namespace Osaru.MessagePack
         {
             return GetValue<Int64>();
         }
+        #endregion
 
         public float GetSingle()
         {

@@ -426,7 +426,7 @@ namespace Osaru.MessagePack
 
         public void Dump(ArraySegment<byte> formatted)
         {
-            throw new NotImplementedException();
+            m_store.Write(formatted);
         }
 
         public void Clear()

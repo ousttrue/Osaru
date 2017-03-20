@@ -1,6 +1,7 @@
 ﻿#if !NETFX_CORE
 using NUnit.Framework;
 using Osaru.Json;
+using Osaru.MessagePack;
 using Osaru.RPC;
 using Osaru.Serialization;
 using System;
@@ -76,7 +77,7 @@ namespace OsaruTest.Reactive
         }
 
         [Test]
-        public void ProxyMehodTest()
+        public void JsonRPCTest()
         {
             var transport = new Transport();
 
@@ -108,6 +109,50 @@ namespace OsaruTest.Reactive
 
             // wait result
             for(int i=0; i<100; ++i)
+            {
+                if (result.HasValue)
+                {
+                    break;
+                }
+                System.Threading.Thread.Sleep(100);
+            }
+
+            Assert.AreEqual(3, result.Value);
+        }
+
+        [Test]
+        public void MessagePackRPCTest()
+        {
+            var transport = new Transport();
+
+            // server side
+            var service = new RpcService<MessagePackParser, MessagePackFormatter>();
+            var r = new TypeRegistory();
+            var method = r.RPCFunc((int a, int b) => a + b);
+            service.Dispatcher.AddMethod("Add", method);
+            service.AddStream(transport.ServerSide);
+
+            // client side
+            var requestTransporter = new RPCRequestTransporter<MessagePackParser, MessagePackFormatter>(
+                transport.ClientSide);
+            var factory = new RPCRequestFactory<MessagePackParser, MessagePackFormatter>();
+            factory.RequestObservable.Subscribe(requestTransporter);
+            requestTransporter.ResponseObservable.Subscribe(factory);
+
+            // call
+            int? result = null;
+            factory.RequestAsync<int, int, int>("Add", 1, 2).Subscribe(x =>
+            {
+                result = x;
+            }
+            , ex =>
+            {
+                throw ex;
+            }
+            );
+
+            // wait result
+            for (int i = 0; i < 100; ++i)
             {
                 if (result.HasValue)
                 {

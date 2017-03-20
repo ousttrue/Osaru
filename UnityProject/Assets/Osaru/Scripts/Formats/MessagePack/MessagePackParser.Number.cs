@@ -192,8 +192,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (byte)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (byte)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (byte)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (byte)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (byte)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not byte" + Bytes);
+                default: throw new MessagePackValueException("is not byte " + Bytes);
             }
             }
         }
@@ -380,8 +382,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (ushort)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (ushort)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (ushort)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (ushort)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (ushort)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not ushort" + Bytes);
+                default: throw new MessagePackValueException("is not ushort " + Bytes);
             }
             }
         }
@@ -568,8 +572,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (uint)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (uint)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (uint)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (uint)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (uint)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not uint" + Bytes);
+                default: throw new MessagePackValueException("is not uint " + Bytes);
             }
             }
         }
@@ -756,8 +762,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (ulong)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (ulong)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (ulong)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (ulong)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (ulong)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not ulong" + Bytes);
+                default: throw new MessagePackValueException("is not ulong " + Bytes);
             }
             }
         }
@@ -944,8 +952,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (sbyte)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (sbyte)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (sbyte)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (sbyte)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (sbyte)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not sbyte" + Bytes);
+                default: throw new MessagePackValueException("is not sbyte " + Bytes);
             }
             }
         }
@@ -1132,8 +1142,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (short)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (short)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (short)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (short)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (short)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not short" + Bytes);
+                default: throw new MessagePackValueException("is not short " + Bytes);
             }
             }
         }
@@ -1320,8 +1332,10 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (int)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (int)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (int)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (int)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (int)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not int" + Bytes);
+                default: throw new MessagePackValueException("is not int " + Bytes);
             }
             }
         }
@@ -1508,8 +1522,390 @@ namespace Osaru.MessagePack
                 case MsgPackType.UINT16: return (long)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return (long)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return (long)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (long)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (long)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
-                default: throw new MessagePackValueException("is not long" + Bytes);
+                default: throw new MessagePackValueException("is not long " + Bytes);
+            }
+            }
+        }
+
+        public Single GetSingle()
+        {
+            unchecked{
+            switch(FormatType)
+            {
+                case MsgPackType.POSITIVE_FIXNUM: return (float)0;
+                case MsgPackType.POSITIVE_FIXNUM_0x01: return (float)1;
+                case MsgPackType.POSITIVE_FIXNUM_0x02: return (float)2;
+                case MsgPackType.POSITIVE_FIXNUM_0x03: return (float)3;
+                case MsgPackType.POSITIVE_FIXNUM_0x04: return (float)4;
+                case MsgPackType.POSITIVE_FIXNUM_0x05: return (float)5;
+                case MsgPackType.POSITIVE_FIXNUM_0x06: return (float)6;
+                case MsgPackType.POSITIVE_FIXNUM_0x07: return (float)7;
+                case MsgPackType.POSITIVE_FIXNUM_0x08: return (float)8;
+                case MsgPackType.POSITIVE_FIXNUM_0x09: return (float)9;
+                case MsgPackType.POSITIVE_FIXNUM_0x0A: return (float)10;
+                case MsgPackType.POSITIVE_FIXNUM_0x0B: return (float)11;
+                case MsgPackType.POSITIVE_FIXNUM_0x0C: return (float)12;
+                case MsgPackType.POSITIVE_FIXNUM_0x0D: return (float)13;
+                case MsgPackType.POSITIVE_FIXNUM_0x0E: return (float)14;
+                case MsgPackType.POSITIVE_FIXNUM_0x0F: return (float)15;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x10: return (float)16;
+                case MsgPackType.POSITIVE_FIXNUM_0x11: return (float)17;
+                case MsgPackType.POSITIVE_FIXNUM_0x12: return (float)18;
+                case MsgPackType.POSITIVE_FIXNUM_0x13: return (float)19;
+                case MsgPackType.POSITIVE_FIXNUM_0x14: return (float)20;
+                case MsgPackType.POSITIVE_FIXNUM_0x15: return (float)21;
+                case MsgPackType.POSITIVE_FIXNUM_0x16: return (float)22;
+                case MsgPackType.POSITIVE_FIXNUM_0x17: return (float)23;
+                case MsgPackType.POSITIVE_FIXNUM_0x18: return (float)24;
+                case MsgPackType.POSITIVE_FIXNUM_0x19: return (float)25;
+                case MsgPackType.POSITIVE_FIXNUM_0x1A: return (float)26;
+                case MsgPackType.POSITIVE_FIXNUM_0x1B: return (float)27;
+                case MsgPackType.POSITIVE_FIXNUM_0x1C: return (float)28;
+                case MsgPackType.POSITIVE_FIXNUM_0x1D: return (float)29;
+                case MsgPackType.POSITIVE_FIXNUM_0x1E: return (float)30;
+                case MsgPackType.POSITIVE_FIXNUM_0x1F: return (float)31;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x20: return (float)32;
+                case MsgPackType.POSITIVE_FIXNUM_0x21: return (float)33;
+                case MsgPackType.POSITIVE_FIXNUM_0x22: return (float)34;
+                case MsgPackType.POSITIVE_FIXNUM_0x23: return (float)35;
+                case MsgPackType.POSITIVE_FIXNUM_0x24: return (float)36;
+                case MsgPackType.POSITIVE_FIXNUM_0x25: return (float)37;
+                case MsgPackType.POSITIVE_FIXNUM_0x26: return (float)38;
+                case MsgPackType.POSITIVE_FIXNUM_0x27: return (float)39;
+                case MsgPackType.POSITIVE_FIXNUM_0x28: return (float)40;
+                case MsgPackType.POSITIVE_FIXNUM_0x29: return (float)41;
+                case MsgPackType.POSITIVE_FIXNUM_0x2A: return (float)42;
+                case MsgPackType.POSITIVE_FIXNUM_0x2B: return (float)43;
+                case MsgPackType.POSITIVE_FIXNUM_0x2C: return (float)44;
+                case MsgPackType.POSITIVE_FIXNUM_0x2D: return (float)45;
+                case MsgPackType.POSITIVE_FIXNUM_0x2E: return (float)46;
+                case MsgPackType.POSITIVE_FIXNUM_0x2F: return (float)47;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x30: return (float)48;
+                case MsgPackType.POSITIVE_FIXNUM_0x31: return (float)49;
+                case MsgPackType.POSITIVE_FIXNUM_0x32: return (float)50;
+                case MsgPackType.POSITIVE_FIXNUM_0x33: return (float)51;
+                case MsgPackType.POSITIVE_FIXNUM_0x34: return (float)52;
+                case MsgPackType.POSITIVE_FIXNUM_0x35: return (float)53;
+                case MsgPackType.POSITIVE_FIXNUM_0x36: return (float)54;
+                case MsgPackType.POSITIVE_FIXNUM_0x37: return (float)55;
+                case MsgPackType.POSITIVE_FIXNUM_0x38: return (float)56;
+                case MsgPackType.POSITIVE_FIXNUM_0x39: return (float)57;
+                case MsgPackType.POSITIVE_FIXNUM_0x3A: return (float)58;
+                case MsgPackType.POSITIVE_FIXNUM_0x3B: return (float)59;
+                case MsgPackType.POSITIVE_FIXNUM_0x3C: return (float)60;
+                case MsgPackType.POSITIVE_FIXNUM_0x3D: return (float)61;
+                case MsgPackType.POSITIVE_FIXNUM_0x3E: return (float)62;
+                case MsgPackType.POSITIVE_FIXNUM_0x3F: return (float)63;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x40: return (float)64;
+                case MsgPackType.POSITIVE_FIXNUM_0x41: return (float)65;
+                case MsgPackType.POSITIVE_FIXNUM_0x42: return (float)66;
+                case MsgPackType.POSITIVE_FIXNUM_0x43: return (float)67;
+                case MsgPackType.POSITIVE_FIXNUM_0x44: return (float)68;
+                case MsgPackType.POSITIVE_FIXNUM_0x45: return (float)69;
+                case MsgPackType.POSITIVE_FIXNUM_0x46: return (float)70;
+                case MsgPackType.POSITIVE_FIXNUM_0x47: return (float)71;
+                case MsgPackType.POSITIVE_FIXNUM_0x48: return (float)72;
+                case MsgPackType.POSITIVE_FIXNUM_0x49: return (float)73;
+                case MsgPackType.POSITIVE_FIXNUM_0x4A: return (float)74; 
+                case MsgPackType.POSITIVE_FIXNUM_0x4B: return (float)75;
+                case MsgPackType.POSITIVE_FIXNUM_0x4C: return (float)76;
+                case MsgPackType.POSITIVE_FIXNUM_0x4D: return (float)77;
+                case MsgPackType.POSITIVE_FIXNUM_0x4E: return (float)78;
+                case MsgPackType.POSITIVE_FIXNUM_0x4F: return (float)79;
+                     
+                case MsgPackType.POSITIVE_FIXNUM_0x50: return (float)80;
+                case MsgPackType.POSITIVE_FIXNUM_0x51: return (float)81;
+                case MsgPackType.POSITIVE_FIXNUM_0x52: return (float)82;
+                case MsgPackType.POSITIVE_FIXNUM_0x53: return (float)83;
+                case MsgPackType.POSITIVE_FIXNUM_0x54: return (float)84;
+                case MsgPackType.POSITIVE_FIXNUM_0x55: return (float)85;
+                case MsgPackType.POSITIVE_FIXNUM_0x56: return (float)86;
+                case MsgPackType.POSITIVE_FIXNUM_0x57: return (float)87;
+                case MsgPackType.POSITIVE_FIXNUM_0x58: return (float)88;
+                case MsgPackType.POSITIVE_FIXNUM_0x59: return (float)89;
+                case MsgPackType.POSITIVE_FIXNUM_0x5A: return (float)90;
+                case MsgPackType.POSITIVE_FIXNUM_0x5B: return (float)91;
+                case MsgPackType.POSITIVE_FIXNUM_0x5C: return (float)92;
+                case MsgPackType.POSITIVE_FIXNUM_0x5D: return (float)93;
+                case MsgPackType.POSITIVE_FIXNUM_0x5E: return (float)94;
+                case MsgPackType.POSITIVE_FIXNUM_0x5F: return (float)95;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x60: return (float)96;
+                case MsgPackType.POSITIVE_FIXNUM_0x61: return (float)97;
+                case MsgPackType.POSITIVE_FIXNUM_0x62: return (float)98;
+                case MsgPackType.POSITIVE_FIXNUM_0x63: return (float)99;
+                case MsgPackType.POSITIVE_FIXNUM_0x64: return (float)100;
+                case MsgPackType.POSITIVE_FIXNUM_0x65: return (float)101;
+                case MsgPackType.POSITIVE_FIXNUM_0x66: return (float)102;
+                case MsgPackType.POSITIVE_FIXNUM_0x67: return (float)103;
+                case MsgPackType.POSITIVE_FIXNUM_0x68: return (float)104;
+                case MsgPackType.POSITIVE_FIXNUM_0x69: return (float)105;
+                case MsgPackType.POSITIVE_FIXNUM_0x6A: return (float)106;
+                case MsgPackType.POSITIVE_FIXNUM_0x6B: return (float)107;
+                case MsgPackType.POSITIVE_FIXNUM_0x6C: return (float)108;
+                case MsgPackType.POSITIVE_FIXNUM_0x6D: return (float)109;
+                case MsgPackType.POSITIVE_FIXNUM_0x6E: return (float)110;
+                case MsgPackType.POSITIVE_FIXNUM_0x6F: return (float)111;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x70: return (float)112;
+                case MsgPackType.POSITIVE_FIXNUM_0x71: return (float)113;
+                case MsgPackType.POSITIVE_FIXNUM_0x72: return (float)114;
+                case MsgPackType.POSITIVE_FIXNUM_0x73: return (float)115;
+                case MsgPackType.POSITIVE_FIXNUM_0x74: return (float)116;
+                case MsgPackType.POSITIVE_FIXNUM_0x75: return (float)117;
+                case MsgPackType.POSITIVE_FIXNUM_0x76: return (float)118;
+                case MsgPackType.POSITIVE_FIXNUM_0x77: return (float)119;
+                case MsgPackType.POSITIVE_FIXNUM_0x78: return (float)120;
+                case MsgPackType.POSITIVE_FIXNUM_0x79: return (float)121;
+                case MsgPackType.POSITIVE_FIXNUM_0x7A: return (float)122;
+                case MsgPackType.POSITIVE_FIXNUM_0x7B: return (float)123;
+                case MsgPackType.POSITIVE_FIXNUM_0x7C: return (float)124;
+                case MsgPackType.POSITIVE_FIXNUM_0x7D: return (float)125;
+                case MsgPackType.POSITIVE_FIXNUM_0x7E: return (float)126;
+                case MsgPackType.POSITIVE_FIXNUM_0x7F: return (float)127;
+
+                case MsgPackType.NEGATIVE_FIXNUM: return (float)-32;
+                case MsgPackType.NEGATIVE_FIXNUM_0x01: return (float)-1;
+                case MsgPackType.NEGATIVE_FIXNUM_0x02: return (float)-2;
+                case MsgPackType.NEGATIVE_FIXNUM_0x03: return (float)-3;
+                case MsgPackType.NEGATIVE_FIXNUM_0x04: return (float)-4;
+                case MsgPackType.NEGATIVE_FIXNUM_0x05: return (float)-5;
+                case MsgPackType.NEGATIVE_FIXNUM_0x06: return (float)-6;
+                case MsgPackType.NEGATIVE_FIXNUM_0x07: return (float)-7;
+                case MsgPackType.NEGATIVE_FIXNUM_0x08: return (float)-8;
+                case MsgPackType.NEGATIVE_FIXNUM_0x09: return (float)-9;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0A: return (float)-10;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0B: return (float)-11;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0C: return (float)-12;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0D: return (float)-13;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0E: return (float)-14;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0F: return (float)-15;
+                case MsgPackType.NEGATIVE_FIXNUM_0x10: return (float)-16;
+                case MsgPackType.NEGATIVE_FIXNUM_0x11: return (float)-17;
+                case MsgPackType.NEGATIVE_FIXNUM_0x12: return (float)-18;
+                case MsgPackType.NEGATIVE_FIXNUM_0x13: return (float)-19;
+                case MsgPackType.NEGATIVE_FIXNUM_0x14: return (float)-20;
+                case MsgPackType.NEGATIVE_FIXNUM_0x15: return (float)-21;
+                case MsgPackType.NEGATIVE_FIXNUM_0x16: return (float)-22;
+                case MsgPackType.NEGATIVE_FIXNUM_0x17: return (float)-23;
+                case MsgPackType.NEGATIVE_FIXNUM_0x18: return (float)-24;
+                case MsgPackType.NEGATIVE_FIXNUM_0x19: return (float)-25;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1A: return (float)-26;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1B: return (float)-27;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1C: return (float)-28;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1D: return (float)-29;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1E: return (float)-30;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1F: return (float)-31;
+
+                case MsgPackType.INT8: return (float)(SByte)GetBody().Get(0);
+                case MsgPackType.INT16: return (float)EndianConverter.NetworkByteWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.INT32: return (float)EndianConverter.NetworkByteDWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.INT64: return (float)EndianConverter.NetworkByteQWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT8: return (float)GetBody().Get(0);
+                case MsgPackType.UINT16: return (float)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT32: return (float)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT64: return (float)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (float)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (float)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
+
+                default: throw new MessagePackValueException("is not float " + Bytes);
+            }
+            }
+        }
+
+        public Double GetDouble()
+        {
+            unchecked{
+            switch(FormatType)
+            {
+                case MsgPackType.POSITIVE_FIXNUM: return (double)0;
+                case MsgPackType.POSITIVE_FIXNUM_0x01: return (double)1;
+                case MsgPackType.POSITIVE_FIXNUM_0x02: return (double)2;
+                case MsgPackType.POSITIVE_FIXNUM_0x03: return (double)3;
+                case MsgPackType.POSITIVE_FIXNUM_0x04: return (double)4;
+                case MsgPackType.POSITIVE_FIXNUM_0x05: return (double)5;
+                case MsgPackType.POSITIVE_FIXNUM_0x06: return (double)6;
+                case MsgPackType.POSITIVE_FIXNUM_0x07: return (double)7;
+                case MsgPackType.POSITIVE_FIXNUM_0x08: return (double)8;
+                case MsgPackType.POSITIVE_FIXNUM_0x09: return (double)9;
+                case MsgPackType.POSITIVE_FIXNUM_0x0A: return (double)10;
+                case MsgPackType.POSITIVE_FIXNUM_0x0B: return (double)11;
+                case MsgPackType.POSITIVE_FIXNUM_0x0C: return (double)12;
+                case MsgPackType.POSITIVE_FIXNUM_0x0D: return (double)13;
+                case MsgPackType.POSITIVE_FIXNUM_0x0E: return (double)14;
+                case MsgPackType.POSITIVE_FIXNUM_0x0F: return (double)15;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x10: return (double)16;
+                case MsgPackType.POSITIVE_FIXNUM_0x11: return (double)17;
+                case MsgPackType.POSITIVE_FIXNUM_0x12: return (double)18;
+                case MsgPackType.POSITIVE_FIXNUM_0x13: return (double)19;
+                case MsgPackType.POSITIVE_FIXNUM_0x14: return (double)20;
+                case MsgPackType.POSITIVE_FIXNUM_0x15: return (double)21;
+                case MsgPackType.POSITIVE_FIXNUM_0x16: return (double)22;
+                case MsgPackType.POSITIVE_FIXNUM_0x17: return (double)23;
+                case MsgPackType.POSITIVE_FIXNUM_0x18: return (double)24;
+                case MsgPackType.POSITIVE_FIXNUM_0x19: return (double)25;
+                case MsgPackType.POSITIVE_FIXNUM_0x1A: return (double)26;
+                case MsgPackType.POSITIVE_FIXNUM_0x1B: return (double)27;
+                case MsgPackType.POSITIVE_FIXNUM_0x1C: return (double)28;
+                case MsgPackType.POSITIVE_FIXNUM_0x1D: return (double)29;
+                case MsgPackType.POSITIVE_FIXNUM_0x1E: return (double)30;
+                case MsgPackType.POSITIVE_FIXNUM_0x1F: return (double)31;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x20: return (double)32;
+                case MsgPackType.POSITIVE_FIXNUM_0x21: return (double)33;
+                case MsgPackType.POSITIVE_FIXNUM_0x22: return (double)34;
+                case MsgPackType.POSITIVE_FIXNUM_0x23: return (double)35;
+                case MsgPackType.POSITIVE_FIXNUM_0x24: return (double)36;
+                case MsgPackType.POSITIVE_FIXNUM_0x25: return (double)37;
+                case MsgPackType.POSITIVE_FIXNUM_0x26: return (double)38;
+                case MsgPackType.POSITIVE_FIXNUM_0x27: return (double)39;
+                case MsgPackType.POSITIVE_FIXNUM_0x28: return (double)40;
+                case MsgPackType.POSITIVE_FIXNUM_0x29: return (double)41;
+                case MsgPackType.POSITIVE_FIXNUM_0x2A: return (double)42;
+                case MsgPackType.POSITIVE_FIXNUM_0x2B: return (double)43;
+                case MsgPackType.POSITIVE_FIXNUM_0x2C: return (double)44;
+                case MsgPackType.POSITIVE_FIXNUM_0x2D: return (double)45;
+                case MsgPackType.POSITIVE_FIXNUM_0x2E: return (double)46;
+                case MsgPackType.POSITIVE_FIXNUM_0x2F: return (double)47;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x30: return (double)48;
+                case MsgPackType.POSITIVE_FIXNUM_0x31: return (double)49;
+                case MsgPackType.POSITIVE_FIXNUM_0x32: return (double)50;
+                case MsgPackType.POSITIVE_FIXNUM_0x33: return (double)51;
+                case MsgPackType.POSITIVE_FIXNUM_0x34: return (double)52;
+                case MsgPackType.POSITIVE_FIXNUM_0x35: return (double)53;
+                case MsgPackType.POSITIVE_FIXNUM_0x36: return (double)54;
+                case MsgPackType.POSITIVE_FIXNUM_0x37: return (double)55;
+                case MsgPackType.POSITIVE_FIXNUM_0x38: return (double)56;
+                case MsgPackType.POSITIVE_FIXNUM_0x39: return (double)57;
+                case MsgPackType.POSITIVE_FIXNUM_0x3A: return (double)58;
+                case MsgPackType.POSITIVE_FIXNUM_0x3B: return (double)59;
+                case MsgPackType.POSITIVE_FIXNUM_0x3C: return (double)60;
+                case MsgPackType.POSITIVE_FIXNUM_0x3D: return (double)61;
+                case MsgPackType.POSITIVE_FIXNUM_0x3E: return (double)62;
+                case MsgPackType.POSITIVE_FIXNUM_0x3F: return (double)63;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x40: return (double)64;
+                case MsgPackType.POSITIVE_FIXNUM_0x41: return (double)65;
+                case MsgPackType.POSITIVE_FIXNUM_0x42: return (double)66;
+                case MsgPackType.POSITIVE_FIXNUM_0x43: return (double)67;
+                case MsgPackType.POSITIVE_FIXNUM_0x44: return (double)68;
+                case MsgPackType.POSITIVE_FIXNUM_0x45: return (double)69;
+                case MsgPackType.POSITIVE_FIXNUM_0x46: return (double)70;
+                case MsgPackType.POSITIVE_FIXNUM_0x47: return (double)71;
+                case MsgPackType.POSITIVE_FIXNUM_0x48: return (double)72;
+                case MsgPackType.POSITIVE_FIXNUM_0x49: return (double)73;
+                case MsgPackType.POSITIVE_FIXNUM_0x4A: return (double)74; 
+                case MsgPackType.POSITIVE_FIXNUM_0x4B: return (double)75;
+                case MsgPackType.POSITIVE_FIXNUM_0x4C: return (double)76;
+                case MsgPackType.POSITIVE_FIXNUM_0x4D: return (double)77;
+                case MsgPackType.POSITIVE_FIXNUM_0x4E: return (double)78;
+                case MsgPackType.POSITIVE_FIXNUM_0x4F: return (double)79;
+                     
+                case MsgPackType.POSITIVE_FIXNUM_0x50: return (double)80;
+                case MsgPackType.POSITIVE_FIXNUM_0x51: return (double)81;
+                case MsgPackType.POSITIVE_FIXNUM_0x52: return (double)82;
+                case MsgPackType.POSITIVE_FIXNUM_0x53: return (double)83;
+                case MsgPackType.POSITIVE_FIXNUM_0x54: return (double)84;
+                case MsgPackType.POSITIVE_FIXNUM_0x55: return (double)85;
+                case MsgPackType.POSITIVE_FIXNUM_0x56: return (double)86;
+                case MsgPackType.POSITIVE_FIXNUM_0x57: return (double)87;
+                case MsgPackType.POSITIVE_FIXNUM_0x58: return (double)88;
+                case MsgPackType.POSITIVE_FIXNUM_0x59: return (double)89;
+                case MsgPackType.POSITIVE_FIXNUM_0x5A: return (double)90;
+                case MsgPackType.POSITIVE_FIXNUM_0x5B: return (double)91;
+                case MsgPackType.POSITIVE_FIXNUM_0x5C: return (double)92;
+                case MsgPackType.POSITIVE_FIXNUM_0x5D: return (double)93;
+                case MsgPackType.POSITIVE_FIXNUM_0x5E: return (double)94;
+                case MsgPackType.POSITIVE_FIXNUM_0x5F: return (double)95;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x60: return (double)96;
+                case MsgPackType.POSITIVE_FIXNUM_0x61: return (double)97;
+                case MsgPackType.POSITIVE_FIXNUM_0x62: return (double)98;
+                case MsgPackType.POSITIVE_FIXNUM_0x63: return (double)99;
+                case MsgPackType.POSITIVE_FIXNUM_0x64: return (double)100;
+                case MsgPackType.POSITIVE_FIXNUM_0x65: return (double)101;
+                case MsgPackType.POSITIVE_FIXNUM_0x66: return (double)102;
+                case MsgPackType.POSITIVE_FIXNUM_0x67: return (double)103;
+                case MsgPackType.POSITIVE_FIXNUM_0x68: return (double)104;
+                case MsgPackType.POSITIVE_FIXNUM_0x69: return (double)105;
+                case MsgPackType.POSITIVE_FIXNUM_0x6A: return (double)106;
+                case MsgPackType.POSITIVE_FIXNUM_0x6B: return (double)107;
+                case MsgPackType.POSITIVE_FIXNUM_0x6C: return (double)108;
+                case MsgPackType.POSITIVE_FIXNUM_0x6D: return (double)109;
+                case MsgPackType.POSITIVE_FIXNUM_0x6E: return (double)110;
+                case MsgPackType.POSITIVE_FIXNUM_0x6F: return (double)111;
+
+                case MsgPackType.POSITIVE_FIXNUM_0x70: return (double)112;
+                case MsgPackType.POSITIVE_FIXNUM_0x71: return (double)113;
+                case MsgPackType.POSITIVE_FIXNUM_0x72: return (double)114;
+                case MsgPackType.POSITIVE_FIXNUM_0x73: return (double)115;
+                case MsgPackType.POSITIVE_FIXNUM_0x74: return (double)116;
+                case MsgPackType.POSITIVE_FIXNUM_0x75: return (double)117;
+                case MsgPackType.POSITIVE_FIXNUM_0x76: return (double)118;
+                case MsgPackType.POSITIVE_FIXNUM_0x77: return (double)119;
+                case MsgPackType.POSITIVE_FIXNUM_0x78: return (double)120;
+                case MsgPackType.POSITIVE_FIXNUM_0x79: return (double)121;
+                case MsgPackType.POSITIVE_FIXNUM_0x7A: return (double)122;
+                case MsgPackType.POSITIVE_FIXNUM_0x7B: return (double)123;
+                case MsgPackType.POSITIVE_FIXNUM_0x7C: return (double)124;
+                case MsgPackType.POSITIVE_FIXNUM_0x7D: return (double)125;
+                case MsgPackType.POSITIVE_FIXNUM_0x7E: return (double)126;
+                case MsgPackType.POSITIVE_FIXNUM_0x7F: return (double)127;
+
+                case MsgPackType.NEGATIVE_FIXNUM: return (double)-32;
+                case MsgPackType.NEGATIVE_FIXNUM_0x01: return (double)-1;
+                case MsgPackType.NEGATIVE_FIXNUM_0x02: return (double)-2;
+                case MsgPackType.NEGATIVE_FIXNUM_0x03: return (double)-3;
+                case MsgPackType.NEGATIVE_FIXNUM_0x04: return (double)-4;
+                case MsgPackType.NEGATIVE_FIXNUM_0x05: return (double)-5;
+                case MsgPackType.NEGATIVE_FIXNUM_0x06: return (double)-6;
+                case MsgPackType.NEGATIVE_FIXNUM_0x07: return (double)-7;
+                case MsgPackType.NEGATIVE_FIXNUM_0x08: return (double)-8;
+                case MsgPackType.NEGATIVE_FIXNUM_0x09: return (double)-9;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0A: return (double)-10;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0B: return (double)-11;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0C: return (double)-12;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0D: return (double)-13;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0E: return (double)-14;
+                case MsgPackType.NEGATIVE_FIXNUM_0x0F: return (double)-15;
+                case MsgPackType.NEGATIVE_FIXNUM_0x10: return (double)-16;
+                case MsgPackType.NEGATIVE_FIXNUM_0x11: return (double)-17;
+                case MsgPackType.NEGATIVE_FIXNUM_0x12: return (double)-18;
+                case MsgPackType.NEGATIVE_FIXNUM_0x13: return (double)-19;
+                case MsgPackType.NEGATIVE_FIXNUM_0x14: return (double)-20;
+                case MsgPackType.NEGATIVE_FIXNUM_0x15: return (double)-21;
+                case MsgPackType.NEGATIVE_FIXNUM_0x16: return (double)-22;
+                case MsgPackType.NEGATIVE_FIXNUM_0x17: return (double)-23;
+                case MsgPackType.NEGATIVE_FIXNUM_0x18: return (double)-24;
+                case MsgPackType.NEGATIVE_FIXNUM_0x19: return (double)-25;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1A: return (double)-26;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1B: return (double)-27;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1C: return (double)-28;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1D: return (double)-29;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1E: return (double)-30;
+                case MsgPackType.NEGATIVE_FIXNUM_0x1F: return (double)-31;
+
+                case MsgPackType.INT8: return (double)(SByte)GetBody().Get(0);
+                case MsgPackType.INT16: return (double)EndianConverter.NetworkByteWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.INT32: return (double)EndianConverter.NetworkByteDWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.INT64: return (double)EndianConverter.NetworkByteQWordToSignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT8: return (double)GetBody().Get(0);
+                case MsgPackType.UINT16: return (double)EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT32: return (double)EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.UINT64: return (double)EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return (double)EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return (double)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
+
+                default: throw new MessagePackValueException("is not double " + Bytes);
             }
             }
         }

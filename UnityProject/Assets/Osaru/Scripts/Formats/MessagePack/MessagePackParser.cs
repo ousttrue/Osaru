@@ -876,26 +876,6 @@ namespace Osaru.MessagePack
             }
         }
 
-        public float GetSingle()
-        {
-            switch (FormatType)
-            {
-                case MsgPackType.FLOAT: return EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
-                case MsgPackType.DOUBLE: return (Single)EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
-                default: throw new MessagePackValueException("is not floating: " + Bytes);
-            }
-        }
-
-        public double GetDouble()
-        {
-            switch (FormatType)
-            {
-                case MsgPackType.FLOAT: return EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
-                case MsgPackType.DOUBLE: return EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
-                default: throw new MessagePackValueException("is not floating: " + Bytes);
-            }
-        }
-
         public ArraySegment<Byte> GetBytes()
         {
             return GetBody();

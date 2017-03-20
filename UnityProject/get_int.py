@@ -184,6 +184,8 @@ def create_body(tt):
                 case MsgPackType.UINT16: return ({t1})EndianConverter.NetworkByteWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT32: return ({t1})EndianConverter.NetworkByteDWordToUnsignedNativeByteOrder(GetBody());
                 case MsgPackType.UINT64: return ({t1})EndianConverter.NetworkByteQWordToUnsignedNativeByteOrder(GetBody());
+                case MsgPackType.FLOAT: return ({t1})EndianConverter.NetworkByteDWordToFloatNativeByteOrder(GetBody());
+                case MsgPackType.DOUBLE: return ({t1})EndianConverter.NetworkByteQWordToFloatNativeByteOrder(GetBody());
 
                 default: throw new MessagePackValueException("is not {t1} " + Bytes);
             }}
@@ -196,6 +198,7 @@ if __name__=="__main__":
     body ="".join([create_body(x) for x in [
         ("Byte", "byte"), ("UInt16", "ushort"), ("UInt32", "uint"), ("UInt64", "ulong"),
         ("SByte", "sbyte"), ("Int16", "short"), ("Int32", "int"), ("Int64", "long"),
+        ("Single", "float"), ("Double", "double")
         ]])
 
     code=f'''

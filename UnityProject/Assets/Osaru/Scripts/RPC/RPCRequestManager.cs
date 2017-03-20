@@ -1,7 +1,4 @@
-﻿#if !NETFX_CORE
-using Osaru.Serialization;
-using Osaru.Serialization.Deserializers;
-using Osaru.Serialization.Serializers;
+﻿using Osaru.Serialization;
 using System;
 using System.Collections.Generic;
 using UniRx;
@@ -9,66 +6,9 @@ using UniRx;
 
 namespace Osaru.RPC
 {
-    public interface IRPCRequestTransporter<PARSER, FORMATTER> : IObserver<RPCRequest<PARSER>>
+    public class RPCRequestManager<PARSER, FORMATTER> : IObserver<RPCResponse<PARSER>>
         where PARSER : IParser<PARSER>, new()
         where FORMATTER : IFormatter, new()
-    {
-        IObservable<RPCResponse<PARSER>> ResponseObservable { get; }
-    }
-    public class RPCRequestTransporter<PARSER, FORMATTER> : IRPCRequestTransporter<PARSER, FORMATTER>
-        where PARSER : IParser<PARSER>, new()
-        where FORMATTER : IFormatter, new()
-    {
-        IDuplexStream m_transport;
-        SerializerBase<RPCRequest<PARSER>> m_s;
-        IDeserializerBase<RPCResponse<PARSER>> m_d;
-        public RPCRequestTransporter(IDuplexStream transport)
-        {
-            m_transport = transport;
-            var r = new TypeRegistory();
-            m_s = r.GetSerializer<RPCRequest<PARSER>>();
-            m_d = r.GetDeserializer<RPCResponse<PARSER>>();
-
-            transport.ReadObservable.Subscribe(x =>
-            {
-                var parser = new PARSER();
-                parser.SetBytes(x);
-                var response = default(RPCResponse<PARSER>);
-                m_d.Deserialize(parser, ref response);
-                m_subject.OnNext(response);
-            });
-        }
-
-        Subject<RPCResponse<PARSER>> m_subject = new Subject<RPCResponse<PARSER>>();
-        public IObservable<RPCResponse<PARSER>> ResponseObservable
-        {
-            get
-            {
-                return m_subject;
-            }
-        }
-
-        public void OnCompleted()
-        {
-        }
-
-        public void OnError(Exception error)
-        {
-            throw error;
-            //Console.WriteLine(error);
-        }
-
-        public void OnNext(RPCRequest<PARSER> value)
-        {
-            var f = new FORMATTER();
-            m_s.Serialize(value, f);
-            m_transport.WriteAsync(f.GetStore().Bytes);
-        }
-    }
-
-    public class RPCRequestFactory<PARSER, FORMATTER>: IObserver<RPCResponse<PARSER>>
-        where PARSER: IParser<PARSER>, new()
-        where FORMATTER: IFormatter, new()
     {
         public class DisposableRequest : IDisposable
         {
@@ -110,7 +50,7 @@ namespace Osaru.RPC
         TypeRegistory m_r;
         int m_id = 1;
 
-        public RPCRequestFactory()
+        public RPCRequestManager()
         {
             m_r = new TypeRegistory();
         }
@@ -122,24 +62,16 @@ namespace Osaru.RPC
             get { return m_requestSubject; }
         }
 
-        public IObservable<R> RequestAsync<A0, A1, R>(string name, A0 a0, A1 a1)
+        public IObservable<R> RequestAsync<R>(string name, ArraySegment<Byte> rpcParams)
         {
-            var s0 = m_r.GetSerializer<A0>();
-            var s1 = m_r.GetSerializer<A1>();
             var d = m_r.GetDeserializer<R>();
 
             // request
-            var f = new FORMATTER();
-            f.Clear();
-            f.BeginList(2);
-            s0.Serialize(a0, f);
-            s1.Serialize(a1, f);
-            f.EndList();
             var request = new RPCRequest<PARSER>
             {
                 Id = m_id++,
                 Method = name,
-                ParamsBytes = f.GetStore().Bytes
+                ParamsBytes = rpcParams
             };
 
             return Observable.Create<R>(observer =>
@@ -182,11 +114,10 @@ namespace Osaru.RPC
             {
                 throw new Exception("no request for " + value.Id);
                 //Console.WriteLine("no request for " + value.Id);
-                return;
+                //return;
             }
 
             disposable.Response(value);
         }
     }
 }
-#endif

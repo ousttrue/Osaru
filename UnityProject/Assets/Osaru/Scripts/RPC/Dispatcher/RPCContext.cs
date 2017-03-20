@@ -1,22 +1,10 @@
-﻿using Osaru.MessagePack;
-using Osaru.Serialization;
-using Osaru.Serialization.Serializers;
+﻿using Osaru.Serialization.Serializers;
 using System;
 
 
 namespace Osaru.RPC
 {
-    public interface IRPCResponseContext<T>
-        where T : IParser<T>, new()
-    {
-        RPCRequest<T> Request { get; }
-        RPCResponse<T> Response { get; }
-        void Success();
-        void Success<R>(R result, SerializerBase<R> s);
-        void Error(Exception ex);
-    }
-
-    public class RPCResponseContext<T> : IRPCResponseContext<T>
+    public class RPCContext<T>
         where T : IParser<T>, new()
     {
         RPCRequest<T> m_request;
@@ -31,7 +19,7 @@ namespace Osaru.RPC
         }
         IFormatter m_formatter;
 
-        public RPCResponseContext(RPCRequest<T> request, IFormatter formatter)
+        public RPCContext(RPCRequest<T> request, IFormatter formatter)
         {
             m_request = request;
             m_formatter = formatter;
@@ -54,12 +42,5 @@ namespace Osaru.RPC
             s.Serialize(result, m_formatter);
             m_response.ResultBytes = m_formatter.GetStore().Bytes;
         }
-    }
-
-    public interface IRPCMethod
-    {
-        void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>, new()
-            ;
     }
 }

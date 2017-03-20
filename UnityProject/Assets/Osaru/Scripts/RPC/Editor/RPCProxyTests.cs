@@ -89,15 +89,16 @@ namespace OsaruTest.Reactive
             service.AddStream(transport.ServerSide);
 
             // client side
-            var requestTransporter = new RPCRequestTransporter<JsonParser, JsonFormatter>(
+            var requestTransporter = new RPCTransporter<JsonParser, JsonFormatter>(
                 transport.ClientSide);
-            var factory = new RPCRequestFactory<JsonParser, JsonFormatter>();
+            var factory = new RPCRequestManager<JsonParser, JsonFormatter>();
             factory.RequestObservable.Subscribe(requestTransporter);
             requestTransporter.ResponseObservable.Subscribe(factory);
 
             // call
+            var f = new RPCParamsFormatter<JsonFormatter>();
             int? result = null;
-            factory.RequestAsync<int, int, int>("Add", 1, 2).Subscribe(x =>
+            factory.RequestAsync<int>("Add", f.Params(1, 2)).Subscribe(x =>
             {
                 result = x;
             }
@@ -133,15 +134,16 @@ namespace OsaruTest.Reactive
             service.AddStream(transport.ServerSide);
 
             // client side
-            var requestTransporter = new RPCRequestTransporter<MessagePackParser, MessagePackFormatter>(
+            var requestTransporter = new RPCTransporter<MessagePackParser, MessagePackFormatter>(
                 transport.ClientSide);
-            var factory = new RPCRequestFactory<MessagePackParser, MessagePackFormatter>();
+            var factory = new RPCRequestManager<MessagePackParser, MessagePackFormatter>();
             factory.RequestObservable.Subscribe(requestTransporter);
             requestTransporter.ResponseObservable.Subscribe(factory);
 
             // call
+            var f = new RPCParamsFormatter<MessagePackFormatter>();
             int? result = null;
-            factory.RequestAsync<int, int, int>("Add", 1, 2).Subscribe(x =>
+            factory.RequestAsync<int>("Add", f.Params(1, 2)).Subscribe(x =>
             {
                 result = x;
             }

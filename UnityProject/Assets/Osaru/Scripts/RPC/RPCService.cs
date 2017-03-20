@@ -7,18 +7,6 @@ using UniRx;
 
 namespace Osaru.RPC
 {
-    public interface IReadObservable
-    {
-        IObservable<ArraySegment<Byte>> ReadObservable { get; }
-    }
-    public interface IWritable
-    {
-        IObservable<Unit> WriteAsync(ArraySegment<Byte> bytes);
-    }
-    public interface IDuplexStream : IReadObservable, IWritable
-    {
-    }
-
     public class RpcService<PARSER, FORMATTER> : IDisposable
         where PARSER : IParser<PARSER>, new()
         where FORMATTER: IFormatter, new()
@@ -69,7 +57,7 @@ namespace Osaru.RPC
             try
             {
                 var formatter = new FORMATTER();
-                var context = new RPCResponseContext<PARSER>(req, formatter);
+                var context = new RPCContext<PARSER>(req, formatter);
                 m_dispatcher.Dispatch(context);
 
                 var responseFormatter = new FORMATTER();

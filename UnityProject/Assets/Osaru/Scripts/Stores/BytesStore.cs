@@ -25,7 +25,8 @@ namespace Osaru
             //Console.WriteLine(newSize);
             var old = m_buffer;
             m_buffer = new Byte[newSize];
-            Array.Copy(old, m_buffer, m_pos);
+            Buffer.BlockCopy(old, 0
+                , m_buffer, 0, m_pos);
         }
        
         int m_pos;

@@ -186,12 +186,13 @@ namespace Osaru.MessagePack
             }
         }
 
+        #region Singed
         public void Value(sbyte n)
         {
             if (n >= 0)
             {
                 // positive
-                m_store.Write((Byte)n);
+                Value((Byte)n);
             }
             else if (n >= -32)
             {
@@ -212,7 +213,7 @@ namespace Osaru.MessagePack
                 // positive
                 if (n <= 0xFF)
                 {
-                    m_store.Write((Byte)n);
+                    Value((Byte)n);
                 }
                 else
                 {
@@ -241,7 +242,7 @@ namespace Osaru.MessagePack
                 // positive
                 if (n <= 0xFF)
                 {
-                    m_store.Write((Byte)n);
+                    Value((Byte)n);
                 }
                 else if (n <= 0xFFFF)
                 {
@@ -257,7 +258,7 @@ namespace Osaru.MessagePack
                 // negative
                 if (n >= -128)
                 {
-                    m_store.Write((SByte)n);
+                    Value((SByte)n);
                 }
                 else if (n >= -32768)
                 {
@@ -278,7 +279,7 @@ namespace Osaru.MessagePack
                 // positive
                 if (n <= 0xFF)
                 {
-                    m_store.Write((Byte)n);
+                    Value((Byte)n);
                 }
                 else if (n <= 0xFFFF)
                 {
@@ -298,7 +299,7 @@ namespace Osaru.MessagePack
                 // negative
                 if (n >= -128)
                 {
-                    m_store.Write((SByte)n);
+                    Value((SByte)n);
                 }
                 else if (n >= -32768)
                 {
@@ -315,7 +316,9 @@ namespace Osaru.MessagePack
                 }
             }
         }
+        #endregion
 
+        #region Unsigned
         public void Value(byte n)
         {
             if (n <= 0x7F)
@@ -334,7 +337,7 @@ namespace Osaru.MessagePack
         {
             if (n <= 0xFF)
             {
-                m_store.Write((Byte)n);
+                Value((Byte)n);
             }
             else
             {
@@ -347,7 +350,7 @@ namespace Osaru.MessagePack
         {
             if (n <= 0xFF)
             {
-                m_store.Write((Byte)n);
+                Value((Byte)n);
             }
             else if (n <= 0xFFFF)
             {
@@ -364,7 +367,7 @@ namespace Osaru.MessagePack
         {
             if (n <= 0xFF)
             {
-                m_store.Write((Byte)n);
+                Value((Byte)n);
             }
             else if (n <= 0xFFFF)
             {
@@ -380,6 +383,7 @@ namespace Osaru.MessagePack
                 m_store.WriteBigEndian(n);
             }
         }
+        #endregion
 
         public void Value(float value)
         {

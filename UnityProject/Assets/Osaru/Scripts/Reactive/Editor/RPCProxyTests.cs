@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if !NETFX_CORE
+using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
 using UniRx;
@@ -35,3 +36,4 @@ namespace OsaruTest.Reactive
         }
     }
 }
+#endif

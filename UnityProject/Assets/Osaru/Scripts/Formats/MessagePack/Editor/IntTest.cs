@@ -150,6 +150,19 @@ namespace OsaruTest.MessagePack
         }
 
         [Test]
+        public void int128Test()
+        {
+            int i = 128;
+            var bytes = m_r.SerializeToMessagePack(i);
+            Assert.AreEqual(new Byte[]{
+                        0xcc, 0x80,
+                        }, bytes.ToEnumerable());
+            var j = default(int);
+            m_r.Deserialize(MessagePackParser.Parse(bytes), ref j);
+            Assert.AreEqual(i, j);
+        }
+
+        [Test]
         public void int16()
         {
             {

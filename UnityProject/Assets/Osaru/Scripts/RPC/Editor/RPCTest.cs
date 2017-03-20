@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿#if !NETFX_CORE
+using NUnit.Framework;
 using Osaru.RPC;
 using Osaru.Serialization;
 using System.Text;
@@ -6,6 +7,8 @@ using System;
 using System.Linq;
 using UniRx;
 using System.Reflection;
+using System.IO;
+using Osaru.MessagePack;
 
 namespace OsaruTest.RPC
 {
@@ -27,3 +30,4 @@ namespace OsaruTest.RPC
         }
     }
 }
+#endif

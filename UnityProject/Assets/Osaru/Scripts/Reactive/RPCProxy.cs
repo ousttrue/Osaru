@@ -1,4 +1,5 @@
-﻿using Osaru.Json;
+﻿#if !NETFX_CORE
+using Osaru.Json;
 using Osaru.RPC;
 using Osaru.Serialization;
 using System;
@@ -117,3 +118,4 @@ namespace Osaru.Reactive
         }
     }
 }
+#endif

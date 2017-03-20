@@ -54,5 +54,19 @@ namespace OsaruTest.MessagePack
                 Assert.AreEqual(i, value[i].GetValue());
             }
         }
+
+        [Test]
+        public void array129()
+        {
+            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var i128 = Enumerable.Range(0, 128).ToArray();
+            var i129 = Enumerable.Range(0, 129).ToArray();
+            var bytes128 = typeRegistory.SerializeToMessagePack(i128);
+            var bytes129 = typeRegistory.SerializeToMessagePack(i129);
+            var deserialized = default(int[]);
+            typeRegistory.Deserialize(MessagePackParser.Parse(bytes128), ref deserialized);
+
+            Assert.AreEqual(i128, deserialized);
+        }
     }
 }

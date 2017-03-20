@@ -19,12 +19,16 @@ namespace Osaru
         {
             get
             {
+#if NETFX_CORE
+                throw new NotImplementedException();
+#else
                 var ms = m_s as MemoryStream;
                 if (ms == null)
                 {
                     throw new NotImplementedException();
                 }
                 return new ArraySegment<byte>(ms.GetBuffer(), 0, (int)ms.Position);
+#endif
             }
         }
 
@@ -58,7 +62,7 @@ namespace Osaru
             m_w.Write(bytes.Array, bytes.Offset, bytes.Count);
         }
 
-        #region BigEndian
+#region BigEndian
         public void WriteBigEndian(int value)
         {
             throw new NotImplementedException();
@@ -98,9 +102,9 @@ namespace Osaru
         {
             throw new NotImplementedException();
         }
-        #endregion
+#endregion
 
-        #region LittleEndian
+#region LittleEndian
         public void WriteLittleEndian(long value)
         {
             m_w.Write(value);
@@ -140,6 +144,6 @@ namespace Osaru
         {
             m_w.Write(value);
         }
-        #endregion
+#endregion
     }
 }

@@ -79,10 +79,9 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] json byte[] backend not string
 * [x] StreamStore
 * [x] BytesStore
-* [ ] fix IParser.Dump
-* [ ] rpc proxy
+* [x] fix IParser.Dump
+* [x] rpc proxy
 * [x] endian conversion use union
-* [ ] StreamSubject
 * [x] add Endian interface to IStore 
 * [ ] commonalize tests for json and messagepack
 

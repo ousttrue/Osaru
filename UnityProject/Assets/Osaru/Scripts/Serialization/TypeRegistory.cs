@@ -57,6 +57,10 @@ namespace Osaru.Serialization
             {
                 AddSerialization(s);
             }
+            foreach(var s in RPCTypeSerializations.Serializations)
+            {
+                AddSerialization(s);
+            }
             m_serializerMap.Add(typeof(Object), new BoxingSerializer(this));
         }
         public void SerializeBoxing(object o, IFormatter f)

@@ -13,7 +13,7 @@ namespace Osaru.RPC
         }
 
         public void Dispatch<T>(IRPCResponseContext<T> f)
-            where T: IParser<T>
+            where T: IParser<T>, new()
         {
             m_map[f.Request.Method].Call(f);
         }

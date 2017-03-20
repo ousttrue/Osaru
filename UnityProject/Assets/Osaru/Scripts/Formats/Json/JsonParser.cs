@@ -167,7 +167,13 @@ namespace Osaru.Json
             }
         }
 
-        JsonParser(StringSegment segment, ParseMode mode)
+        public void SetBytes(ArraySegment<Byte> bytes)
+        {
+            var json = Encoding.UTF8.GetString(bytes.Array, bytes.Offset, bytes.Count);
+            Initialize(new StringSegment(json), ParseMode.ToEnd);
+        }
+
+        void Initialize(StringSegment segment, ParseMode mode)
         {
             switch (segment[0])
             {
@@ -248,7 +254,9 @@ namespace Osaru.Json
             {
                 throw new JsonParseException("[" + json.ToString() + "] is only whitespace");
             }
-            return new JsonParser(json.Skip(pos), mode);
+            var parser = new JsonParser();
+            parser.Initialize(json.Skip(pos), mode);
+            return parser;
         }
 
         #region PrimitiveType
@@ -414,7 +422,9 @@ namespace Osaru.Json
                     {
                         // end
                         if (useCloseNode) {
-                            yield return new JsonParser(current, ParseMode.Recursive);
+                            var parser = new JsonParser();
+                            parser.Initialize(current, ParseMode.Recursive);
+                            yield return parser;
                         }
                         break;
                     }
@@ -490,14 +500,15 @@ namespace Osaru.Json
             return new ArraySegment<byte>(decoded); 
         }
 
-        public void GetBytes(IFormatter f)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Dump(IFormatter f)
         {
-            throw new NotImplementedException();
+            f.Dump(Dump());
+        }
+
+        public ArraySegment<Byte> Dump()
+        {
+            var bytes = Encoding.UTF8.GetBytes(m_segment.Value.ToCharArray(), m_segment.Offset, m_segment.Count);
+            return new ArraySegment<byte>(bytes);
         }
     }
 }

@@ -63,7 +63,7 @@ namespace Osaru.MessagePack
                 for (var i = 0; i < count; ++i)
                 {
                     var child = new MessagePackParser(current);
-                    current = child.Parse();
+                    current = child._Parse();
                     yield return child;
                 }
             }
@@ -84,9 +84,9 @@ namespace Osaru.MessagePack
                 for (var i = 0; i < childCount; i += 2)
                 {
                     var key = new MessagePackParser(current);
-                    current = key.Parse();
+                    current = key._Parse();
                     var value = new MessagePackParser(current);
-                    current = value.Parse();
+                    current = value._Parse();
                     yield return new KeyValuePair<string, MessagePackParser>(key.GetString(), value);
                 }
             }
@@ -105,9 +105,9 @@ namespace Osaru.MessagePack
             for (var i = 0; i < childCount; i += 2)
             {
                 var key = new MessagePackParser(current);
-                current = key.Parse();
+                current = key._Parse();
                 var value = new MessagePackParser(current);
-                current = value.Parse();
+                current = value._Parse();
                 if (key.GetInt32() == target)
                 {
                     return value;
@@ -156,7 +156,7 @@ namespace Osaru.MessagePack
         public static MessagePackParser Parse(ArraySegment<Byte> bytes)
         {
             var value = new MessagePackParser(bytes);
-            value.Parse();
+            value._Parse();
             return value;
         }
 
@@ -168,7 +168,12 @@ namespace Osaru.MessagePack
             Bytes = bytes;
         }
 
-        ArraySegment<Byte> Parse()
+        public void SetBytes(ArraySegment<Byte> bytes)
+        {
+            Bytes = bytes;
+        }
+
+        ArraySegment<Byte> _Parse()
         {
             ArraySegment<Byte> current;
             if (FormatType.IsArray())
@@ -179,7 +184,7 @@ namespace Osaru.MessagePack
                 for(var i=0; i<count; ++i)
                 { 
                     var child = new MessagePackParser(current);
-                    current = child.Parse();
+                    current = child._Parse();
                 }
             }
             else if (FormatType.IsMap())
@@ -191,7 +196,7 @@ namespace Osaru.MessagePack
                 for (var i = 0; i < childCount; ++i)
                 {
                     var child = new MessagePackParser(current);
-                    current = child.Parse();
+                    current = child._Parse();
                 }
             }
             else
@@ -884,6 +889,11 @@ namespace Osaru.MessagePack
         public void Dump(IFormatter f)
         {
             f.Dump(Bytes);
+        }
+
+        public ArraySegment<Byte> Dump()
+        {
+            return Bytes;
         }
     }
 }

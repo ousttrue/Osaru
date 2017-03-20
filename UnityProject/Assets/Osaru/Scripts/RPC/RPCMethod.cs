@@ -24,7 +24,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -94,7 +94,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -135,7 +135,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -180,7 +180,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -221,7 +221,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -254,7 +254,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -291,7 +291,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -332,7 +332,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {
@@ -377,7 +377,7 @@ namespace Osaru.RPC
         }
 
         public void Call<T>(IRPCResponseContext<T> f)
-            where T : IParser<T>
+            where T : IParser<T>, new()
         {
             try
             {

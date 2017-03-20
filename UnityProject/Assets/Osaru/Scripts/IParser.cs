@@ -22,6 +22,8 @@ namespace Osaru
     public interface IParser<T>
         where T: IParser<T>
     {
+        void SetBytes(ArraySegment<Byte> bytes);
+
         ParserValueType ValueType { get; }
         Boolean IsNull { get; }
 
@@ -51,5 +53,6 @@ namespace Osaru
         ArraySegment<Byte> GetBytes();
 
         void Dump(IFormatter f);
+        ArraySegment<Byte> Dump();
     }
 }

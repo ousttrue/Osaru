@@ -1,36 +1,22 @@
-﻿using Osaru.Serialization;
-using System;
+﻿using System;
 
 
 namespace Osaru.RPC
 {
     public struct RPCResponse<T>
-        where T : IParser<T>
+        where T : IParser<T>, new()
     {
-        public Exception Error;
-        public T Result;
-        public int Id;
-
-        [Serializer]
-        public static void Serialize(RPCResponse<T> res, IFormatter f)
+        public String Error;
+        public ArraySegment<Byte> ResultBytes;
+        public T Result
         {
-            if (res.Error == null)
+            get
             {
-                f.BeginMap(3);
-                f.Key("jsonrpc"); f.Value("2.0");
-                f.Key("result"); res.Result.Dump(f);
-                f.Key("id"); f.Value(res.Id);
-                f.EndMap();
-            }
-            else
-            {
-                f.BeginMap(3);
-                f.Key("jsonrpc"); f.Value("2.0");
-                f.Key("error"); f.Value(res.Error.Message);
-                f.Key("id"); f.Value(res.Id);
-                f.EndMap();
-                //throw res.Error;
+                var parser = new T();
+                parser.SetBytes(ResultBytes);
+                return parser;
             }
         }
+        public int Id;
     }
 }

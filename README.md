@@ -43,11 +43,92 @@ Object Serialization And RPC Utilities
 
 # Usage
 
+## parse json
+
 ```cs
 var src = "{\"key\":{ \"nestedKey\": \"nestedValue\" } }";
 var json = JsonParser.Parse(src);
 
 Assert.AreEqual("nestedValue", json["key"]["nestedKey"].GetString());
+```
+
+## json array
+
+```cs
+var json = JsonParser.Parse("[1, 2, 3]");
+for(var item in json.ListItems)
+{
+    Console.WriteLine(item.GetInt32());
+}
+```
+
+## json object
+
+```cs
+var json = JsonParser.Parse("{\"key\": \"value\"}");
+for(var item in json.ObjectItems)
+{
+    Console.WriteLine(item.Key); // JSON allow only string key
+    Console.WriteLine(item.Value.GetString());
+}
+```
+
+## format json
+
+```cs
+var f=new JsonFormatter();
+f.Value("abc");
+Console.WriteLine(f.ToString()); // "abc"
+
+f.Clear();
+f.BeginList(3);
+f.Value(true);
+f.Null();
+f.Value(1);
+f.EndList();
+Console.WriteLine(f.ToString()); // [true,null,1]
+
+f.Clear();
+f.BeginMap(3);
+f.Key("key1"); f.Value(true);
+f.Key("key2"); f.Null();
+f.Key("key3"); f.Value(1);
+f.EndMap();
+Console.WriteLine(f.ToString()); // {"key1":true,"key2":null,"key3":1}
+
+// get bytes
+ArraySegment<Byte>=f.GetStore().Bytes;
+```
+
+## serialize & deserialize
+
+```cs
+class Point
+{
+    public int X;
+    public int Y;
+    public Point(int x, int y)
+    {
+        X=x;
+        Y=y;
+    }
+}
+
+var r=new TypeRegistory();
+
+// serialize
+var bytes=r.SerializeToJsonBytes(new Point(1, 2));
+
+// parse as json
+var json=bytes.ParseAsJson();
+Console.WriteLine(json["X"]); // 1
+Console.WriteLine(json["Y"]); // 2
+
+// deserialize
+var p=default(Point);
+r.Deserialize(json, ref p);
+Console.WriteLine(p.X); // 1
+Console.WriteLine(p.Y); // 2
 ```
 
 ## RPC
@@ -61,7 +142,9 @@ dispatcher.AddMethod("Add", method);
 
 // request
 var request = "{\"jsonrpc\":\"2.0\",\"method\":\"Add\",\"params\":[1,2],\"id\":1}";
-var response = dispatcher.DispatchJsonRPC20(request);
+var requestBytes=Encoding.UTF8.GetBytes(request);
+var responseBytes = dispatcher.Dispatch(new ArraySegment<Byte>(requestBytes));
+var response=Encoding.UTF8.GetString(responseBytes.Array, responseBytes.Offset, responseBytes.Count);
 Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 ```
 

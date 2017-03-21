@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using System.Text;
 
 namespace Osaru.Json
 {
@@ -43,6 +43,12 @@ namespace Osaru.Json
         {
             m_w = w;
             m_stack.Push(new Context(Current.NONE));
+        }
+
+        public override string ToString()
+        {
+            var bytes = GetStore().Bytes;
+            return Encoding.UTF8.GetString(bytes.Array, bytes.Offset, bytes.Count);
         }
 
         public IStore GetStore()

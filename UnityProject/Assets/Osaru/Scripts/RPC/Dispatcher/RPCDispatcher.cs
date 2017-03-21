@@ -25,9 +25,16 @@ namespace Osaru.RPC
             where PARSER : IParser<PARSER>, new()
             where FORMATTER : IFormatter, new()
         {
-            var d = m_r.GetDeserializer<RPCRequest<PARSER>>();
             var parser = new PARSER();
             parser.SetBytes(bytes);
+            return Dispatch<PARSER, FORMATTER>(parser);
+        }
+
+        public ArraySegment<Byte> Dispatch<PARSER, FORMATTER>(PARSER parser)
+            where PARSER : IParser<PARSER>, new()
+            where FORMATTER : IFormatter, new()
+        {
+            var d = m_r.GetDeserializer<RPCRequest<PARSER>>();
             var request = d.Deserialize(parser);
 
             var response = Dispatch<PARSER, FORMATTER>(request);

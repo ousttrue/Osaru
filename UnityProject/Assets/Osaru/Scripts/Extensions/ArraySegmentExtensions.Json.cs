@@ -10,6 +10,10 @@ namespace Osaru
         {
             return JsonParser.Parse(bytes);
         }
+        public static JsonParser ParseAsJson(this Byte[] src)
+        {
+            return JsonParser.Parse(new ArraySegment<byte>(src));
+        }
         public static JsonParser ParseAsJson(this string src)
         {
             return JsonParser.Parse(src);

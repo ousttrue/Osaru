@@ -10,5 +10,9 @@ namespace Osaru
         {
             return MessagePackParser.Parse(bytes);
         }
+        public static MessagePackParser ParseAsMessagePack(this Byte[] bytes)
+        {
+            return MessagePackParser.Parse(bytes);
+        }
     }
 }

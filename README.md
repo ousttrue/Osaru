@@ -65,7 +65,9 @@ for(var item in json.ListItems)
 ## json object
 
 ```cs
-var json = JsonParser.Parse("{\"key\": \"value\"}");
+using Osaru;
+
+var json = "{\"key\": \"value\"}".ParseAsJson();
 for(var item in json.ObjectItems)
 {
     Console.WriteLine(item.Key); // JSON allow only string key
@@ -73,9 +75,11 @@ for(var item in json.ObjectItems)
 }
 ```
 
-## format json
+## json formatter
 
 ```cs
+using Osaru.Json;
+
 var f=new JsonFormatter();
 f.Value("abc");
 Console.WriteLine(f.ToString()); // "abc"
@@ -100,9 +104,21 @@ Console.WriteLine(f.ToString()); // {"key1":true,"key2":null,"key3":1}
 ArraySegment<Byte>=f.GetStore().Bytes;
 ```
 
+## customize json formatter
+
+```cs
+using Osaru.Json;
+
+var s=new FileStream("out.json", FileMode.Create);
+var f=new JsonFormatter(new StreamStore(s));
+```
+
 ## serialize & deserialize
 
 ```cs
+using Osaru;
+using Osaru.Serialization;
+
 class Point
 {
     public int X;
@@ -131,9 +147,16 @@ Console.WriteLine(p.X); // 1
 Console.WriteLine(p.Y); // 2
 ```
 
+## custom serialization
+
 ## RPC
 
 ```cs
+using Osaru;
+using Osaru.Serialization;
+using Osaru.RPC;
+
+
 // setup
 var typeRegistory = new TypeRegistory();
 var method = typeRegistory.RPCFunc((int a, int b) => a + b);
@@ -142,8 +165,7 @@ dispatcher.AddMethod("Add", method);
 
 // request
 var request = "{\"jsonrpc\":\"2.0\",\"method\":\"Add\",\"params\":[1,2],\"id\":1}";
-var requestBytes=Encoding.UTF8.GetBytes(request);
-var responseBytes = dispatcher.Dispatch(new ArraySegment<Byte>(requestBytes));
+var responseBytes = dispatcher.Dispatch(request.ParseAsJson());
 var response=Encoding.UTF8.GetString(responseBytes.Array, responseBytes.Offset, responseBytes.Count);
 Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 ```

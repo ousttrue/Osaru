@@ -1,5 +1,5 @@
-﻿
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Osaru;
 using Osaru.MessagePack;
 using Osaru.Serialization;
 using System;

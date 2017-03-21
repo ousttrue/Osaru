@@ -2,9 +2,9 @@
 using System;
 
 
-namespace Osaru.Json
+namespace Osaru
 {
-    public static class TypeRegistoryExtensions
+    public static partial class TypeRegistoryExtensions
     {
         public static ArraySegment<Byte> SerializeToJsonBytes<T>(this TypeRegistory r, T value)
         {

@@ -1,10 +1,11 @@
-﻿using Osaru.Serialization.Serializers;
+﻿using Osaru.MessagePack;
+using Osaru.Serialization.Serializers;
 using System;
 
 
-namespace Osaru.MessagePack
+namespace Osaru
 {
-    public static class ISerializerExtensions
+    public static partial class ISerializerExtensions
     {
         public static ArraySegment<Byte> SerializeToMessagePack<T>(this SerializerBase<T> s, T o)
         {

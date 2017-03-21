@@ -1,10 +1,11 @@
-﻿using Osaru.Serialization;
+﻿using Osaru.MessagePack;
+using Osaru.Serialization;
 using System;
 
 
-namespace Osaru.MessagePack
+namespace Osaru
 {
-    public static class TypeRegistoryExtensions
+    public static partial class TypeRegistoryExtensions
     {
         public static ArraySegment<Byte> SerializeToMessagePack<T>(this TypeRegistory r, T value)
         {

@@ -1,4 +1,6 @@
-﻿namespace Osaru.Serialization.Deserializers
+﻿using Osaru.Serialization.Deserializers;
+
+namespace Osaru
 {
     public static class IDeserializerExtensions
     {

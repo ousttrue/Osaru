@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
+using Osaru;
 using Osaru.MessagePack;
 using Osaru.Serialization;
 using System;
-using System.Linq;
 
 
 namespace OsaruTest.MessagePack

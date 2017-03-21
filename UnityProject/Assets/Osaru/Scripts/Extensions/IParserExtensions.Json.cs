@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using Osaru.Json;
+using System.Text;
 
 
-namespace Osaru.Json
+namespace Osaru
 {
-    public static class IParserExtensions
+    public static partial class IParserExtensions
     {
         public static string ToJson<PARSER>(this PARSER parser)
             where PARSER : IParser<PARSER>

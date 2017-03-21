@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Osaru.MessagePack;
 using Osaru.Serialization;
+using Osaru;
 using System;
 using System.IO;
 

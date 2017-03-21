@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Osaru.Json;
+using System;
 
 
-namespace Osaru.Json
+namespace Osaru
 {
-    public static class ArraySegmentExtensions
+    public static partial class ArraySegmentExtensions
     {
         public static JsonParser ParseAsJson(this ArraySegment<Byte> bytes)
         {

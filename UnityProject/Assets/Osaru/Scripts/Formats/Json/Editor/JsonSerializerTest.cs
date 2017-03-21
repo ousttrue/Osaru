@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Osaru;
 using Osaru.Json;
 using Osaru.Serialization.Serializers;
 using System;

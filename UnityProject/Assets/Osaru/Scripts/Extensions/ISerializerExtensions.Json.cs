@@ -1,11 +1,12 @@
-﻿using Osaru.Serialization.Serializers;
+﻿using Osaru.Json;
+using Osaru.Serialization.Serializers;
 using System;
 using System.Text;
 
 
-namespace Osaru.Json
+namespace Osaru
 {
-    public static class ISerializerExtensions
+    public static partial class ISerializerExtensions
     {
         public static string SerializeToJson<T>(this SerializerBase<T> s, T o)
         {

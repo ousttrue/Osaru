@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 
-namespace System
+namespace Osaru
 {
-    public static class ArraySegmentExtensions
+    public static partial class ArraySegmentExtensions
     {
         public static IEnumerable<T> ToEnumerable<T>(this ArraySegment<T> self)
         {
@@ -51,5 +50,12 @@ namespace System
             }
             return array;
         }
+    }
+
+    public static partial class ArraySegmentExtensions
+    {
+        #region JSON
+
+        #endregion
     }
 }

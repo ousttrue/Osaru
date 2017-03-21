@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Osaru.MessagePack;
+using System;
 
 
-namespace Osaru.MessagePack
+namespace Osaru
 {
-    public static class IParserExtensions
+    public static partial class IParserExtensions
     {
         public static ArraySegment<Byte> ToMessagePack<PARSER>(this PARSER parser)
             where PARSER : IParser<PARSER>

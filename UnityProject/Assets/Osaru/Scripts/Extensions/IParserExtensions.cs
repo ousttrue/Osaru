@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Osaru
 {
-    public static class ParserExtensions
+    public static partial class IParserExtensions
     {
         public static void Convert<PARSER>(this PARSER parser, IFormatter f)
             where PARSER: IParser<PARSER>

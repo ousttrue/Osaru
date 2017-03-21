@@ -1,79 +1,40 @@
 ﻿using NUnit.Framework;
 using Osaru.Json;
-using Osaru;
 using Osaru.MessagePack;
 using Osaru.Serialization;
-using System;
+using Osaru.Serialization.Deserializers;
 
 
 namespace OsaruTest
 {
     public class ConverterTest
     {
-        static ArraySegment<Byte> ConvertToJson(ArraySegment<Byte> messagePack)
-        {
-            var json = new JsonFormatter();
-            MessagePackParser.Parse(messagePack).Convert(json);
-            return json.GetStore().Bytes;
-        }
-
-        static ArraySegment<Byte> ConvertToMessagePack(string json)
-        {
-            var msgPack = new MessagePackFormatter();
-            JsonParser.Parse(json).Convert(msgPack);
-            return msgPack.GetStore().Bytes;
-        }
-
-        static ArraySegment<Byte> FormatToMessagePack<T>(T value)
-        {
-            var typeRegistory = new TypeRegistory();
-            var s=typeRegistory.GetSerializer<T>();
-            return s.SerializeToMessagePack(value);
-        }
-
-        static string FormatToJson<T>(T value)
-        {
-            var typeRegistory = new TypeRegistory();
-            var s = typeRegistory.GetSerializer<T>();
-            return s.SerializeToJson(value);
-        }
-
-        static T Deserialize<T, PARSER>(PARSER parser, ref T t)
-            where PARSER: IParser<PARSER>
-        {
-            var typeRegistory = new TypeRegistory();
-            var d = typeRegistory.GetDeserializer<T>();
-            d.Deserialize(parser, ref t);
-            return t;
-        }
-
         static void ConvertJsonToMessagePackTest<T>(T value)
         {
-            // todo fixed int
-            var converted = ConvertToMessagePack(FormatToJson(value));
-            var c = MessagePackParser.Parse(converted);
+            var r = new TypeRegistory();
+            var converted = r.SerializeToJsonBytes(value)
+                .ParseAsJson()
+                .ToMessagePack();
+            var cc = r.GetDeserializer<T>().Deserialize(converted.ParseAsMessagePack());
 
-            var formated = FormatToMessagePack(value);
-            var f = MessagePackParser.Parse(formated);
+            var formated= r.SerializeToMessagePack(value);
+            var ff = r.GetDeserializer<T>().Deserialize(formated.ParseAsMessagePack());
 
-            var cc = default(T);
-            var ccc = Deserialize(c, ref cc);
-            var ff = default(T);
-            var fff = Deserialize(f, ref ff);
-            Assert.AreEqual(fff, ccc);
+            Assert.AreEqual(ff, cc);
         }
 
         static void ConvertMessagePackToJsonTest<T>(T value)
         {
-            var converted = ConvertToJson(FormatToMessagePack(value));
-            var c = JsonParser.Parse(converted);
-            var cc = default(T);
+            var r = new TypeRegistory();
+            var converted = r.SerializeToMessagePack(value)
+                .ParseAsMessagePack()
+                .ToJson();
+            var cc = r.GetDeserializer<T>().Deserialize(converted.ParseAsJson());
 
-            var formated = FormatToJson(value);
-            var f = JsonParser.Parse(formated);
-            var ff = default(T);
+            var formated= r.SerializeToJsonBytes(value);
+            var ff = r.GetDeserializer<T>().Deserialize(formated.ParseAsJson());
 
-            Assert.AreEqual(Deserialize(f, ref ff), Deserialize(c, ref cc));
+            Assert.AreEqual(ff, cc);
         }
 
         [Test]

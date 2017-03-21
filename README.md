@@ -84,4 +84,5 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] endian conversion use union
 * [x] add Endian interface to IStore 
 * [ ] commonalize tests for json and messagepack
+* [ ] organize extensions
 

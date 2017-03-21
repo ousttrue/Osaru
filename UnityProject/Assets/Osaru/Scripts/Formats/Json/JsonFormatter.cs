@@ -112,6 +112,11 @@ namespace Osaru.Json
 
         public void BeginList(int n)
         {
+            BeginList();
+        }
+
+        public void BeginList()
+        {
             CommaCheck();
             m_w.Write('[');
             m_stack.Push(new Context(Current.ARRAY));
@@ -124,6 +129,11 @@ namespace Osaru.Json
         }
 
         public void BeginMap(int n)
+        {
+            BeginMap();
+        }
+
+        public void BeginMap()
         {
             CommaCheck();
             m_w.Write('{');

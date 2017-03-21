@@ -81,7 +81,7 @@ f.Value("abc");
 Console.WriteLine(f.ToString()); // "abc"
 
 f.Clear();
-f.BeginList(3);
+f.BeginList();
 f.Value(true);
 f.Null();
 f.Value(1);
@@ -89,7 +89,7 @@ f.EndList();
 Console.WriteLine(f.ToString()); // [true,null,1]
 
 f.Clear();
-f.BeginMap(3);
+f.BeginMap();
 f.Key("key1"); f.Value(true);
 f.Key("key2"); f.Null();
 f.Key("key3"); f.Value(1);

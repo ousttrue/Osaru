@@ -1,9 +1,7 @@
-﻿#if !NETFX_CORE
-using Osaru.Serialization;
+﻿using Osaru.Serialization;
 using Osaru.Serialization.Deserializers;
 using Osaru.Serialization.Serializers;
 using System;
-using System.Collections.Generic;
 using UniRx;
 
 
@@ -79,4 +77,3 @@ namespace Osaru.RPC
         }
     }
 }
-#endif

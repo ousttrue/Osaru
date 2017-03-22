@@ -190,4 +190,5 @@ Assert.AreEqual("{\"jsonrpc\":\"2.0\",\"result\":3,\"id\":1}", response);
 * [x] add Endian interface to IStore 
 * [ ] commonalize tests for json and messagepack
 * [x] organize extensions
+* [ ] rpc error handling
 

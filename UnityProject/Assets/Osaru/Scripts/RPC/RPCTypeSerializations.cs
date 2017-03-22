@@ -29,6 +29,7 @@ public static class RPCTypeSerializations
                         outValue.Method = kv.Value.GetString();
                         break;
 
+                    case "args":
                     case "params":
                         outValue.ParamsBytes = kv.Value.Dump();
                         break;

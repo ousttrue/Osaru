@@ -87,7 +87,7 @@ namespace Osaru.RPC
             }
             , ex =>
             {
-                Console.WriteLine(ex);
+                //Console.WriteLine(ex);
             }
             , () =>
             {

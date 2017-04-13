@@ -43,11 +43,17 @@ namespace OsaruTest
                 ));
         }
 
+        public string HtmlPath
+        {
+            get
+            {
 #if UNITY_EDITOR
-        string HtmlPath = UnityEngine.Application.dataPath + "/Osaru/Tests/CSharpHtml.txt";
+                return UnityEngine.Application.dataPath + "/Osaru/Tests/CSharpHtml.txt";
 #else
-        string HtmlPath = "CSharpHtml.txt";
+                return "CSharpHtml.txt";
 #endif
+            }
+        }
 
         const int Iteration = 10;
         static bool dryRun = true;

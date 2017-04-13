@@ -7,6 +7,23 @@ using UnityEngine;
 
 namespace Osaru.Serialization
 {
+
+    public class Vector2Deserializer : IDeserializerBase<Vector2>
+    {
+        IDeserializerBase<Single> m_d;
+        public void Setup(TypeRegistory r)
+        {
+            m_d = r.GetDeserializer<Single>();
+        }
+        public void Deserialize<PARSER>(PARSER parser, ref Vector2 outValue) where PARSER : IParser<PARSER>
+        {
+            var it = parser.ListItems.GetEnumerator();
+            var a = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.x);
+            var b = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.y);
+        }
+    }
     public class Vector3Deserializer : IDeserializerBase<Vector3>
     {
         IDeserializerBase<Single> m_d;
@@ -25,6 +42,26 @@ namespace Osaru.Serialization
             m_d.Deserialize(it.Current, ref outValue.z);
         }
     }
+    public class Vector4Deserializer : IDeserializerBase<Vector4>
+    {
+        IDeserializerBase<Single> m_d;
+        public void Setup(TypeRegistory r)
+        {
+            m_d = r.GetDeserializer<Single>();
+        }
+        public void Deserialize<PARSER>(PARSER parser, ref Vector4 outValue) where PARSER : IParser<PARSER>
+        {
+            var it = parser.ListItems.GetEnumerator();
+            var a = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.x);
+            var b = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.y);
+            var c = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.z);
+            var d = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.w);
+        }
+    }
 
     public static class UnityTypeSerializations
     {
@@ -32,6 +69,17 @@ namespace Osaru.Serialization
         {
             get
             {
+                yield return TypeSerialization.Create(
+                    new LambdaSerializer<Vector2>((t, f) =>
+                    {
+                        f.BeginList(2);
+                        f.Value(t.x);
+                        f.Value(t.y);
+                        f.EndList();
+                    })
+                    , new Vector2Deserializer()
+                    );
+
                 yield return TypeSerialization.Create(
                     new LambdaSerializer<Vector3>((t, f) =>
                     {
@@ -42,6 +90,19 @@ namespace Osaru.Serialization
                         f.EndList();
                     })
                     , new Vector3Deserializer()
+                    );
+
+                yield return TypeSerialization.Create(
+                    new LambdaSerializer<Vector4>((t, f) =>
+                    {
+                        f.BeginList(4);
+                        f.Value(t.x);
+                        f.Value(t.y);
+                        f.Value(t.z);
+                        f.Value(t.w);
+                        f.EndList();
+                    })
+                    , new Vector4Deserializer()
                     );
 
 #if UNITY_EDITOR || UNITY_WSA || UNITY_STANDALONE

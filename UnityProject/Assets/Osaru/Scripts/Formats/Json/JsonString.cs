@@ -10,6 +10,11 @@ namespace Osaru.Json
         #region Quote
         public static void Escape(String s, IStore w)
         {
+            if (String.IsNullOrEmpty(s))
+            {
+                return;
+            }
+
             var it = s.ToCharArray().Cast<char>().GetEnumerator();
             while(it.MoveNext())
             {

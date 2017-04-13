@@ -30,7 +30,8 @@ namespace Osaru
             return f.GetStore().Bytes;
         }
 
-        public static void Deserialize<T>(this TypeRegistory r, MessagePackParser parser, ref T outValue)
+        public static void Deserialize<PARSER, T>(this TypeRegistory r, PARSER parser, ref T outValue)
+            where PARSER: IParser<PARSER>
         {
             var d = r.GetDeserializer<T>();
             d.Deserialize(parser, ref outValue);

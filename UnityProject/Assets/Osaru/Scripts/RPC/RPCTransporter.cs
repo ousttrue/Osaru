@@ -2,6 +2,7 @@
 using Osaru.Serialization.Deserializers;
 using Osaru.Serialization.Serializers;
 using System;
+using System.Collections.Generic;
 using UniRx;
 
 

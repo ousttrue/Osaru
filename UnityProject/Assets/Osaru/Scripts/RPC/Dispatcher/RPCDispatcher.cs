@@ -57,7 +57,8 @@ namespace Osaru.RPC
         public void Dispatch<T>(RPCContext<T> context)
             where T: IParser<T>, new()
         {
-            m_map[context.Request.Method].Call(context);
+            var method = m_map[context.Request.Method];
+            method.Call(context);
         }
     }
 }

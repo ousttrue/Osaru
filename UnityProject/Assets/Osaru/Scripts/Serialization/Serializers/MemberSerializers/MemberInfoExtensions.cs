@@ -9,7 +9,7 @@ namespace Osaru.Serialization.Serializers
     {
         #region Field
         static MemberSerializer<T, U> CreateFromFieldInfo<T, U>(FieldInfo fi
-            , TypeRegistory r)
+            , TypeRegistry r)
         {
             return new MemberSerializer<T, U>(fi.Name
                 , (ref T t) => (U)fi.GetValue(t)
@@ -17,7 +17,7 @@ namespace Osaru.Serialization.Serializers
                 );
         }
         public static IMemberSerializer<T> CreateMemberSerializer<T>(this FieldInfo fi
-            , TypeRegistory r)
+            , TypeRegistry r)
         {
             var generic = typeof(MemberInfoExtensions).GetMethod("CreateFromFieldInfo"
                 , BindingFlags.Static | BindingFlags.NonPublic);
@@ -28,7 +28,7 @@ namespace Osaru.Serialization.Serializers
 
         #region Property
         static MemberSerializer<T, U> CreateFromPropertyInfo<T, U>(PropertyInfo pi
-            , TypeRegistory r)
+            , TypeRegistry r)
         {
             return new MemberSerializer<T, U>(pi.Name
                 , (ref T t) => (U)pi.GetValue(t, null)
@@ -36,7 +36,7 @@ namespace Osaru.Serialization.Serializers
                 );
         }
         public static IMemberSerializer<T> CreateMemberSerializer<T>(this PropertyInfo pi
-            , TypeRegistory r)
+            , TypeRegistry r)
         {
             var generic = typeof(MemberInfoExtensions).GetMethod("CreateFromPropertyInfo"
                 , BindingFlags.Static | BindingFlags.NonPublic);

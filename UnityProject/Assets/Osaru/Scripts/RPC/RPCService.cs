@@ -11,7 +11,7 @@ namespace Osaru.RPC
         where PARSER : IParser<PARSER>, new()
         where FORMATTER: IFormatter, new()
     {
-        TypeRegistory m_r = new TypeRegistory();
+        TypeRegistry m_r = new TypeRegistry();
         IDeserializerBase<RPCRequest<PARSER>> m_d;
         SerializerBase<RPCResponse<PARSER>> m_s;
 

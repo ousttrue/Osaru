@@ -18,8 +18,8 @@ namespace OsaruTest.RPC
         public void JsonRpcTest()
         {
             // setup
-            var typeRegistory = new TypeRegistory();
-            var method = typeRegistory.RPCFunc((int a, int b) => a + b);
+            var typeRegistry = new TypeRegistry();
+            var method = typeRegistry.RPCFunc((int a, int b) => a + b);
             var dispatcher = new RPCDispatcher();
             dispatcher.AddMethod("Add", method);
 

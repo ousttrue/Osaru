@@ -5,7 +5,7 @@ namespace Osaru.Serialization.Deserializers
 {
     public class EnumStringDeserializer<T> : IDeserializerBase<T>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 

@@ -7,7 +7,7 @@ namespace Osaru.Serialization.Serializers
     {
         SerializerBase<string> m_stringSerializer;
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
             m_stringSerializer = (SerializerBase<string>)r.GetSerializer<String>();
         }

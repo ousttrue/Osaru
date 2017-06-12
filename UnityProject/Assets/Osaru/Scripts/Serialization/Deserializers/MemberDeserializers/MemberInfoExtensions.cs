@@ -8,7 +8,7 @@ namespace Osaru.Serialization.Deserializers
     {
         #region Field
         static IMemberDeserializer<T> CreateFromFieldInfo<T, U>(FieldInfo fi
-            , TypeRegistory r)
+            , TypeRegistry r)
         {
 #if true
             return new MemberDeserializer<T, U>(fi.Name
@@ -21,7 +21,7 @@ namespace Osaru.Serialization.Deserializers
 #endif
         }
         public static IMemberDeserializer<T> CreateMemberDeserializer<T>(
-            this FieldInfo fi, TypeRegistory r)
+            this FieldInfo fi, TypeRegistry r)
         {
             var genericMethod = typeof(MemberInfoExtensions).GetMethod("CreateFromFieldInfo"
                 , BindingFlags.Static | BindingFlags.NonPublic);
@@ -42,7 +42,7 @@ namespace Osaru.Serialization.Deserializers
             return new PropertySetter<T, U>(lambda.Compile());
         }
         static MemberDeserializer<T, U> CreateFromPropertyInfo<T, U>(PropertyInfo pi
-            , TypeRegistory r)
+            , TypeRegistry r)
         {
             var setter = CreatePropertySetter<T, U>(pi);
             return new MemberDeserializer<T, U>(pi.Name
@@ -53,7 +53,7 @@ namespace Osaru.Serialization.Deserializers
                 );
         }
         public static IMemberDeserializer<T> CreateMemberDeserializer<T>(
-            this PropertyInfo pi, TypeRegistory r)
+            this PropertyInfo pi, TypeRegistry r)
         {
             var genericMethod = typeof(MemberInfoExtensions).GetMethod("CreateFromPropertyInfo"
                 , BindingFlags.Static | BindingFlags.NonPublic);

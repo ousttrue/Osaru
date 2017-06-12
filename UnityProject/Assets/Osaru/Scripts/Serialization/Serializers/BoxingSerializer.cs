@@ -5,13 +5,13 @@ namespace Osaru.Serialization.Serializers
 {
     public class BoxingSerializer : SerializerBase<Object>
     {
-        TypeRegistory m_r;
-        public BoxingSerializer(TypeRegistory r)
+        TypeRegistry m_r;
+        public BoxingSerializer(TypeRegistry r)
         {
             m_r = r;
         }
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
         }
 

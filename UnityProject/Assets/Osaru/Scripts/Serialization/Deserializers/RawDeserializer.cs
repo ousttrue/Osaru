@@ -5,7 +5,7 @@ namespace Osaru.Serialization.Deserializers
 {
     public class RawDeserializer : IDeserializerBase<Byte[]>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -26,7 +26,7 @@ namespace Osaru.Serialization.Deserializers
     public class GenericRawDeserializer<T> : IDeserializerBase<T>
         where T : class, IList<Byte>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 

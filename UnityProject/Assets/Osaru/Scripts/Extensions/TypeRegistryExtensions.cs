@@ -5,15 +5,15 @@ using System;
 
 namespace Osaru
 {
-    public static partial class TypeRegistoryExtensions
+    public static partial class TypeRegistryExtensions
     {
-        public static ArraySegment<Byte> SerializeToMessagePack<T>(this TypeRegistory r, T value)
+        public static ArraySegment<Byte> SerializeToMessagePack<T>(this TypeRegistry r, T value)
         {
             var s = r.GetSerializer<T>();
             return s.SerializeToMessagePack(value);
         }
 
-        public static ArraySegment<Byte> SerializeToMessagePackMap<K0, T0, K1, T1>(this TypeRegistory r
+        public static ArraySegment<Byte> SerializeToMessagePackMap<K0, T0, K1, T1>(this TypeRegistry r
             , K0 key0, T0 value0
             , K1 key1, T1 value1
             )
@@ -30,7 +30,7 @@ namespace Osaru
             return f.GetStore().Bytes;
         }
 
-        public static void Deserialize<PARSER, T>(this TypeRegistory r, PARSER parser, ref T outValue)
+        public static void Deserialize<PARSER, T>(this TypeRegistry r, PARSER parser, ref T outValue)
             where PARSER: IParser<PARSER>
         {
             var d = r.GetDeserializer<T>();

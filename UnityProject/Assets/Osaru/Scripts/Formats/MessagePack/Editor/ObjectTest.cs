@@ -11,7 +11,7 @@ namespace OsaruTest.MessagePack
     [TestFixture]
     public class ObjectTest
     {
-        TypeRegistory m_r;
+        TypeRegistry m_r;
 
         [Serializable, DataContract]
         class Nest
@@ -28,7 +28,7 @@ namespace OsaruTest.MessagePack
         [SetUp]
         public void Setup()
         {
-            m_r = new TypeRegistory();
+            m_r = new TypeRegistry();
         }
 
         [Test]
@@ -95,9 +95,9 @@ namespace OsaruTest.MessagePack
 
         static void GoBackTest<T>(ref T original)
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
-            var msgPack = typeRegistory.SerializeToMessagePack(original);
-            var d = typeRegistory.GetDeserializer<T>();
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
+            var msgPack = typeRegistry.SerializeToMessagePack(original);
+            var d = typeRegistry.GetDeserializer<T>();
             var parsed = MessagePackParser.Parse(msgPack);
             var copy = default(T);
             d.Deserialize(parsed, ref copy);

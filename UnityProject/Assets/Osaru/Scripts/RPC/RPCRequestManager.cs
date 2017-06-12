@@ -47,12 +47,12 @@ namespace Osaru.RPC
             }
         }
 
-        TypeRegistory m_r;
+        TypeRegistry m_r;
         int m_id = 1;
 
         public RPCRequestManager()
         {
-            m_r = new TypeRegistory();
+            m_r = new TypeRegistry();
         }
 
         Dictionary<int, DisposableRequest> m_requestMap = new Dictionary<int, DisposableRequest>();

@@ -44,7 +44,7 @@ public static class RPCTypeSerializations
             }
         }
 
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
     }
@@ -82,7 +82,7 @@ public static class RPCTypeSerializations
 
         }
 
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
     }
@@ -97,7 +97,7 @@ public static class RPCTypeSerializations
             it.MoveNext(); outValue.ParamsBytes = it.Current.Dump();
         }
 
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
     }
@@ -121,7 +121,7 @@ public static class RPCTypeSerializations
             }
         }
 
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
     }

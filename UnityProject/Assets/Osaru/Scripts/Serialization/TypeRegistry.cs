@@ -45,9 +45,9 @@ namespace Osaru.Serialization
     /// <summary>
     /// not thread safe. use thread local
     /// </summary>
-    public class TypeRegistory
+    public class TypeRegistry
     {
-        public TypeRegistory()
+        public TypeRegistry()
         {
             foreach(var s in EmbededTypeSerializations.Serializations)
             {

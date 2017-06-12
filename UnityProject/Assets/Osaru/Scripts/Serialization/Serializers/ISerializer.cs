@@ -13,7 +13,7 @@ namespace Osaru.Serialization.Serializers
             Serialize((T)o, f);
         }
 
-        public abstract void Setup(TypeRegistory r);
+        public abstract void Setup(TypeRegistry r);
 
         public abstract void Serialize(T t, IFormatter f);
     }

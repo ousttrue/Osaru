@@ -12,7 +12,7 @@ namespace OsaruTest
     {
         static void ConvertJsonToMessagePackTest<T>(T value)
         {
-            var r = new TypeRegistory();
+            var r = new TypeRegistry();
             var converted = r.SerializeToJsonBytes(value)
                 .ParseAsJson()
                 .ToMessagePack();
@@ -26,7 +26,7 @@ namespace OsaruTest
 
         static void ConvertMessagePackToJsonTest<T>(T value)
         {
-            var r = new TypeRegistory();
+            var r = new TypeRegistry();
             var converted = r.SerializeToMessagePack(value)
                 .ParseAsMessagePack()
                 .ToJson();

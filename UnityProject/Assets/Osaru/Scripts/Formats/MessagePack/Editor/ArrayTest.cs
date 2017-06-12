@@ -10,12 +10,12 @@ namespace OsaruTest.MessagePack
     [TestFixture]
     public class ArrayTest
     {
-        TypeRegistory m_r;
+        TypeRegistry m_r;
 
         [SetUp]
         public void Setup()
         {
-            m_r = new TypeRegistory();
+            m_r = new TypeRegistry();
         }
 
         [Test]
@@ -59,13 +59,13 @@ namespace OsaruTest.MessagePack
         [Test]
         public void array129()
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
             var i128 = Enumerable.Range(0, 128).ToArray();
             var i129 = Enumerable.Range(0, 129).ToArray();
-            var bytes128 = typeRegistory.SerializeToMessagePack(i128);
-            var bytes129 = typeRegistory.SerializeToMessagePack(i129);
+            var bytes128 = typeRegistry.SerializeToMessagePack(i128);
+            var bytes129 = typeRegistry.SerializeToMessagePack(i129);
             var deserialized = default(int[]);
-            typeRegistory.Deserialize(MessagePackParser.Parse(bytes128), ref deserialized);
+            typeRegistry.Deserialize(MessagePackParser.Parse(bytes128), ref deserialized);
 
             Assert.AreEqual(i128, deserialized);
         }

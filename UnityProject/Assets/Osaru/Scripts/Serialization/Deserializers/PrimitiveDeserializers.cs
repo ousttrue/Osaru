@@ -5,7 +5,7 @@ namespace Osaru.Serialization.Deserializers
 {
     public class BooleanDeserializer : IDeserializerBase<Boolean>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -19,7 +19,7 @@ namespace Osaru.Serialization.Deserializers
     #region Byte, UInt16, 32, 64
     public class ByteDeserializer : IDeserializerBase<Byte>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class UInt16Deserializer : IDeserializerBase<UInt16>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -43,7 +43,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class UInt32Deserializer : IDeserializerBase<UInt32>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -55,7 +55,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class UInt64Deserializer : IDeserializerBase<UInt64>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -70,7 +70,7 @@ namespace Osaru.Serialization.Deserializers
     #region SByte, Int16, 32, 64
     public class SByteDeserializer : IDeserializerBase<SByte>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -82,7 +82,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class Int16Deserializer : IDeserializerBase<Int16>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -94,7 +94,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class Int32Deserializer : IDeserializerBase<Int32>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -106,7 +106,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class Int64Deserializer : IDeserializerBase<Int64>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -121,7 +121,7 @@ namespace Osaru.Serialization.Deserializers
     #region Single, Double
     public class SingleDeserializer : IDeserializerBase<Single>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -133,7 +133,7 @@ namespace Osaru.Serialization.Deserializers
     }
     public class DoubleDeserializer : IDeserializerBase<Double>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 
@@ -147,7 +147,7 @@ namespace Osaru.Serialization.Deserializers
 
     public class StringDeserializer : IDeserializerBase<String>
     {
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
         }
 

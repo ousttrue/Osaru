@@ -7,7 +7,7 @@ namespace Osaru.Serialization.Deserializers
     {
         IDeserializerBase<T> m_elementDeserializer;
 
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
             m_elementDeserializer = r.GetDeserializer<T>();
         }

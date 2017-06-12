@@ -13,7 +13,7 @@ namespace Osaru.Serialization.Serializers
             m_serializer = serializer;
         }
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
         }
 

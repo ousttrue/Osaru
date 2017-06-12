@@ -56,12 +56,12 @@ class UserType
 [TestFixture]
 public class UserTypeTest
 {
-    TypeRegistory m_r;
+    typeRegistry m_r;
 
     [SetUp]
     public void Setup()
     {
-        m_r = new TypeRegistory();
+        m_r = new typeRegistry();
         Deserializer.Clear();
     }
 

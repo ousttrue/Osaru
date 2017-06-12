@@ -6,7 +6,7 @@ namespace Osaru.Serialization.Serializers
 {
     public class RawSerializer : ClassSerializerBase<Byte[]>
     {
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
         }
 
@@ -19,7 +19,7 @@ namespace Osaru.Serialization.Serializers
     public class GenericRawSerializer<T> : ClassSerializerBase<T>
         where T: class, IList<Byte>
     {
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
         }
 

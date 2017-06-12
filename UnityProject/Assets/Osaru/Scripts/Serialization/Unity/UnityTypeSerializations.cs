@@ -11,7 +11,7 @@ namespace Osaru.Serialization
     public class Vector2Deserializer : IDeserializerBase<Vector2>
     {
         IDeserializerBase<Single> m_d;
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
             m_d = r.GetDeserializer<Single>();
         }
@@ -27,7 +27,7 @@ namespace Osaru.Serialization
     public class Vector3Deserializer : IDeserializerBase<Vector3>
     {
         IDeserializerBase<Single> m_d;
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
             m_d = r.GetDeserializer<Single>();
         }
@@ -45,7 +45,7 @@ namespace Osaru.Serialization
     public class Vector4Deserializer : IDeserializerBase<Vector4>
     {
         IDeserializerBase<Single> m_d;
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
             m_d = r.GetDeserializer<Single>();
         }

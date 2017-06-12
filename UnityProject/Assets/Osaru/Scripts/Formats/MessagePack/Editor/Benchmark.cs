@@ -31,12 +31,12 @@ namespace OsaruTest
     /// </summary>
     public class Benchmark
     {
-        TypeRegistory m_r;
+        TypeRegistry m_r;
 
         [SetUp]
         public void Setup()
         {
-            m_r = new TypeRegistory();
+            m_r = new TypeRegistry();
             m_r.AddSerialization(TypeSerialization.Create(
                 Single3.Serialize
                 , new Single3.Single3Deserializer()
@@ -202,7 +202,7 @@ namespace OsaruTest
             public class Single3Deserializer : IDeserializerBase<Single3>
             {
                 IDeserializerBase<Single> m_d;
-                public void Setup(TypeRegistory r)
+                public void Setup(TypeRegistry r)
                 {
                     m_d=r.GetDeserializer<Single>();
                 }
@@ -226,7 +226,7 @@ namespace OsaruTest
         {
             public abstract T Serialize<T>(T t);
 
-            protected T Serialize<Parser, T>(TypeRegistory r
+            protected T Serialize<Parser, T>(TypeRegistry r
                 , IFormatter f
                 , Func<ArraySegment<Byte>, Parser> parser, T original)
                 where Parser : IParser<Parser>
@@ -285,9 +285,9 @@ namespace OsaruTest
 
         class MessagePackSerializer : BenchSerializerBase
         {
-            TypeRegistory m_r;
+            TypeRegistry m_r;
 
-            public MessagePackSerializer(TypeRegistory r)
+            public MessagePackSerializer(TypeRegistry r)
             {
                 m_r = r;
             }
@@ -304,9 +304,9 @@ namespace OsaruTest
 
         class JsonSerializer : BenchSerializerBase
         {
-            TypeRegistory m_r;
+            TypeRegistry m_r;
 
-            public JsonSerializer(TypeRegistory r)
+            public JsonSerializer(TypeRegistry r)
             {
                 m_r = r;
             }

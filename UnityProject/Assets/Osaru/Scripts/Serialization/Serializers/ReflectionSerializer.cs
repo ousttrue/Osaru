@@ -7,7 +7,7 @@ namespace Osaru.Serialization.Serializers
     {
         IMemberSerializer<T>[] m_serializers;
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
             m_serializers = r.GetMemberSerializers<T>().ToArray();
         }

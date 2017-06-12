@@ -9,16 +9,16 @@ using System.Linq;
 
 namespace OsaruTest.Json
 {
-    public static class TypeRegistoryExtensions
+    public static class TypeRegistryExtensions
     {
-        public static void TypeTest<T>(this Osaru.Serialization.TypeRegistory typeRegistory
+        public static void TypeTest<T>(this Osaru.Serialization.TypeRegistry typeRegistry
             , T value, string expected)
         {
-            var serializer = (SerializerBase<T>)typeRegistory.GetSerializer<T>();
+            var serializer = (SerializerBase<T>)typeRegistry.GetSerializer<T>();
             var serialized = serializer.SerializeToJson(value);
             Assert.AreEqual(expected, serialized);
 
-            var deserializer = typeRegistory.GetDeserializer<T>();
+            var deserializer = typeRegistry.GetDeserializer<T>();
             var deserialized = default(T);
             try
             {
@@ -41,32 +41,32 @@ namespace OsaruTest.Json
         [Test]
         public void NumberTest()
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
-            typeRegistory.TypeTest(1, "1");
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
+            typeRegistry.TypeTest(1, "1");
         }
 
         [Test]
         public void ArrayTest()
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
             var array = new[] { 1, 2, 3 };
-            typeRegistory.TypeTest(array, "[1,2,3]");
+            typeRegistry.TypeTest(array, "[1,2,3]");
         }
 
         [Test]
         public void ListTest()
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
             var list = new List<int> { 1, 2, 3 };
-            typeRegistory.TypeTest(list, "[1,2,3]");
+            typeRegistry.TypeTest(list, "[1,2,3]");
         }
 
         [Test]
         public void Vector3Test()
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
             var v = new UnityEngine.Vector3(1, 2, 3);
-            typeRegistory.TypeTest(v, "[1,2,3]");
+            typeRegistry.TypeTest(v, "[1,2,3]");
         }
 
         [Serializable]
@@ -102,13 +102,13 @@ namespace OsaruTest.Json
         [Test]
         public void Base64Test()
         {
-            var typeRegistory = new Osaru.Serialization.TypeRegistory();
+            var typeRegistry = new Osaru.Serialization.TypeRegistry();
             var v = new Base64Struct
             {
                 Bytes=new Byte[] { (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)'E', (byte)'F', (byte)'G' },
                 ListBytes = new List<Byte> { (byte)'A', (byte)'B', (byte)'C', (byte)'D', (byte)'E', (byte)'F', (byte)'G' },
             };
-            typeRegistory.TypeTest(v, "{\"Bytes\":\"QUJDREVGRw==\",\"ListBytes\":\"QUJDREVGRw==\"}");
+            typeRegistry.TypeTest(v, "{\"Bytes\":\"QUJDREVGRw==\",\"ListBytes\":\"QUJDREVGRw==\"}");
         }
     }
 }

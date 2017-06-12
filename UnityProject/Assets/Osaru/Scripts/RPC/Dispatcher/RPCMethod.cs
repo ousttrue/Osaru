@@ -24,7 +24,7 @@ namespace Osaru.RPC
 
         public delegate void Method();
         Method m_method;
-        public RPCAction(TypeRegistory r, Method method)
+        public RPCAction(TypeRegistry r, Method method)
         {
             m_method = method;
 
@@ -56,7 +56,7 @@ namespace Osaru.RPC
 
         public delegate void Method(A0 a0);
         Method m_method;
-        public RPCAction(TypeRegistory r, Method method)
+        public RPCAction(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -92,7 +92,7 @@ namespace Osaru.RPC
 
         public delegate void Method(A0 a0, A1 a1);
         Method m_method;
-        public RPCAction(TypeRegistory r, Method method)
+        public RPCAction(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -132,7 +132,7 @@ namespace Osaru.RPC
 
         public delegate void Method(A0 a0, A1 a1, A2 a2);
         Method m_method;
-        public RPCAction(TypeRegistory r, Method method)
+        public RPCAction(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -176,7 +176,7 @@ namespace Osaru.RPC
 
         public delegate void Method(A0 a0, A1 a1, A2 a2, A3 a3);
         Method m_method;
-        public RPCAction(TypeRegistory r, Method method)
+        public RPCAction(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -220,7 +220,7 @@ namespace Osaru.RPC
         public delegate R Method();
         Method m_method;
         SerializerBase<R> m_s;
-        public RPCFunc(TypeRegistory r, Method method)
+        public RPCFunc(TypeRegistry r, Method method)
         {
             m_method = method;
 
@@ -252,7 +252,7 @@ namespace Osaru.RPC
         public delegate R Method(A0 a0);
         Method m_method;
         SerializerBase<R> m_s;
-        public RPCFunc(TypeRegistory r, Method method)
+        public RPCFunc(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -288,7 +288,7 @@ namespace Osaru.RPC
         public delegate R Method(A0 a0, A1 a1);
         Method m_method;
         SerializerBase<R> m_s;
-        public RPCFunc(TypeRegistory r, Method method)
+        public RPCFunc(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -328,7 +328,7 @@ namespace Osaru.RPC
         public delegate R Method(A0 a0, A1 a1, A2 a2);
         Method m_method;
         SerializerBase<R> m_s;
-        public RPCFunc(TypeRegistory r, Method method)
+        public RPCFunc(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();
@@ -372,7 +372,7 @@ namespace Osaru.RPC
         public delegate R Method(A0 a0, A1 a1, A2 a2, A3 a3);
         Method m_method;
         SerializerBase<R> m_s;
-        public RPCFunc(TypeRegistory r, Method method)
+        public RPCFunc(TypeRegistry r, Method method)
         {
             m_method = method;
             m_d0 = r.GetDeserializer<A0>();

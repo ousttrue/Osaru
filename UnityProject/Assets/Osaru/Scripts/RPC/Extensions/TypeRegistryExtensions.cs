@@ -8,40 +8,40 @@ using Osaru.Serialization;
 
 namespace Osaru.RPC
 {
-    public static class TypeRegistoryExtensions
+    public static class TypeRegistryExtensions
     {
 
         #region Action
         public static RPCAction RPCAction(
-            this TypeRegistory r, Action p)
+            this TypeRegistry r, Action p)
         {
             return new RPCAction(r
                 , new RPCAction.Method(p));
         }
 
         public static RPCAction<A0> RPCAction<A0>(
-            this TypeRegistory r, Action<A0> p)
+            this TypeRegistry r, Action<A0> p)
         {
             return new RPCAction<A0>(r
                 , new RPCAction<A0>.Method(p));
         }
 
         public static RPCAction<A0, A1> RPCAction<A0, A1>(
-            this TypeRegistory r, Action<A0, A1> p)
+            this TypeRegistry r, Action<A0, A1> p)
         {
             return new RPCAction<A0, A1>(r
                 , new RPCAction<A0, A1>.Method(p));
         }
 
         public static RPCAction<A0, A1, A2> RPCAction<A0, A1, A2>(
-            this TypeRegistory r, Action<A0, A1, A2> p)
+            this TypeRegistry r, Action<A0, A1, A2> p)
         {
             return new RPCAction<A0, A1, A2>(r
                 , new RPCAction<A0, A1, A2>.Method(p));
         }
 
         public static RPCAction<A0, A1, A2, A3> RPCAction<A0, A1, A2, A3>(
-            this TypeRegistory r, Action<A0, A1, A2, A3> p)
+            this TypeRegistry r, Action<A0, A1, A2, A3> p)
         {
             return new RPCAction<A0, A1, A2, A3>(r
                 , new RPCAction<A0, A1, A2, A3>.Method(p));
@@ -50,35 +50,35 @@ namespace Osaru.RPC
 
         #region Func
         public static RPCFunc<R> RPCFunc<R>(
-            this TypeRegistory r, Func<R> p)
+            this TypeRegistry r, Func<R> p)
         {
             return new RPCFunc<R>(r
                 , new RPCFunc<R>.Method(p));
         }
 
         public static RPCFunc<A0, R> RPCFunc<A0, R>(
-            this TypeRegistory r, Func<A0, R> p)
+            this TypeRegistry r, Func<A0, R> p)
         {
             return new RPCFunc<A0, R>(r
                 , new RPCFunc<A0, R>.Method(p));
         }
 
         public static RPCFunc<A0, A1, R> RPCFunc<A0, A1, R>(
-            this TypeRegistory r, Func<A0, A1, R> p)
+            this TypeRegistry r, Func<A0, A1, R> p)
         {
             return new RPCFunc<A0, A1, R>(r
                 , new RPCFunc<A0, A1, R>.Method(p));
         }
 
         public static RPCFunc<A0, A1, A2, R> RPCFunc<A0, A1, A2, R>(
-            this TypeRegistory r, Func<A0, A1, A2, R> p)
+            this TypeRegistry r, Func<A0, A1, A2, R> p)
         {
             return new RPCFunc<A0, A1, A2, R>(r
                 , new RPCFunc<A0, A1, A2, R>.Method(p));
         }
 
         public static RPCFunc<A0, A1, A2, A3, R> RPCFunc<A0, A1, A2, A3, R>(
-            this TypeRegistory r, Func<A0, A1, A2, A3, R> p)
+            this TypeRegistry r, Func<A0, A1, A2, A3, R> p)
         {
             return new RPCFunc<A0, A1, A2, A3, R>(r
                 , new RPCFunc<A0, A1, A2, A3, R>.Method(p));

@@ -10,12 +10,12 @@ namespace OsaruTest.MessagePack
     [TestFixture]
     public class StringTest
     {
-        TypeRegistory m_r;
+        TypeRegistry m_r;
 
         [SetUp]
         public void Setup()
         {
-            m_r = new TypeRegistory();
+            m_r = new TypeRegistry();
         }
 
         [Test]

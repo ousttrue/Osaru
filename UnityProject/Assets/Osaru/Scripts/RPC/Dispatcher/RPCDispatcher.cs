@@ -8,12 +8,12 @@ namespace Osaru.RPC
 {
     public class RPCDispatcher
     {
-        TypeRegistory m_r;
+        TypeRegistry m_r;
         Dictionary<string, IRPCMethod> m_map = new Dictionary<string, IRPCMethod>();
 
-        public RPCDispatcher(TypeRegistory r=null)
+        public RPCDispatcher(TypeRegistry r=null)
         {
-            m_r= r ?? new TypeRegistory();
+            m_r= r ?? new TypeRegistry();
         }
 
         public void AddMethod(string name, IRPCMethod method)

@@ -11,10 +11,10 @@ namespace Osaru.RPC
     public class RPCParamsFormatter<FORMATTER>
         where FORMATTER : IFormatter, new()
     {
-        TypeRegistory m_r;
+        TypeRegistry m_r;
         public RPCParamsFormatter()
         {
-            m_r = new TypeRegistory();
+            m_r = new TypeRegistry();
         }
 
         public ArraySegment<Byte> Params()

@@ -4,7 +4,7 @@
     {
         SerializerBase<T> m_elementSerializer = null;
 
-        public override void Setup(TypeRegistory r)
+        public override void Setup(TypeRegistry r)
         {
             m_elementSerializer = (SerializerBase<T>)r.GetSerializer<T>();
         }

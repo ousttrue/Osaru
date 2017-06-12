@@ -10,7 +10,7 @@ namespace Osaru.Serialization.Deserializers
         Dictionary<string, IMemberDeserializer<T>> m_deserializers
             =new Dictionary<string, IMemberDeserializer<T>>();
 
-        public void Setup(TypeRegistory r)
+        public void Setup(TypeRegistry r)
         {
             m_deserializers = r.GetMemberDeserializers<T>()
                 .ToDictionary(x => x.MemberName, x => x)

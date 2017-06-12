@@ -37,7 +37,7 @@ namespace Osaru.RPC
         public RPCTransporter(IDuplexStream transport)
         {
             m_transport = transport;
-            var r = new TypeRegistory();
+            var r = new TypeRegistry();
             m_s = r.GetSerializer<RPCRequest<PARSER>>();
             m_d = r.GetDeserializer<RPCResponse<PARSER>>();
 

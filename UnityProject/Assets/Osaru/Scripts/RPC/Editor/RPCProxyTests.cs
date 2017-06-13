@@ -85,7 +85,7 @@ namespace OsaruTest.Reactive
             var service = new RpcService<JsonParser, JsonFormatter>();
             var r = new TypeRegistry();
             var method = r.RPCFunc((int a, int b) => a + b);
-            service.Dispatcher.AddMethod("Add", method);
+            service.Dispatcher.AddRequestMethod("Add", method);
             service.AddStream(transport.ServerSide);
 
             // client side
@@ -130,7 +130,7 @@ namespace OsaruTest.Reactive
             var service = new RpcService<MessagePackParser, MessagePackFormatter>();
             var r = new TypeRegistry();
             var method = r.RPCFunc((int a, int b) => a + b);
-            service.Dispatcher.AddMethod("Add", method);
+            service.Dispatcher.AddRequestMethod("Add", method);
             service.AddStream(transport.ServerSide);
 
             // client side

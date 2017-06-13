@@ -9,35 +9,36 @@ namespace Osaru.RPC
     public class RPCDispatcher
     {
         TypeRegistry m_r;
-        Dictionary<string, IRPCMethod> m_map = new Dictionary<string, IRPCMethod>();
 
         public RPCDispatcher(TypeRegistry r=null)
         {
             m_r= r ?? new TypeRegistry();
         }
 
-        public void AddMethod(string name, IRPCMethod method)
+        #region Request
+        Dictionary<string, IRPCMethod> m_requestMap = new Dictionary<string, IRPCMethod>();
+        public void AddRequestMethod(string name, IRPCMethod method)
         {
-            m_map.Add(name, method);
+            m_requestMap.Add(name, method);
         }
 
-        public ArraySegment<Byte> Dispatch<PARSER, FORMATTER>(ArraySegment<Byte> bytes)
+        public ArraySegment<Byte> DispatchRequest<PARSER, FORMATTER>(ArraySegment<Byte> bytes)
             where PARSER : IParser<PARSER>, new()
             where FORMATTER : IFormatter, new()
         {
             var parser = new PARSER();
             parser.SetBytes(bytes);
-            return Dispatch<PARSER, FORMATTER>(parser);
+            return DispatchRequest<PARSER, FORMATTER>(parser);
         }
 
-        public ArraySegment<Byte> Dispatch<PARSER, FORMATTER>(PARSER parser)
+        public ArraySegment<Byte> DispatchRequest<PARSER, FORMATTER>(PARSER parser)
             where PARSER : IParser<PARSER>, new()
             where FORMATTER : IFormatter, new()
         {
             var d = m_r.GetDeserializer<RPCRequest<PARSER>>();
             var request = d.Deserialize(parser);
 
-            var response = Dispatch<PARSER, FORMATTER>(request);
+            var response = DispatchRequest<PARSER, FORMATTER>(request);
 
             var f = new FORMATTER();
             var s = m_r.GetSerializer<RPCResponse<PARSER>>();
@@ -45,20 +46,41 @@ namespace Osaru.RPC
             return f.GetStore().Bytes;
         }
 
-        public RPCResponse<PARSER> Dispatch<PARSER, FORMATTER>(RPCRequest<PARSER> request)
+        public RPCResponse<PARSER> DispatchRequest<PARSER, FORMATTER>(RPCRequest<PARSER> request)
             where PARSER: IParser<PARSER>, new()
             where FORMATTER: IFormatter, new()
         {
             var context = new RPCContext<PARSER>(request, new FORMATTER());
-            Dispatch(context);
+            DispatchRequest(context);
             return context.Response;
         }
 
-        public void Dispatch<T>(RPCContext<T> context)
+        public void DispatchRequest<T>(RPCContext<T> context)
             where T: IParser<T>, new()
         {
-            var method = m_map[context.Request.Method];
+            var method = m_requestMap[context.Request.Method];
             method.Call(context);
         }
+        #endregion
+
+        #region Notify
+        Dictionary<string, IRPCMethod> m_notifyMap = new Dictionary<string, IRPCMethod>();
+
+        public void DispatchNotify<PARSER>(PARSER parser)
+            where PARSER : IParser<PARSER>, new()
+        {
+            var d = m_r.GetDeserializer<RPCRequest<PARSER>>();
+            var request = d.Deserialize(parser);
+
+            DispatchNotify<PARSER>(request);
+        }
+
+        public void DispatchNotify<PARSER>(RPCRequest<PARSER> request)
+            where PARSER : IParser<PARSER>, new()
+        {
+            var method = m_requestMap[request.Method];
+            method.Call(request);
+        }
+        #endregion
     }
 }

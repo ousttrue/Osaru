@@ -58,7 +58,7 @@ namespace Osaru.RPC
             {
                 var formatter = new FORMATTER();
                 var context = new RPCContext<PARSER>(req, formatter);
-                m_dispatcher.Dispatch(context);
+                m_dispatcher.DispatchRequest(context);
 
                 var responseFormatter = new FORMATTER();
                 m_s.Serialize(context.Response, responseFormatter);

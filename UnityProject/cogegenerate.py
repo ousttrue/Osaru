@@ -16,7 +16,7 @@ namespace Osaru.RPC
 {
     public interface IRPCMethod
     {
-        void Call<T>(RPCRequest<T> request)
+        void Call<T>(T args)
             where T : IParser<T>, new()
             ;
         void Call<T>(RPCContext<T> f)
@@ -44,7 +44,7 @@ def rpcmethod_write_actions(f, num):
         arg_vars="".join((
             f"                var a{x} = default(A{x});\n" for x in range(i)))
         deserializes="".join((
-            f"                m_d{x}.Deserialize(request.Params[{x}], ref a{x});\n" 
+            f"                m_d{x}.Deserialize(args[{x}], ref a{x});\n" 
             for x in range(i)))
         invoke="m_method("+", ".join((f"a{x}" for x in range(i)))+");"
 
@@ -61,7 +61,7 @@ def rpcmethod_write_actions(f, num):
 {get_deserializers}
         }}
 
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {{
 {arg_vars}
@@ -75,7 +75,7 @@ def rpcmethod_write_actions(f, num):
         {{
             try
             {{
-                Call(f.Request);
+                Call(f.Request.Params);
                 f.Success();
             }}
             catch (Exception ex)
@@ -102,7 +102,7 @@ def rpcmethod_write_funcs(f, num):
         arg_vars="".join((
             f"                var a{x} = default(A{x});\n" for x in range(i)))
         deserializes="".join((
-            f"                m_d{x}.Deserialize(request.Params[{x}], ref a{x});\n" 
+            f"                m_d{x}.Deserialize(args[{x}], ref a{x});\n" 
             for x in range(i)))
         invoke="m_method("+", ".join((f"a{x}" for x in range(i)))+")"
 
@@ -123,7 +123,7 @@ def rpcmethod_write_funcs(f, num):
         }}
 
         [Obsolete("Use RPCAction.Call")]
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {{
 {arg_vars}
@@ -137,7 +137,7 @@ def rpcmethod_write_funcs(f, num):
         {{
             try
             {{
-                var request=f.Request;
+                var args=f.Request.Params;
 
 {arg_vars}
 {deserializes}

@@ -33,12 +33,31 @@ namespace OsaruTest.RPC
             var typeRegistry = new TypeRegistry();
             var method = typeRegistry.RPCFunc((int a, int b) => a + b);
             var dispatcher = new RPCDispatcher();
-            dispatcher.AddRequestMethod("Add", method);
+            dispatcher.AddNotifyMethod("Add", method);
 
-            // request
-            var request = "{\"jsonrpc\":\"2.0\",\"method\":\"Add\",\"params\":[1,2],\"id\":1}";
+            // notify
+            var notify = "{\"jsonrpc\":\"2.0\",\"method\":\"Add\",\"params\":[1,2]}";
 
-            dispatcher.DispatchNotify(request.ParseAsJson());
+            dispatcher.DispatchNotify(notify.ParseAsJson());
+        }
+
+        [Test]
+        public void MsgPackRpcDispatchNotify()
+        {
+            // setup
+            var typeRegistry = new TypeRegistry();
+            var method = typeRegistry.RPCFunc((int a, int b) => a + b);
+            var dispatcher = new RPCDispatcher();
+            dispatcher.AddNotifyMethod("Add", method);
+
+            // notify
+            var notify = new RPCNotify<Osaru.MessagePack.MessagePackParser>
+            {
+                Method="Add",
+                ParamsBytes=typeRegistry.SerializeToMessagePack(new[] { 1, 2 })
+            };
+
+            dispatcher.DispatchNotify(notify);
         }
     }
 }

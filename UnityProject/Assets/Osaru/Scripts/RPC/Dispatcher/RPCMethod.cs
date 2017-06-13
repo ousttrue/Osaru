@@ -12,7 +12,7 @@ namespace Osaru.RPC
 {
     public interface IRPCMethod
     {
-        void Call<T>(RPCRequest<T> request)
+        void Call<T>(T args)
             where T : IParser<T>, new()
             ;
         void Call<T>(RPCContext<T> f)
@@ -33,7 +33,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
 
@@ -47,7 +47,7 @@ namespace Osaru.RPC
         {
             try
             {
-                Call(f.Request);
+                Call(f.Request.Params);
                 f.Success();
             }
             catch (Exception ex)
@@ -72,12 +72,12 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
+                m_d0.Deserialize(args[0], ref a0);
 
 
                 m_method(a0);
@@ -88,7 +88,7 @@ namespace Osaru.RPC
         {
             try
             {
-                Call(f.Request);
+                Call(f.Request.Params);
                 f.Success();
             }
             catch (Exception ex)
@@ -115,14 +115,14 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
                 var a1 = default(A1);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
 
 
                 m_method(a0, a1);
@@ -133,7 +133,7 @@ namespace Osaru.RPC
         {
             try
             {
-                Call(f.Request);
+                Call(f.Request.Params);
                 f.Success();
             }
             catch (Exception ex)
@@ -162,16 +162,16 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
                 var a1 = default(A1);
                 var a2 = default(A2);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
-                m_d2.Deserialize(request.Params[2], ref a2);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
+                m_d2.Deserialize(args[2], ref a2);
 
 
                 m_method(a0, a1, a2);
@@ -182,7 +182,7 @@ namespace Osaru.RPC
         {
             try
             {
-                Call(f.Request);
+                Call(f.Request.Params);
                 f.Success();
             }
             catch (Exception ex)
@@ -213,7 +213,7 @@ namespace Osaru.RPC
 
         }
 
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
@@ -221,10 +221,10 @@ namespace Osaru.RPC
                 var a2 = default(A2);
                 var a3 = default(A3);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
-                m_d2.Deserialize(request.Params[2], ref a2);
-                m_d3.Deserialize(request.Params[3], ref a3);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
+                m_d2.Deserialize(args[2], ref a2);
+                m_d3.Deserialize(args[3], ref a3);
 
 
                 m_method(a0, a1, a2, a3);
@@ -235,7 +235,7 @@ namespace Osaru.RPC
         {
             try
             {
-                Call(f.Request);
+                Call(f.Request.Params);
                 f.Success();
             }
             catch (Exception ex)
@@ -261,7 +261,7 @@ namespace Osaru.RPC
         }
 
         [Obsolete("Use RPCAction.Call")]
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
 
@@ -275,7 +275,7 @@ namespace Osaru.RPC
         {
             try
             {
-                var request=f.Request;
+                var args=f.Request.Params;
 
 
 
@@ -306,12 +306,12 @@ namespace Osaru.RPC
         }
 
         [Obsolete("Use RPCAction.Call")]
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
+                m_d0.Deserialize(args[0], ref a0);
 
 
                 m_method(a0);
@@ -322,11 +322,11 @@ namespace Osaru.RPC
         {
             try
             {
-                var request=f.Request;
+                var args=f.Request.Params;
 
                 var a0 = default(A0);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
+                m_d0.Deserialize(args[0], ref a0);
 
 
                 f.Success(m_method(a0), m_s);
@@ -357,14 +357,14 @@ namespace Osaru.RPC
         }
 
         [Obsolete("Use RPCAction.Call")]
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
                 var a1 = default(A1);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
 
 
                 m_method(a0, a1);
@@ -375,13 +375,13 @@ namespace Osaru.RPC
         {
             try
             {
-                var request=f.Request;
+                var args=f.Request.Params;
 
                 var a0 = default(A0);
                 var a1 = default(A1);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
 
 
                 f.Success(m_method(a0, a1), m_s);
@@ -414,16 +414,16 @@ namespace Osaru.RPC
         }
 
         [Obsolete("Use RPCAction.Call")]
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
                 var a1 = default(A1);
                 var a2 = default(A2);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
-                m_d2.Deserialize(request.Params[2], ref a2);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
+                m_d2.Deserialize(args[2], ref a2);
 
 
                 m_method(a0, a1, a2);
@@ -434,15 +434,15 @@ namespace Osaru.RPC
         {
             try
             {
-                var request=f.Request;
+                var args=f.Request.Params;
 
                 var a0 = default(A0);
                 var a1 = default(A1);
                 var a2 = default(A2);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
-                m_d2.Deserialize(request.Params[2], ref a2);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
+                m_d2.Deserialize(args[2], ref a2);
 
 
                 f.Success(m_method(a0, a1, a2), m_s);
@@ -477,7 +477,7 @@ namespace Osaru.RPC
         }
 
         [Obsolete("Use RPCAction.Call")]
-        public void Call<T>(RPCRequest<T> request)
+        public void Call<T>(T args)
             where T : IParser<T>, new()
         {
                 var a0 = default(A0);
@@ -485,10 +485,10 @@ namespace Osaru.RPC
                 var a2 = default(A2);
                 var a3 = default(A3);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
-                m_d2.Deserialize(request.Params[2], ref a2);
-                m_d3.Deserialize(request.Params[3], ref a3);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
+                m_d2.Deserialize(args[2], ref a2);
+                m_d3.Deserialize(args[3], ref a3);
 
 
                 m_method(a0, a1, a2, a3);
@@ -499,17 +499,17 @@ namespace Osaru.RPC
         {
             try
             {
-                var request=f.Request;
+                var args=f.Request.Params;
 
                 var a0 = default(A0);
                 var a1 = default(A1);
                 var a2 = default(A2);
                 var a3 = default(A3);
 
-                m_d0.Deserialize(request.Params[0], ref a0);
-                m_d1.Deserialize(request.Params[1], ref a1);
-                m_d2.Deserialize(request.Params[2], ref a2);
-                m_d3.Deserialize(request.Params[3], ref a3);
+                m_d0.Deserialize(args[0], ref a0);
+                m_d1.Deserialize(args[1], ref a1);
+                m_d2.Deserialize(args[2], ref a2);
+                m_d3.Deserialize(args[3], ref a3);
 
 
                 f.Success(m_method(a0, a1, a2, a3), m_s);

@@ -65,21 +65,25 @@ namespace Osaru.RPC
 
         #region Notify
         Dictionary<string, IRPCMethod> m_notifyMap = new Dictionary<string, IRPCMethod>();
+        public void AddNotifyMethod(string name, IRPCMethod method)
+        {
+            m_notifyMap.Add(name, method);
+        }
 
         public void DispatchNotify<PARSER>(PARSER parser)
             where PARSER : IParser<PARSER>, new()
         {
-            var d = m_r.GetDeserializer<RPCRequest<PARSER>>();
+            var d = m_r.GetDeserializer<RPCNotify<PARSER>>();
             var request = d.Deserialize(parser);
 
             DispatchNotify<PARSER>(request);
         }
 
-        public void DispatchNotify<PARSER>(RPCRequest<PARSER> request)
+        public void DispatchNotify<PARSER>(RPCNotify<PARSER> notify)
             where PARSER : IParser<PARSER>, new()
         {
-            var method = m_requestMap[request.Method];
-            method.Call(request);
+            var method = m_notifyMap[notify.Method];
+            method.Call(notify.Params);
         }
         #endregion
     }

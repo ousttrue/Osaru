@@ -48,6 +48,42 @@ public static class RPCTypeSerializations
         {
         }
     }
+
+    public class JsonRPC20NotifyDeserializer : IDeserializerBase<RPCNotify<JsonParser>>
+    {
+        public void Deserialize<PARSER>(PARSER parser, ref RPCNotify<JsonParser> outValue) where PARSER : IParser<PARSER>
+        {
+            foreach (var kv in parser.ObjectItems)
+            {
+                switch (kv.Key)
+                {
+                    case "jsonrpc":
+                        if (kv.Value.GetString() != "2.0")
+                        {
+                            throw new FormatException("jsonrpc should 2.0");
+                        }
+                        break;
+
+                    case "method":
+                        outValue.Method = kv.Value.GetString();
+                        break;
+
+                    case "args":
+                    case "params":
+                        outValue.ParamsBytes = kv.Value.Dump();
+                        break;
+
+                    default:
+                        throw new FormatException("unknown key: " + kv.Key);
+                }
+            }
+        }
+
+        public void Setup(TypeRegistry r)
+        {
+        }
+    }
+
     public class JsonRPC20ResponseDeserializer : IDeserializerBase<RPCResponse<JsonParser>>
     {
         public void Deserialize<PARSER>(PARSER parser, ref RPCResponse<JsonParser> outValue) where PARSER : IParser<PARSER>
@@ -86,6 +122,7 @@ public static class RPCTypeSerializations
         {
         }
     }
+
     public class MessagePackRPCRequestDeserializer : IDeserializerBase<RPCRequest<MessagePackParser>>
     {
         public void Deserialize<PARSER>(PARSER parser, ref RPCRequest<MessagePackParser> outValue) where PARSER : IParser<PARSER>
@@ -101,6 +138,7 @@ public static class RPCTypeSerializations
         {
         }
     }
+
     public class MessagePackRPCResponseDeserializer : IDeserializerBase<RPCResponse<MessagePackParser>>
     {
         public void Deserialize<PARSER>(PARSER parser, ref RPCResponse<MessagePackParser> outValue) where PARSER : IParser<PARSER>
@@ -126,6 +164,21 @@ public static class RPCTypeSerializations
         }
     }
 
+    public class MessagePackRPCNotifyDeserializer : IDeserializerBase<RPCNotify<MessagePackParser>>
+    {
+        public void Deserialize<PARSER>(PARSER parser, ref RPCNotify<MessagePackParser> outValue) where PARSER : IParser<PARSER>
+        {
+            var it = parser.ListItems.GetEnumerator();
+            it.MoveNext(); if (it.Current.GetInt32() != 2) throw new FormatException("request should 0");
+            it.MoveNext(); outValue.Method = it.Current.GetString();
+            it.MoveNext(); outValue.ParamsBytes = it.Current.Dump();
+        }
+
+        public void Setup(TypeRegistry r)
+        {
+        }
+    }
+
     public static IEnumerable<TypeSerialization> Serializations
     {
         get
@@ -142,6 +195,18 @@ public static class RPCTypeSerializations
                     f.EndMap();
                 }
                 , new JsonRPC20RequestDeserializer());
+
+            // json-rpc-2.0 Notify
+            yield return TypeSerialization.Create<RPCNotify<JsonParser>>(
+                (x, f) =>
+                {
+                    f.BeginMap(3);
+                    f.Key("jsonrpc"); f.Value("2.0");
+                    f.Key("method"); f.Value(x.Method);
+                    f.Key("params"); f.Dump(x.ParamsBytes);
+                    f.EndMap();
+                }
+                , new JsonRPC20NotifyDeserializer());
 
             // json-rpc-2.0 Response
             yield return TypeSerialization.Create<RPCResponse<JsonParser>>(
@@ -204,6 +269,19 @@ public static class RPCTypeSerializations
                     }
                 }
                 , new MessagePackRPCResponseDeserializer());
+
+            // messagepack-rpc Notify
+            yield return TypeSerialization.Create<RPCNotify<MessagePackParser>>(
+                (x, f) =>
+                {
+                    f.BeginList(3);
+                    f.Value(2);
+                    f.Value(x.Method);
+                    f.Dump(x.ParamsBytes);
+                    f.EndList();
+                }
+                , new MessagePackRPCNotifyDeserializer());
+
         }
     }
 }

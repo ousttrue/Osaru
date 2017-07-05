@@ -145,7 +145,15 @@ namespace Osaru.MessagePack
         {
             get
             {
-                return ObjectItems.First(x => x.Key == key).Value;
+                foreach(var kv in ObjectItems)
+                {
+                    if (kv.Key == key)
+                    {
+                        return kv.Value;
+                    }
+                }
+
+                throw new KeyNotFoundException();
             }
         }
 

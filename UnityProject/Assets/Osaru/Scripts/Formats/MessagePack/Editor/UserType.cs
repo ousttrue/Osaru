@@ -1,10 +1,13 @@
 ﻿using NUnit.Framework;
 using System;
-using Osaru.MessagePack;
+using Osaru;
 using Osaru.Serialization;
+using System.Runtime.Serialization;
 
-#if false
 
+#if UNITY_EDITOR
+using UnityEngine;
+#else
 [Serializable]
 struct Vector3
 {
@@ -27,6 +30,7 @@ struct Vector3
         return String.Format("[{0}, {1}, {2}]", X, Y, Z);
     }
 }
+#endif
 
 
 [Serializable]
@@ -56,13 +60,12 @@ class UserType
 [TestFixture]
 public class UserTypeTest
 {
-    typeRegistry m_r;
+    TypeRegistry m_r;
 
     [SetUp]
     public void Setup()
     {
-        m_r = new typeRegistry();
-        Deserializer.Clear();
+        m_r = new TypeRegistry();
     }
 
     [Test]
@@ -72,7 +75,7 @@ public class UserTypeTest
         {
             Name = "hoge"
             ,
-            Position = new Vector3 { X = 1, Y = 2, Z = 3 }
+            Position = new Vector3 { x = 1, y = 2, z = 3 }
 #if USE_FORM
                 , Color = System.Drawing.Color.FromArgb(255, 128, 128, 255)
 #endif
@@ -112,7 +115,8 @@ public class UserTypeTest
         var bytes = m_r.SerializeToMessagePack(obj);
 
         // unpack
-        UserType newObj = Deserializer.Deserialize<UserType>(bytes);
+        var newObj = default(UserType);
+        m_r.Deserialize(bytes.ParseAsMessagePack(), ref newObj);
 
         Assert.AreEqual(obj.Name, newObj.Name);
 #if USE_FORM
@@ -120,5 +124,24 @@ public class UserTypeTest
 #endif
         Assert.AreEqual(obj.Position, newObj.Position);
     }
+
+    [DataContract]
+    class KeyName
+    {
+        [DataMember(Name ="key")]
+        public String Name;
+    }
+
+    [Test]
+    public void key_rename()
+    {
+        var value = new KeyName
+        {
+            Name = "hoge"
+        };
+        var bytes=m_r.SerializeToMessagePack(value);
+        var parsed = bytes.ParseAsMessagePack();
+
+        Assert.AreEqual(parsed["key"].GetString(), "hoge");
+    }
 }
-#endif

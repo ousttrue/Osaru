@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
 using Osaru;
 using System;
-
+using System.Linq;
+using System.Runtime.Serialization;
 
 namespace Osaru.Serialization.Serializers
 {
@@ -11,7 +12,10 @@ namespace Osaru.Serialization.Serializers
         static MemberSerializer<T, U> CreateFromFieldInfo<T, U>(FieldInfo fi
             , TypeRegistry r)
         {
-            return new MemberSerializer<T, U>(fi.Name
+            var dataMember=fi.GetCustomAttributes(true).FirstOrDefault(x => x is DataMemberAttribute) as DataMemberAttribute;
+            var name = dataMember != null ? dataMember.Name : fi.Name;
+
+            return new MemberSerializer<T, U>(name
                 , (ref T t) => (U)fi.GetValue(t)
                 , r.GetSerializer<U>()
                 );
@@ -30,7 +34,10 @@ namespace Osaru.Serialization.Serializers
         static MemberSerializer<T, U> CreateFromPropertyInfo<T, U>(PropertyInfo pi
             , TypeRegistry r)
         {
-            return new MemberSerializer<T, U>(pi.Name
+            var dataMember = pi.GetCustomAttributes(true).FirstOrDefault(x => x is DataMemberAttribute) as DataMemberAttribute;
+            var name = dataMember != null ? dataMember.Name : pi.Name;
+
+            return new MemberSerializer<T, U>(name
                 , (ref T t) => (U)pi.GetValue(t, null)
                 , r.GetSerializer<U>()
                 );

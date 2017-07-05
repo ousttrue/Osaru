@@ -69,7 +69,7 @@ public class UserTypeTest
     }
 
     [Test]
-    public void pack_and_unpack()
+    public void PackAndUnpack()
     {
         var obj = new UserType
         {
@@ -133,7 +133,7 @@ public class UserTypeTest
     }
 
     [Test]
-    public void key_rename()
+    public void KeyRename()
     {
         var value = new KeyName
         {
@@ -141,7 +141,26 @@ public class UserTypeTest
         };
         var bytes=m_r.SerializeToMessagePack(value);
         var parsed = bytes.ParseAsMessagePack();
+        Assert.AreEqual("hoge", parsed["key"].GetString());
 
-        Assert.AreEqual(parsed["key"].GetString(), "hoge");
+        var restore = default(KeyName);
+        m_r.Deserialize(parsed, ref restore);
+        Assert.AreEqual("hoge", restore.Name);
+    }
+
+    [DataContract]
+    struct StaticMember
+    {
+        public static readonly String Name="hoge";
+    }
+
+    [Test]
+    public void StaticMemberTest()
+    {
+        var value = new StaticMember();
+        var bytes = m_r.SerializeToMessagePack(value);
+        var parsed = bytes.ParseAsMessagePack();
+
+        Assert.AreEqual(0, parsed.Count);
     }
 }

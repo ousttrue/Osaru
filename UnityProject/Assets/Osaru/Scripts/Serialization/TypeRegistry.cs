@@ -128,6 +128,7 @@ namespace Osaru.Serialization
         #region MembserSerializer
         public IEnumerable<IMemberSerializer<T>> GetMemberSerializers<T>()
         {
+            // fields
             foreach (var fi in typeof(T).GetFields(BindingFlags.Public
                 | BindingFlags.Instance))
             {
@@ -137,6 +138,8 @@ namespace Osaru.Serialization
                     yield return fi.CreateMemberSerializer<T>(this);
                 }
             }
+
+            // poperties
             foreach (var pi in typeof(T).GetProperties(BindingFlags.Public
                 | BindingFlags.Instance))
             {

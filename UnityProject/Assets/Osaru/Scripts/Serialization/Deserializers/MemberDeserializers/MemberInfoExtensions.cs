@@ -1,5 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using System.Linq;
+using System.Runtime.Serialization;
 
 
 namespace Osaru.Serialization.Deserializers
@@ -10,8 +12,10 @@ namespace Osaru.Serialization.Deserializers
         static IMemberDeserializer<T> CreateFromFieldInfo<T, U>(FieldInfo fi
             , TypeRegistry r)
         {
+            var dataMember = fi.GetCustomAttributes(true).FirstOrDefault(x => x is DataMemberAttribute) as DataMemberAttribute;
+            var name = dataMember != null ? dataMember.Name : fi.Name;
 #if true
-            return new MemberDeserializer<T, U>(fi.Name
+            return new MemberDeserializer<T, U>(name
                 , r.GetDeserializer<U>()
                 , (ref T t, U u) => fi.SetValue(t, u)
                 , (object o, U u) => fi.SetValue(o, u)
@@ -44,8 +48,11 @@ namespace Osaru.Serialization.Deserializers
         static MemberDeserializer<T, U> CreateFromPropertyInfo<T, U>(PropertyInfo pi
             , TypeRegistry r)
         {
+            var dataMember = pi.GetCustomAttributes(true).FirstOrDefault(x => x is DataMemberAttribute) as DataMemberAttribute;
+            var name = dataMember != null ? dataMember.Name : pi.Name;
+
             var setter = CreatePropertySetter<T, U>(pi);
-            return new MemberDeserializer<T, U>(pi.Name
+            return new MemberDeserializer<T, U>(name
                 , r.GetDeserializer<U>()
                 , (ref T t, U u) => pi.SetValue(t, u, null)
                 //, new MemberDeserializer<T, U>.Setter(setter) crash

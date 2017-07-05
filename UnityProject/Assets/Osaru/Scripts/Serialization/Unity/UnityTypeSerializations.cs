@@ -62,6 +62,26 @@ namespace Osaru.Serialization
             m_d.Deserialize(it.Current, ref outValue.w);
         }
     }
+    public class QuaternionDeserializer : IDeserializerBase<Quaternion>
+    {
+        IDeserializerBase<Single> m_d;
+        public void Setup(TypeRegistry r)
+        {
+            m_d = r.GetDeserializer<Single>();
+        }
+        public void Deserialize<PARSER>(PARSER parser, ref Quaternion outValue) where PARSER : IParser<PARSER>
+        {
+            var it = parser.ListItems.GetEnumerator();
+            var a = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.x);
+            var b = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.y);
+            var c = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.z);
+            var d = it.MoveNext();
+            m_d.Deserialize(it.Current, ref outValue.w);
+        }
+    }
 
     public static class UnityTypeSerializations
     {
@@ -103,6 +123,19 @@ namespace Osaru.Serialization
                         f.EndList();
                     })
                     , new Vector4Deserializer()
+                    );
+
+                yield return TypeSerialization.Create(
+                    new LambdaSerializer<Quaternion>((t, f) =>
+                    {
+                        f.BeginList(4);
+                        f.Value(t.x);
+                        f.Value(t.y);
+                        f.Value(t.z);
+                        f.Value(t.w);
+                        f.EndList();
+                    })
+                    , new QuaternionDeserializer()
                     );
 
 #if UNITY_EDITOR || UNITY_WSA || UNITY_STANDALONE
